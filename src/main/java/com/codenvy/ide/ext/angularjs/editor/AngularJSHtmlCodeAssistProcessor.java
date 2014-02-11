@@ -117,6 +117,11 @@ public class AngularJSHtmlCodeAssistProcessor implements CodeAssistProcessor {
                 }
             }
 
+            // No completion on end elements
+            if (textBefore.startsWith("</")) {
+                return null;
+            }
+
             // search the end of the HTML element (or break when number of lines is reached)
             String textAfter = "";
             line = lineWithCursor;
