@@ -65,16 +65,18 @@ public class AngularJSInterpolationBraceStrategy implements AutoEditStrategy {
         try {
             // character before the {
             char beforeChar = document.getChar(offset - 1);
+            char beforeBeforeChar = document.getChar(offset - 2);
 
             // well we have two {{ then we can close these brackets (and don't forget to add the current character which is {
-            if ('{' == beforeChar) {
+            if ('{' == beforeChar && ' ' == beforeBeforeChar) {
                 command.text = "{}}";
                 command.caretOffset = offset + 1;
                 command.doit = false;
             }
 
         } catch (BadLocationException e) {
-            Log.error(AngularJSInterpolationBraceStrategy.class, e);
+            // only debug as we may not have previous characters
+            Log.debug(AngularJSInterpolationBraceStrategy.class, e);
         }
 
 
