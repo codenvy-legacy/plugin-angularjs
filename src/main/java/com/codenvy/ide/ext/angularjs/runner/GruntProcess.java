@@ -19,19 +19,25 @@
 package com.codenvy.ide.ext.angularjs.runner;
 
 import com.codenvy.api.core.util.CommandLine;
+import com.codenvy.api.core.util.DownloadPlugin;
+import com.codenvy.api.core.util.HttpDownloadPlugin;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.DeploymentSources;
+import com.codenvy.api.runner.internal.Updatable;
+import com.codenvy.commons.lang.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Application process used for Grunt
  *
  * @author Florent Benoit
  */
-public class GruntProcess extends ApplicationProcess {
+public class GruntProcess extends ApplicationProcess implements Updatable {
 
     /**
      * Result of the Runtime.exec command
@@ -43,15 +49,20 @@ public class GruntProcess extends ApplicationProcess {
      */
     private final File workDir;
 
+    private String sourceURL;
+    private DownloadPlugin downloadPlugin;
+
     /**
      * Build a new process for the following directory
      *
      * @param workDir
      *         the directory to start grunt
      */
-    public GruntProcess(File workDir) {
+    public GruntProcess(File workDir, String sourceURL) {
         super();
         this.workDir = workDir;
+        this.sourceURL = sourceURL;
+        this.downloadPlugin = new HttpDownloadPlugin();;
     }
 
     /**
@@ -87,6 +98,20 @@ public class GruntProcess extends ApplicationProcess {
         process.destroy();
     }
 
+
+
+    public void update() throws RunnerException {
+        // Download the new source again and unpack
+        DeploymentSources deploymentSources = downloadApplication(sourceURL, workDir);
+
+        // unpack again
+        try {
+            ZipUtils.unzip(deploymentSources.getFile(), workDir);
+        } catch (IOException e) {
+            throw new RunnerException("unable to update");
+        }
+    }
+
     @Override
     public int waitFor() throws RunnerException {
         synchronized (this) {
@@ -118,5 +143,32 @@ public class GruntProcess extends ApplicationProcess {
     public ApplicationLogger getLogger() throws RunnerException {
         //FIXME : return a real logger
         return ApplicationLogger.DUMMY;
+    }
+
+
+    protected DeploymentSources downloadApplication(String url, File destFolder) throws RunnerException {
+        final IOException[] errorHolder = new IOException[1];
+        final DeploymentSources[] resultHolder = new DeploymentSources[1];
+        final File downloadDir;
+        try {
+            downloadDir = Files.createTempDirectory(destFolder.toPath(), "updated").toFile();
+        } catch (IOException e) {
+            throw new RunnerException(e);
+        }
+        downloadPlugin.download(url, downloadDir, new DownloadPlugin.Callback() {
+            @Override
+            public void done(java.io.File downloaded) {
+                resultHolder[0] = new DeploymentSources(downloaded);
+            }
+
+            @Override
+            public void error(IOException e) {
+                errorHolder[0] = e;
+            }
+        });
+        if (errorHolder[0] != null) {
+            throw new RunnerException(errorHolder[0]);
+        }
+        return resultHolder[0];
     }
 }

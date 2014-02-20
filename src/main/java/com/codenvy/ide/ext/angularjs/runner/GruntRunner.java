@@ -19,6 +19,7 @@ package com.codenvy.ide.ext.angularjs.runner;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.core.util.DownloadPlugin;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
@@ -27,6 +28,8 @@ import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.commons.lang.IoUtil;
+import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 
 import javax.inject.Inject;
@@ -36,6 +39,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Runner implementation to run Java web applications by deploying it to application server.
@@ -99,13 +106,36 @@ public class GruntRunner extends Runner {
 
         File path;
         File sourceFile = toDeploy.getFile();
-        try (FileReader reader = new FileReader(sourceFile); BufferedReader bufferedReader = new BufferedReader(reader)) {
-            path = new File(bufferedReader.readLine());
-        } catch (IOException e) {
-            throw new RunnerException("Unable to read file", e);
+
+        // Zip file, unpack it as it contains the source repository
+        if (toDeploy.isArchive()) {
+            try {
+                path = Files.createTempDirectory(getDeployDirectory().toPath(), null).toFile();
+            } catch (IOException e) {
+                throw new RunnerException("Unable to create a temporary file", e);
+            }
+            path.mkdirs();
+            try {
+                ZipUtils.unzip(toDeploy.getFile(), path);
+
+                // Also unzip the grunt addon
+                InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("builders/grunt-required.zip");
+                ZipUtils.unzip(is, path);
+            } catch (IOException e) {
+                throw new RunnerException("Unable to unpack the zip file", e);
+            }
+        } else {
+
+            try (FileReader reader = new FileReader(sourceFile); BufferedReader bufferedReader = new BufferedReader(reader)) {
+                path = new File(bufferedReader.readLine());
+            } catch (IOException e) {
+                throw new RunnerException("Unable to read file", e);
+            }
         }
 
-        final ApplicationProcess process = new GruntProcess(path);
+
+        String sourceURL = configuration.getRequest().getDeploymentSourcesUrl();
+        final ApplicationProcess process = new GruntProcess(path, sourceURL);
 
         //FIXME : cleanup of files ?
         /*registerDisposer(process, new Disposer() {
