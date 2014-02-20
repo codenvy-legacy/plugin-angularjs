@@ -46,19 +46,26 @@ public class YeomanAngularJSProjectTypeExtension implements ProjectTypeExtension
     public List<Attribute> getPredefinedAttributes() {
         final List<Attribute> list = new ArrayList<>(3);
         list.add(new Attribute("language", new VfsPropertyValueProvider("language", "javascript")));
-        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "grunt")));
-        list.add(new Attribute("builder.name", new VfsPropertyValueProvider("builder.name", "grunt")));
+    /*        list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "grunt")));
+        list.add(new Attribute("builder.name", new VfsPropertyValueProvider("builder.name", "grunt")));*/
         return list;
     }
 
 
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
-        final List<ProjectTemplateDescription> list = new ArrayList<>(1);
+        final List<ProjectTemplateDescription> list = new ArrayList<>(2);
         list.add(new ProjectTemplateDescription("zip",
-                                                "AngularJS PROJECT",
+                                                "AngularJS (Yeoman)",
                                                 "Project using yeoman scaffolding.",
                                                 "templates/angularjs.zip"));
+
+        list.add(new ProjectTemplateDescription("zip",
+                                                "AngularJS (Angular seed)",
+                                                "Project using Angular seed scaffolding.",
+                                                "templates/angular-seed.zip"));
+
+
         return list;
     }
 }

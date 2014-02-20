@@ -17,11 +17,8 @@
  */
 package com.codenvy.ide.ext.angularjs.server.template;
 
-import com.codenvy.api.builder.internal.Builder;
-import com.codenvy.ide.ext.angularjs.builder.GruntBuilder;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
 
 /**
  * Module for Grunt builder.
@@ -34,6 +31,6 @@ public class TemplateModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(AngularJSProjectTypeDescriptionsExtension.class);
-        bind(AngularJSProjectTypeExtension.class);
+        bind(YeomanAngularJSProjectTypeExtension.class);
     }
 }
