@@ -23,16 +23,17 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 
 /**
- * Module for Grunt builder.
+ * Module for AngularJS builders.
  *
  * @author Florent Benoit
  */
 @DynaModule
-public class GruntBuilderModule extends AbstractModule {
+public class BuildersModule extends AbstractModule {
 
     @Override
     protected void configure() {
         Multibinder<Builder> multiBinder = Multibinder.newSetBinder(binder(), Builder.class);
         multiBinder.addBinding().to(GruntBuilder.class);
+        multiBinder.addBinding().to(YeomanBuilder.class);
     }
 }

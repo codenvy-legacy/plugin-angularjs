@@ -18,34 +18,47 @@
 package com.codenvy.ide.ext.angularjs.server.template;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
+import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.server.VfsPropertyValueProvider;
 import com.codenvy.api.project.shared.Attribute;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeExtension;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @author Artem Zatsarynnyy */
 @Singleton
-public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
+public class YeomanAngularJSProjectTypeExtension implements ProjectTypeExtension {
+
     @Inject
-    public AngularJSProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+    public YeomanAngularJSProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerProjectType(this);
     }
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("AngularJS", "AngularJS");
+        return new ProjectType("AngularJS", "AngularJS (javascript)");
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(2);
+        final List<Attribute> list = new ArrayList<>(3);
+        list.add(new Attribute("language", new VfsPropertyValueProvider("language", "javascript")));
         list.add(new Attribute("runner.name", new VfsPropertyValueProvider("runner.name", "grunt")));
         list.add(new Attribute("builder.name", new VfsPropertyValueProvider("builder.name", "grunt")));
+        return list;
+    }
+
+
+    @Override
+    public List<ProjectTemplateDescription> getTemplates() {
+        final List<ProjectTemplateDescription> list = new ArrayList<>(1);
+        list.add(new ProjectTemplateDescription("zip",
+                                                "AngularJS PROJECT",
+                                                "Project using yeoman scaffolding.",
+                                                "templates/angularjs.zip"));
         return list;
     }
 }

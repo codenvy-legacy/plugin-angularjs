@@ -33,7 +33,6 @@ public class TemplateModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(AngularJSProjectTemplateExtension.class);
         bind(AngularJSProjectTypeDescriptionsExtension.class);
         bind(AngularJSProjectTypeExtension.class);
     }

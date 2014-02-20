@@ -20,7 +20,7 @@ package com.codenvy.ide.ext.angularjs.server.template;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.shared.ProjectTypeDescriptionExtension;
+import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,9 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link com.codenvy.api.project.shared.ProjectTypeDescriptionExtension} to register project types.
- *
- * @author Artem Zatsarynnyy
+ * Register angularjs extension {@link com.codenvy.api.project.server.ProjectTypeDescriptionExtension} to register project types.
+ * @author Florent Benoit
  */
 @Singleton
 public class AngularJSProjectTypeDescriptionsExtension implements ProjectTypeDescriptionExtension {
