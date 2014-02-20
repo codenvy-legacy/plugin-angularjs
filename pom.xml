@@ -24,7 +24,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M8-SNAPSHOT</version>
+        <version>3.0.0-M10-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-angularjs</artifactId>
     <packaging>jar</packaging>
@@ -32,13 +32,19 @@
     <dependencies>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-api</artifactId>
+            <artifactId>codenvy-ext-builder</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-commons</artifactId>
+            <artifactId>codenvy-ext-runner</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -51,6 +57,12 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-builder</artifactId>
+            <version>${com.codenvy.platform-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-project</artifactId>
             <version>${com.codenvy.platform-api.version}</version>
             <scope>provided</scope>
         </dependency>
