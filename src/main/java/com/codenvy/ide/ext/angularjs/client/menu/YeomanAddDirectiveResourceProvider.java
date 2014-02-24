@@ -16,7 +16,7 @@
  *  from Codenvy S.A..
  */
 
-package com.codenvy.ide.ext.angularjs.menu;
+package com.codenvy.ide.ext.angularjs.client.menu;
 
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
@@ -25,11 +25,9 @@ import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;

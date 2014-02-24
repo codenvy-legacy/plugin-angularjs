@@ -16,7 +16,7 @@
  * from Codenvy S.A..
  */
 
-package com.codenvy.ide.ext.angularjs.menu;
+package com.codenvy.ide.ext.angularjs.client.menu;
 
 
 import static com.codenvy.ide.api.ui.action.Anchor.BEFORE;
@@ -24,7 +24,6 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
@@ -33,9 +32,13 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 
+import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
+import com.codenvy.ide.ext.angularjs.client.menu.wizard.YeomanWizard;
+import com.codenvy.ide.ext.angularjs.client.menu.wizard.YeomanWizardPresenter;
 import com.codenvy.ide.extension.runner.client.RunnerController;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -46,14 +49,26 @@ import com.google.web.bindery.event.shared.EventBus;
 @Extension(title = "AngularJS extension.", version = "1.0.0")
 public class AngularJSExtension {
 
+    private DefaultWizard newResourceWizard;
+
+    private Provider<YeomanWizardPresenter> chooseResourcePage;
 
     private static final String YEOMAN_GROUP_MENU = "YeomanMenu";
 
     @Inject
-    public AngularJSExtension(ActionManager actionManager, ResourceProvider resourceProvider, LocalizationConstant localizationConstant, YeomanAddDirectiveAction yeomanAddDirectiveAction, NewResourceAgent newResourceAgent, YeomanAddDirectiveResourceProvider yeomanAddDirectiveResourceProvider, EventBus eventBus, final NotificationManager notificationManager, final RunnerController runnerController) {
+    public AngularJSExtension(ActionManager actionManager, ResourceProvider resourceProvider, LocalizationConstant localizationConstant,
+                              YeomanAddDirectiveAction yeomanAddDirectiveAction, NewResourceAgent newResourceAgent,
+                              YeomanAddDirectiveResourceProvider yeomanAddDirectiveResourceProvider, EventBus eventBus,
+                              final NotificationManager notificationManager, final RunnerController runnerController,
+                              @YeomanWizard DefaultWizard newResourceWizard,
+                              Provider<YeomanWizardPresenter> chooseResourcePage) {
+
+
+        newResourceWizard.addPage(chooseResourcePage);
+
 
         // Build a new Yeoman menu
-        DefaultActionGroup mainMenu = (DefaultActionGroup) actionManager.getAction(GROUP_MAIN_MENU);
+        DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
         DefaultActionGroup yeomanActionGroup = new CustomActionGroup(resourceProvider, "Yeoman", true, actionManager);
 
         actionManager.registerAction(YEOMAN_GROUP_MENU,

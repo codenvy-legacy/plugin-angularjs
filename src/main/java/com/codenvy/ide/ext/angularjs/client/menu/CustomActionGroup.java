@@ -1,10 +1,9 @@
-package com.codenvy.ide.ext.angularjs.menu;
+package com.codenvy.ide.ext.angularjs.client.menu;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.resources.model.Project;
 
 /**
  * Allow to hide elements if the current project is not an angular project.

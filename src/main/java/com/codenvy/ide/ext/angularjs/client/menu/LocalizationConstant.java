@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.angularjs.menu;
+package com.codenvy.ide.ext.angularjs.client.menu;
 
 import com.google.gwt.i18n.client.Messages;
 
