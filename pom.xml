@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    CODENVY CONFIDENTIAL
+    __________________
+
+     [2014] Codenvy, S.A.
+     All Rights Reserved.
+
+    NOTICE:  All information contained herein is, and remains
+    the property of Codenvy S.A. and its suppliers,
+    if any.  The intellectual and technical concepts contained
+    herein are proprietary to Codenvy S.A.
+    and its suppliers and may be covered by U.S. and Foreign Patents,
+    patents in process, and are protected by trade secret or copyright law.
+    Dissemination of this information or reproduction of this material
+    is strictly forbidden unless prior written permission is obtained
+    from Codenvy S.A..
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>maven-parent-pom</artifactId>
+        <groupId>com.codenvy</groupId>
+        <version>3.1.1</version>
+    </parent>
+    <groupId>com.codenvy.plugin-angularjs</groupId>
+    <artifactId>angularjs-parent</artifactId>
+    <version>1.0.0-M1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>AngularJS Plugin</name>
+    <developers>
+        <developer>
+            <name>Florent Benoit</name>
+            <organization>Serli</organization>
+            <organizationUrl>http://www.serli.com</organizationUrl>
+        </developer>
+    </developers>
+    <modules>
+        <module>api</module>
+        <module>completion</module>
+        <module>core</module>
+        <module>builders</module>
+        <module>runners</module>
+        <module>templates</module>
+    </modules>
+    <properties>
+        <apache-rat-plugin.ignoreErrors>false</apache-rat-plugin.ignoreErrors>
+        <apache-rat-plugin.version>0.10</apache-rat-plugin.version>
+        <ide.version>3.0.0-M11-SNAPSHOT</ide.version>
+        <platform-api.version>0.10.0-SNAPSHOT</platform-api.version>
+    </properties>
+    <build>
+        <plugins>
+            <!-- License header check -->
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>${apache-rat-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>legal</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <ignoreErrors>${apache-rat-plugin.ignoreErrors}</ignoreErrors>
+                            <includes>
+                                <include>src/**</include>
+                                <include>pom.xml</include>
+                            </includes>
+                            <excludes>
+                                <!-- JSON are only data files -->
+                                <exclude>**/*.json</exclude>
+                                <!-- BSD -->
+                                <exclude>**/esprima/*.js</exclude>
+                            </excludes>
+                            <licenses>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>CodenvyLicense</licenseFamilyCategory>
+                                    <licenseFamilyName>Codenvy Software License</licenseFamilyName>
+                                    <patterns>
+                                        <pattern>CODENVY CONFIDENTIAL</pattern>
+                                    </patterns>
+                                </license>
+                            </licenses>
+                            <!-- Approved licenses families -->
+                            <licenseFamilies>
+                                <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
+                                    <familyName>Codenvy Software License</familyName>
+                                </licenseFamily>
+                            </licenseFamilies>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>enforce-version-policy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-plugin-version</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requirePluginVersions>
+                                          <banSnapshots>false</banSnapshots>
+                                        </requirePluginVersions>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
