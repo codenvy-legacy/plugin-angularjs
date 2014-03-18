@@ -45,24 +45,17 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
  * @author Florent Benoit
  */
 @Singleton
-@Extension(title = "AngularJS extension.", version = "1.0.0")
-public class AngularJSExtension {
-
-    private DefaultWizard newResourceWizard;
-
-    private Provider<YeomanWizardPresenter> chooseResourcePage;
+@Extension(title = "AngularJS Menu extension.", version = "1.0.0")
+public class AngularJSMenuExtension {
 
     private static final String YEOMAN_GROUP_MENU = "YeomanMenu";
 
     @Inject
-    public AngularJSExtension(ActionManager actionManager, ResourceProvider resourceProvider,
-                              LocalizationConstant localizationConstant,
-                              YeomanAddDirectiveAction yeomanAddDirectiveAction,
-                              NewResourceAgent newResourceAgent,
-                              EventBus eventBus,
-                              final NotificationManager notificationManager, final RunnerController runnerController,
-                              @YeomanWizard DefaultWizard newResourceWizard,
-                              Provider<YeomanWizardPresenter> chooseResourcePage) {
+    public AngularJSMenuExtension(ActionManager actionManager, ResourceProvider resourceProvider,
+                                  LocalizationConstant localizationConstant,
+                                  YeomanAddDirectiveAction yeomanAddDirectiveAction,
+                                  @YeomanWizard DefaultWizard newResourceWizard,
+                                  Provider<YeomanWizardPresenter> chooseResourcePage) {
 
 
         newResourceWizard.addPage(chooseResourcePage);
