@@ -22,6 +22,7 @@
     <inherits name="com.codenvy.ide.Core"/>
     <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="com.codenvy.ide.collections.Collections"/>
+    <inherits name="com.codenvy.ide.ext.web.Web" />
     <inherits name="com.codenvy.plugin.angularjs.completion.dto.Completion" />
     <source path=""/>
 </module>

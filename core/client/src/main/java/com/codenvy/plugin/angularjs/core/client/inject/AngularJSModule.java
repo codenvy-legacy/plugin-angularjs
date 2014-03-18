@@ -20,12 +20,23 @@ package com.codenvy.plugin.angularjs.core.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
+import com.codenvy.ide.ext.web.html.editor.AutoEditStrategyFactory;
+import com.codenvy.ide.ext.web.html.editor.HTMLCodeAssistProcessor;
+import com.codenvy.ide.ext.web.html.editor.HTMLEditorConfigurationProvider;
+import com.codenvy.ide.ext.web.html.editor.HtmlEditorConfiguration;
+import com.codenvy.ide.ext.web.js.editor.JsCodeAssistProcessor;
+import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
+import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.plugin.angularjs.core.client.editor.AngularJSHtmlCodeAssistProcessor;
+import com.codenvy.plugin.angularjs.core.client.editor.AngularJSInterpolationBraceStrategyFactory;
+import com.codenvy.plugin.angularjs.core.client.javascript.JavaScriptCodeAssistProcessor;
 import com.codenvy.plugin.angularjs.core.client.menu.wizard.YeomanWizard;
 import com.codenvy.plugin.angularjs.core.client.menu.wizard.YeomanWizardProvider;
 import com.codenvy.plugin.angularjs.core.client.menu.wizard.YeomanWizardSelectNameView;
 import com.codenvy.plugin.angularjs.core.client.menu.wizard.YeomanWizardSelectNameViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
+import com.google.gwt.inject.client.multibindings.GinMultibinder;
 
 /**
  * @author Florent Benoit
@@ -41,6 +52,17 @@ public class AngularJSModule extends AbstractGinModule {
                                      .in(Singleton.class);
 
             bind(YeomanWizardSelectNameView.class).to(YeomanWizardSelectNameViewImpl.class);
+
+            bind(AutoEditStrategyFactory.class).to(AngularJSInterpolationBraceStrategyFactory.class).in(Singleton.class);
+
+            GinMultibinder<AutoEditStrategyFactory> binder = GinMultibinder.newSetBinder(binder(), AutoEditStrategyFactory.class);
+            binder.addBinding().to(AngularJSInterpolationBraceStrategyFactory.class);
+
+            GinMultibinder<HTMLCodeAssistProcessor> binderHtmlProcessors = GinMultibinder.newSetBinder(binder(), HTMLCodeAssistProcessor.class);
+            binderHtmlProcessors.addBinding().to(AngularJSHtmlCodeAssistProcessor.class);
+
+            GinMultibinder<JsCodeAssistProcessor> binderJsProcessors = GinMultibinder.newSetBinder(binder(), JsCodeAssistProcessor.class);
+            binderJsProcessors.addBinding().to(JavaScriptCodeAssistProcessor.class);
 
         }
 

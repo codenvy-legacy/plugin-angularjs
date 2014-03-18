@@ -20,6 +20,9 @@ package com.codenvy.plugin.angularjs.core.client.javascript;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.ext.web.html.editor.HTMLCodeAssistProcessor;
+import com.codenvy.ide.ext.web.js.editor.JsCodeAssistProcessor;
 import com.codenvy.plugin.angularjs.completion.dto.Method;
 import com.codenvy.plugin.angularjs.completion.dto.Param;
 import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
@@ -39,12 +42,13 @@ import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JsProgr
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JsProposal;
 import com.google.gwt.core.client.JsArray;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
  * @author Florent Benoit
  */
-public class JavaScriptCodeAssistProcessor implements CodeAssistProcessor {
+public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
 
     private static char[] activationCharacters = new char[]{'.'};
 
@@ -62,8 +66,9 @@ public class JavaScriptCodeAssistProcessor implements CodeAssistProcessor {
 
     private AbstractTrie<TemplateDotProvider> trie;
 
-    public JavaScriptCodeAssistProcessor(Templating templating, JavaScriptResources javaScriptResources) {
-        this.templating = templating;
+    @Inject
+    public JavaScriptCodeAssistProcessor(DtoFactory dtoFactory, JavaScriptResources javaScriptResources) {
+        this.templating = dtoFactory.createDtoFromJson(javaScriptResources.completionTemplatingJson().getText(), Templating.class);
         this.javaScriptResources = javaScriptResources;
         provider = getProvider();
 

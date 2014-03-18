@@ -21,6 +21,7 @@ import com.codenvy.api.builder.BuilderException;
 import com.codenvy.api.builder.internal.BuildResult;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
 
 import javax.inject.Inject;
@@ -57,8 +58,9 @@ public class GruntBuilder extends Builder {
     public GruntBuilder(@Named(REPOSITORY) java.io.File rootDirectory,
                         @Named(NUMBER_OF_WORKERS) int numberOfWorkers,
                         @Named(INTERNAL_QUEUE_SIZE) int queueSize,
-                        @Named(CLEAN_RESULT_DELAY_TIME) int cleanBuildResultDelay) {
-        super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay);
+                        @Named(CLEAN_RESULT_DELAY_TIME) int cleanBuildResultDelay,
+                        EventService eventService) {
+        super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay, eventService);
     }
 
     /**

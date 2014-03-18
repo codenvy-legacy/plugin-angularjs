@@ -19,18 +19,17 @@
 package com.codenvy.plugin.angularjs.core.client.editor;
 
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.web.html.editor.HTMLCodeAssistProcessor;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Position;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.plugin.angularjs.core.client.editor.AngularJSQuery;
-import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
+import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +39,7 @@ import java.util.List;
  *
  * @author Florent Benoit
  */
-public class AngularJSHtmlCodeAssistProcessor implements CodeAssistProcessor {
+public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor {
 
     /**
      * Space separator.
@@ -63,6 +62,7 @@ public class AngularJSHtmlCodeAssistProcessor implements CodeAssistProcessor {
      * @param angularJSResources
      *         the AngularJS resource
      */
+    @Inject
     public AngularJSHtmlCodeAssistProcessor(AngularJSResources angularJSResources) {
         this.angularJSResources = angularJSResources;
     }

@@ -17,6 +17,7 @@
  */
 package com.codenvy.plugin.angularjs.runner.grunt;
 
+import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.runner.RunnerException;
@@ -56,8 +57,9 @@ public class GruntRunner extends Runner {
                        @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
                        @Named("runner.java_webapp.host_name") String hostName,
                        ResourceAllocators allocators,
-                       CustomPortService portService) {
-        super(deployDirectoryRoot, cleanupDelay, allocators);
+                       CustomPortService portService,
+                       EventService eventService) {
+        super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.hostName = hostName;
         this.portService = portService;
     }

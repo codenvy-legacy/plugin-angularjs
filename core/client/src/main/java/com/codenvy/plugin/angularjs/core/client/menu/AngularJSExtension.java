@@ -82,16 +82,5 @@ public class AngularJSExtension {
         yeomanActionGroup.add(yeomanAddDirectiveAction);
 
 
-        eventBus.addHandler(FileEvent.TYPE, new FileEventHandler() {
-            @Override
-            public void onFileOperation(FileEvent event) {
-                String name = event.getFile().getName();
-                if (event.getOperationType() == FileEvent.FileOperation.SAVE) {
-                    //notificationManager.showNotification(new Notification("Save in progress", Notification.Type.INFO));
-                    //runnerController.updateActiveProject();
-                }
-            }
-        });
-
     }
 }
