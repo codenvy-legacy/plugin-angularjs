@@ -47,8 +47,6 @@ public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
 
     @PostConstruct
     public void init() {
-        icons.put("AngularJS.projecttype.big.icon", "angularjs-extension/newproject-angularjs.png");
-        icons.put("AngularJS.projecttype.small.icon", "angularjs-extension/newproject-angularjs.png");
         registry.registerProjectType(this);
 
     }
@@ -83,8 +81,4 @@ public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
         return list;
     }
 
-    @Override
-    public Map<String, String> getIconRegistry() {
-        return icons;
-    }
 }
