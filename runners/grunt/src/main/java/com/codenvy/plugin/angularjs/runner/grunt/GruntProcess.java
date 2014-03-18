@@ -21,22 +21,34 @@ package com.codenvy.plugin.angularjs.runner.grunt;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.DownloadPlugin;
 import com.codenvy.api.core.util.HttpDownloadPlugin;
+import com.codenvy.api.project.server.ProjectEvent;
+import com.codenvy.api.project.server.ProjectEventListener;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.commons.lang.ZipUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Application process used for Grunt
  *
  * @author Florent Benoit
  */
-public class GruntProcess extends ApplicationProcess /*implements Updatable*/ {
+public class GruntProcess extends ApplicationProcess implements ProjectEventListener {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(GruntProcess.class);
 
     /**
      * Result of the Runtime.exec command
@@ -44,11 +56,16 @@ public class GruntProcess extends ApplicationProcess /*implements Updatable*/ {
     private Process process;
 
     /**
+     * Excutor service.
+     */
+    private ExecutorService executorService;
+
+    /**
      * Directory where launch grunt.
      */
     private final File workDir;
 
-    private String sourceURL;
+    private String         sourceURL;
     private DownloadPlugin downloadPlugin;
 
     /**
@@ -57,11 +74,13 @@ public class GruntProcess extends ApplicationProcess /*implements Updatable*/ {
      * @param workDir
      *         the directory to start grunt
      */
-    public GruntProcess(File workDir, String sourceURL) {
+    public GruntProcess(ExecutorService executorService, File workDir, String sourceURL) {
         super();
+        this.executorService = executorService;
         this.workDir = workDir;
         this.sourceURL = sourceURL;
-        this.downloadPlugin = new HttpDownloadPlugin();;
+        this.downloadPlugin = new HttpDownloadPlugin();
+        ;
     }
 
     /**
@@ -97,19 +116,6 @@ public class GruntProcess extends ApplicationProcess /*implements Updatable*/ {
         process.destroy();
     }
 
-
-
-    public void update() throws RunnerException {
-        // Download the new source again and unpack
-        DeploymentSources deploymentSources = downloadApplication(sourceURL, workDir);
-
-        // unpack again
-        try {
-            ZipUtils.unzip(deploymentSources.getFile(), workDir);
-        } catch (IOException e) {
-            throw new RunnerException("unable to update");
-        }
-    }
 
     @Override
     public int waitFor() throws RunnerException {
@@ -169,5 +175,42 @@ public class GruntProcess extends ApplicationProcess /*implements Updatable*/ {
             throw new RunnerException(errorHolder[0]);
         }
         return resultHolder[0];
+    }
+
+    /**
+     * There is a change on the project that we're monitoring, whatever the type of event is, we need to updated the runner.
+     * @param event
+     */
+    @Override
+    public void onEvent(ProjectEvent event) {
+        // needs update
+        update();
+    }
+
+
+    /**
+     * Update the current code through the executor service
+     * Download the new source again and unpack.
+     */
+    public void update() {
+        executorService.submit(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                DeploymentSources deploymentSources = null;
+                try {
+                    deploymentSources = downloadApplication(sourceURL, workDir);
+                } catch (RunnerException e) {
+                    LOG.error("Unable to download project update", e);
+                }
+
+                // unpack again
+                try {
+                    ZipUtils.unzip(deploymentSources.getFile(), workDir);
+                } catch (IOException e) {
+                    LOG.error("Unable to unzip the update code", e);
+                }
+                return null;
+            }
+        });
     }
 }

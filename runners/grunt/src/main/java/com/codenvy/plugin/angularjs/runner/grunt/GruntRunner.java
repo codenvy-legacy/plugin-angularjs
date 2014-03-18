@@ -20,6 +20,7 @@ package com.codenvy.plugin.angularjs.runner.grunt;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
+import com.codenvy.api.project.server.ProjectEventService;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
@@ -42,15 +43,16 @@ import java.io.InputStream;
 import java.nio.file.Files;
 
 /**
- * Runner implementation to run Java web applications by deploying it to application server.
+ * Runner implementation to run Grunt application
  *
- * @author Artem Zatsarynnyy
+ * @author Florent Benoit
  */
 @Singleton
 public class GruntRunner extends Runner {
 
-    private       String            hostName;
-    private final CustomPortService portService;
+    private       String              hostName;
+    private final CustomPortService   portService;
+    private final ProjectEventService projectEventService;
 
     @Inject
     public GruntRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
@@ -58,10 +60,13 @@ public class GruntRunner extends Runner {
                        @Named("runner.java_webapp.host_name") String hostName,
                        ResourceAllocators allocators,
                        CustomPortService portService,
-                       EventService eventService) {
+                       EventService eventService,
+                       ProjectEventService projectEventService) {
         super(deployDirectoryRoot, cleanupDelay, allocators, eventService);
         this.hostName = hostName;
         this.portService = portService;
+        this.projectEventService = projectEventService;
+
     }
 
     @Override
@@ -131,19 +136,23 @@ public class GruntRunner extends Runner {
             }
         }
 
-
+        // Gets the source url from the request
         String sourceURL = configuration.getRequest().getDeploymentSourcesUrl();
-        final ApplicationProcess process = new GruntProcess(path, sourceURL);
+
+        // Create the process
+        final GruntProcess process = new GruntProcess(getExecutor(), path, sourceURL);
 
         //FIXME : cleanup of files ?
-        /*registerDisposer(process, new Disposer() {
-            @Override
-            public void dispose() {
-                if (!IoUtil.deleteRecursive(appDir)) {
-                    LOG.error("Unable to remove app: {}", appDir);
-                }
-            }
-        });*/
+
+        // Add a listener on the project
+        RunRequest runRequest = gruntRunnerConfiguration.getRequest();
+        String projectName = runRequest.getProjectDescriptor().getName();
+        String workspace = runRequest.getWorkspace();
+
+        // Register the listener
+        projectEventService.addListener(workspace, projectName, process);
+
+        //FIXME : unregister the listener ?
 
         return process;
     }
