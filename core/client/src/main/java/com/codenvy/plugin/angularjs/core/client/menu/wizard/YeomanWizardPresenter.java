@@ -140,7 +140,7 @@ public class YeomanWizardPresenter extends AbstractWizardPage implements YeomanW
 
         Timer t = new Timer() {
             public void run() {
-                resourceProvider.getActiveProject().refreshTree(new AsyncCallback<Project>() {
+                resourceProvider.getActiveProject().refreshChildren(new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project result) {
                     }
