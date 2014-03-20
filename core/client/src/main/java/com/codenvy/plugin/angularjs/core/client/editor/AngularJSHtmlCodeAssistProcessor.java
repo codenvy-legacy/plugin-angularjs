@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CodeAssist processor will manage AngularJS proposals.
+ * CodeAssist processor will manage AngularJS directives proposals.
  *
  * @author Florent Benoit
  */

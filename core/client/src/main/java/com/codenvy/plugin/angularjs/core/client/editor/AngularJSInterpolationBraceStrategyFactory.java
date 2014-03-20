@@ -25,12 +25,18 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.google.inject.Singleton;
 
 /**
- * Factory for AutoEdit Strategy
+ * InterpolationBrace Factory for AutoEdit Strategy
  * @author Florent Benoit
  */
 @Singleton
 public class AngularJSInterpolationBraceStrategyFactory implements AutoEditStrategyFactory {
 
+    /**
+     * Build a new Interpolation each time the method is invoked
+     * @param textEditorPartView editor view
+     * @param contentType content type
+     * @return a newly object at each call
+     */
     @Override
     public AutoEditStrategy build(TextEditorPartView textEditorPartView, String contentType) {
         return new AngularJSInterpolationBraceStrategy(textEditorPartView);
