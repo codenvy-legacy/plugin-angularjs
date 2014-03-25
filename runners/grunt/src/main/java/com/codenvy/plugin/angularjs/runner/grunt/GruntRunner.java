@@ -121,9 +121,13 @@ public class GruntRunner extends Runner {
             try {
                 ZipUtils.unzip(toDeploy.getFile(), path);
 
-                // Also unzip the grunt addon
-                InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("builders/grunt-required.zip");
-                ZipUtils.unzip(is, path);
+                // then, unzip the grunt addon (if there is no Gruntfile available in the path)
+                File gruntFile = new File(path, "Gruntfile.js");
+                if (!gruntFile.exists()) {
+                    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("builders/grunt-required.zip");
+                    ZipUtils.unzip(is, path);
+                }
+
             } catch (IOException e) {
                 throw new RunnerException("Unable to unpack the zip file", e);
             }
