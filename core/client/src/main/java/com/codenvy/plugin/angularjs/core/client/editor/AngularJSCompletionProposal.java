@@ -27,10 +27,12 @@ import com.codenvy.ide.text.edits.ReplaceEdit;
 import com.codenvy.ide.texteditor.api.codeassistant.Completion;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.plugin.angularjs.core.client.editor.InvocationContext;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
 
 /**
  * AngularJS completion proposal that is called when the user has selected a completion.
@@ -56,7 +58,16 @@ public class AngularJSCompletionProposal implements CompletionProposal {
 
     @Override
     public Widget getAdditionalProposalInfo() {
-        return null;
+        // if it's an angular directive, return a link to the documentation
+        if (!name.startsWith("ng-")) {
+            return null;
+        }
+        // convert the name ng-xxxx into ngXxxx
+        String directiveName = "ng".concat(name.substring(3, 4).toUpperCase()).concat(name.substring(4));
+        String link = "http://docs.angularjs.org/api/ng/directive/".concat(directiveName);
+        // Don't use String.format (not gwt compliant)
+        HTML html = new HTML("Full documentation available on <a href='".concat(link).concat("'>").concat(link).concat("</a>"));
+        return html;
     }
 
     @Override
