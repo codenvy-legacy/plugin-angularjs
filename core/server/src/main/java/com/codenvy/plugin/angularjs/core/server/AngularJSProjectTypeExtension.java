@@ -52,7 +52,7 @@ public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("AngularJS", "AngularJS (javascript)");
+        return new ProjectType("AngularJS", "AngularJS (javascript)", "AngularJS");
     }
 
     @Override
