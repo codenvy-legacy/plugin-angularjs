@@ -149,7 +149,7 @@ public class GruntRunner extends Runner {
 
         // Add a listener on the project
         RunRequest runRequest = gruntRunnerConfiguration.getRequest();
-        String projectName = runRequest.getProjectDescriptor().getName();
+        String projectName = runRequest.getProject();
         String workspace = runRequest.getWorkspace();
 
         // Register the listener
