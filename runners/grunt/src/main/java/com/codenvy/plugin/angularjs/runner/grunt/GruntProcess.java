@@ -31,7 +31,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -63,7 +68,11 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
      */
     private final File workDir;
 
-    private String         sourceURL;
+    /**
+     * Base URL for Rest API.
+     */
+    private String         baseURL;
+
     private DownloadPlugin downloadPlugin;
 
     /**
@@ -72,11 +81,11 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
      * @param workDir
      *         the directory to start grunt
      */
-    public GruntProcess(ExecutorService executorService, File workDir, String sourceURL) {
+    public GruntProcess(ExecutorService executorService, File workDir, String baseURL) {
         super();
         this.executorService = executorService;
         this.workDir = workDir;
-        this.sourceURL = sourceURL;
+        this.baseURL = baseURL;
         this.downloadPlugin = new HttpDownloadPlugin();
         ;
     }
@@ -181,32 +190,54 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
      */
     @Override
     public void onEvent(ProjectEvent event) {
-        // needs update
-        update();
-    }
+        if (event.getType() == ProjectEvent.EventType.UPDATED || event.getType() == ProjectEvent.EventType.CREATED) {
+            // needs update
+            update(event);
+        }
 
+    }
 
     /**
      * Update the current code through the executor service
      * Download the new source again and unpack.
      */
-    public void update() {
+    protected void update(final ProjectEvent event) {
         executorService.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                DeploymentSources deploymentSources = null;
-                try {
-                    deploymentSources = downloadApplication(sourceURL, workDir);
-                } catch (RunnerException e) {
-                    LOG.error("Unable to download project update", e);
+
+                // connect to the project API URL
+                int index = baseURL.indexOf(event.getProject());
+                HttpURLConnection conn = (HttpURLConnection)new URL(baseURL.substring(0, index).concat("/file").concat(event.getProject()).concat("/").concat(
+                        event.getPath())).openConnection();
+                conn.setConnectTimeout(30 * 1000);
+                conn.setRequestMethod("GET");
+                conn.addRequestProperty("content-type", "application/json");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.connect();
+
+                // If file has been found, dump the content
+                final int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    File updatedFile = new File(workDir, event.getPath());
+                    byte[] buffer = new byte[8192];
+                    InputStream input = conn.getInputStream();
+                    try {
+                        OutputStream output = new FileOutputStream(updatedFile);
+                        try {
+                            int bytesRead;
+                            while ((bytesRead = input.read(buffer)) != -1) {
+                                output.write(buffer, 0, bytesRead);
+                            }
+                        } finally {
+                            output.close();
+                        }
+                    } finally {
+                        input.close();
+                    }
                 }
 
-                // unpack again
-                try {
-                    ZipUtils.unzip(deploymentSources.getFile(), workDir);
-                } catch (IOException e) {
-                    LOG.error("Unable to unzip the update code", e);
-                }
                 return null;
             }
         });

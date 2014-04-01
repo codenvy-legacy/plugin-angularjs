@@ -142,8 +142,10 @@ public class GruntRunner extends Runner {
         // Gets the source url from the request
         String sourceURL = configuration.getRequest().getDeploymentSourcesUrl();
 
+        String baseURL = configuration.getRequest().getProjectDescriptor().getBaseUrl();
+
         // Create the process
-        final GruntProcess process = new GruntProcess(getExecutor(), path, sourceURL);
+        final GruntProcess process = new GruntProcess(getExecutor(), path, baseURL);
 
         //FIXME : cleanup of files ?
 
