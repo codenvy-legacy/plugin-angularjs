@@ -27,6 +27,7 @@
     <modules>
         <module>angular-seed</module>
         <module>yeoman</module>
+        <module>gulp-angularjs-starter</module>
     </modules>
     <dependencies>
         <dependency>
