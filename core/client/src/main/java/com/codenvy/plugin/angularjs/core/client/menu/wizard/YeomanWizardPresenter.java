@@ -18,12 +18,12 @@ package com.codenvy.plugin.angularjs.core.client.menu.wizard;
 
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -57,7 +57,8 @@ public class YeomanWizardPresenter extends AbstractWizardPage implements YeomanW
      * @param view
      */
     @Inject
-    public YeomanWizardPresenter(YeomanWizardSelectNameView view, DtoFactory dtoFactory, BuildProjectPresenter buildProjectPresenter, ResourceProvider resourceProvider) {
+    public YeomanWizardPresenter(YeomanWizardSelectNameView view, DtoFactory dtoFactory, BuildProjectPresenter buildProjectPresenter,
+                                 ResourceProvider resourceProvider) {
         super("Select a name to be generated with this Yeoman generator", null);
 
         this.view = view;
