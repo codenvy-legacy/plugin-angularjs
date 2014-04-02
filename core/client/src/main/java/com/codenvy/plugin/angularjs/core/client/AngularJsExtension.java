@@ -39,7 +39,8 @@ public class AngularJsExtension {
         Map<String, String> icons = new HashMap<>();
         icons.put("AngularJS.projecttype.big.icon", "angularjs-extension/newproject-angularjs.png");
         icons.put("AngularJS.projecttype.small.icon", "angularjs-extension/newproject-angularjs.png");
-
+        icons.put("AngularJS/bower.json.file.small.icon", "angularjs-extension/bower-icon.png");
+        icons.put("AngularJS/Gruntfile.js.file.small.icon", "angularjs-extension/grunt-icon.png");
         iconRegistry.registerIcons(icons);
     }
 }
