@@ -45,8 +45,6 @@
     <apache-rat-plugin.ignoreErrors>false</apache-rat-plugin.ignoreErrors>
     <apache-rat-plugin.version>0.10</apache-rat-plugin.version>
     <ide.version>3.0.0-M14-SNAPSHOT</ide.version>
-    <maven.releases.repo.url>https://maven.codenvycorp.com/content/repositories/codenvy-private-releases/</maven.releases.repo.url>
-    <maven.snapshots.repo.url>https://maven.codenvycorp.com/content/repositories/codenvy-private-snapshots/</maven.snapshots.repo.url>
     <platform-api.version>0.15.0-SNAPSHOT</platform-api.version>
 </properties>
 <build>
