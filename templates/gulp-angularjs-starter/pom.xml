@@ -23,5 +23,5 @@
     </parent>
     <artifactId>angularjs-template-gulp-angularjs-starter</artifactId>
     <packaging>jar</packaging>
-    <name>AngularJS Plugin :: Templates :: Gulp AngularJS starter</name>
+    <name>AngularJS Plugin :: Templates :: Gulp Starter</name>
 </project>
