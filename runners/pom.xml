@@ -26,6 +26,7 @@
     <name>AngularJS Plugin :: Runners</name>
     <modules>
         <module>grunt</module>
+        <module>gulp</module>
     </modules>
 
     <dependencies>

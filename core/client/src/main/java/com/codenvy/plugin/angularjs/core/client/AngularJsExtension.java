@@ -41,6 +41,7 @@ public class AngularJsExtension {
         icons.put("AngularJS.projecttype.small.icon", "angularjs-extension/newproject-angularjs.png");
         icons.put("AngularJS/bower.json.file.small.icon", "angularjs-extension/bower-icon.png");
         icons.put("AngularJS/Gruntfile.js.file.small.icon", "angularjs-extension/grunt-icon.png");
+        icons.put("AngularJS/gulpfile.js.file.small.icon", "angularjs-extension/gulp-icon.png");
         iconRegistry.registerIcons(icons);
     }
 }
