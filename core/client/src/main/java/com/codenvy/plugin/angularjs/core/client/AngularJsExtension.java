@@ -36,12 +36,10 @@ public class AngularJsExtension {
 
     @Inject
     public AngularJsExtension(IconRegistry iconRegistry) {
-        Map<String, String> icons = new HashMap<>();
-        icons.put("AngularJS.projecttype.big.icon", "angularjs-extension/newproject-angularjs.png");
-        icons.put("AngularJS.projecttype.small.icon", "angularjs-extension/newproject-angularjs.png");
-        icons.put("AngularJS/bower.json.file.small.icon", "angularjs-extension/bower-icon.png");
-        icons.put("AngularJS/Gruntfile.js.file.small.icon", "angularjs-extension/grunt-icon.png");
-        icons.put("AngularJS/gulpfile.js.file.small.icon", "angularjs-extension/gulp-icon.png");
-        iconRegistry.registerIcons(icons);
+        iconRegistry.registerIcon("AngularJS.projecttype.big.icon", "angularjs-extension/newproject-angularjs.png");
+        iconRegistry.registerIcon("AngularJS.projecttype.small.icon", "angularjs-extension/newproject-angularjs.png");
+        iconRegistry.registerIcon("AngularJS/bower.json.file.small.icon", "angularjs-extension/bower-icon.png");
+        iconRegistry.registerIcon("AngularJS/Gruntfile.js.file.small.icon", "angularjs-extension/grunt-icon.png");
+        iconRegistry.registerIcon("AngularJS/gulpfile.js.file.small.icon", "angularjs-extension/gulp-icon.png");
     }
 }
