@@ -48,7 +48,7 @@ import java.util.List;
  */
 public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
 
-    private static char[] activationCharacters = new char[]{'.'};
+    private static final char ACTIVATION_CHARACTER = '.';
 
     private boolean isTextToCompleteBeforeDot;
 
@@ -155,29 +155,19 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
         }
 
 
-
-
-        JsProgram jsProgram = provider.parse(view.getDocument().get());
-
         try {
             JsArray<JsProposal> jsProposals = provider.computeProposals(view.getDocument().get(), offset, c);
             if (jsProposals != null && jsProposals.length() != 0) {
                 for (int i = 0; i < jsProposals.length(); i++) {
-                    prop.add(new JavaScriptProposal(prefix, jsProposals.get(i), offset, javaScriptResources));
+                    JsProposal jsProposal = jsProposals.get(i);
+                    CompletionProposal proposal = new JavaScriptProposal(prefix, jsProposal, offset, javaScriptResources);
+                    prop.add(proposal);
                 }
             }
         } catch (Exception ignore) {
             ignore.printStackTrace();
         }
-        // TODO
-        /*if (!isTextToCompleteBeforeDot) {
-            Array<? extends TemplateProposal> search = JsConstants.getInstance().getTemplatesTrie().search(prefix);
-            for (TemplateProposal p : search.asIterable()) {
-                p.setOffset(offset);
-                p.setPrefix(prefix);
-                prop.add(p);
-            }
-        }*/
+
         CompletionProposal[] proposals = new CompletionProposal[prop.size()];
         for (int i = 0; i < prop.size(); i++) {
             proposals[i] = prop.get(i);
@@ -220,6 +210,7 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
                 switch (partLine.charAt(i)) {
                     case '.':
                         isTextToCompleteBeforeDot = true;
+                        break;
                     case ' ':
                     case '(':
                     case ')':
@@ -245,7 +236,7 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
 
     @Override
     public char[] getCompletionProposalAutoActivationCharacters() {
-        return activationCharacters;
+        return new char[] {ACTIVATION_CHARACTER};
     }
 
     @Override

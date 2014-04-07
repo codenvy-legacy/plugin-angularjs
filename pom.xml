@@ -15,41 +15,77 @@
   ~ limitations under the License.
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-<modelVersion>4.0.0</modelVersion>
-<parent>
-    <artifactId>maven-parent-pom</artifactId>
-    <groupId>com.codenvy</groupId>
-    <version>3.1.1</version>
-</parent>
-<groupId>com.codenvy.plugin-angularjs</groupId>
-<artifactId>angularjs-parent</artifactId>
-<version>1.0.0-M1-SNAPSHOT</version>
-<packaging>pom</packaging>
-<name>AngularJS Plugin</name>
-<developers>
-    <developer>
-        <name>Florent Benoit</name>
-        <organization>Serli</organization>
-        <organizationUrl>http://www.serli.com</organizationUrl>
-    </developer>
-</developers>
-<modules>
-    <module>api</module>
-    <module>completion</module>
-    <module>core</module>
-    <module>builders</module>
-    <module>runners</module>
-    <module>templates</module>
-</modules>
-<properties>
-    <apache-rat-plugin.ignoreErrors>false</apache-rat-plugin.ignoreErrors>
-    <apache-rat-plugin.version>0.10</apache-rat-plugin.version>
-    <ide.version>3.0.0-M14-SNAPSHOT</ide.version>
-    <platform-api.version>0.15.0-SNAPSHOT</platform-api.version>
-</properties>
-<build>
-    <plugins>
-        <!-- License header check -->
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>maven-parent-pom</artifactId>
+        <groupId>com.codenvy</groupId>
+        <version>3.1.1</version>
+        <relativePath />
+    </parent>
+    <groupId>com.codenvy.plugin-angularjs</groupId>
+    <artifactId>angularjs-parent</artifactId>
+    <version>1.0.0-M1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>AngularJS Plugin</name>
+    <developers>
+        <developer>
+            <name>Florent Benoit</name>
+            <organization>Serli</organization>
+            <organizationUrl>http://www.serli.com</organizationUrl>
+        </developer>
+    </developers>
+    <modules>
+        <module>api</module>
+        <module>completion</module>
+        <module>core</module>
+        <module>builders</module>
+        <module>runners</module>
+        <module>templates</module>
+    </modules>
+    <properties>
+        <apache-rat-plugin.ignoreErrors>false</apache-rat-plugin.ignoreErrors>
+        <apache-rat-plugin.version>0.10</apache-rat-plugin.version>
+        <ide.version>3.0.0-M14-SNAPSHOT</ide.version>
+        <platform-api.version>0.15.0-SNAPSHOT</platform-api.version>
+    </properties>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.3</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-changes-plugin</artifactId>
+                    <version>2.9</version>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!-- FindBugs -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <xmlOutput>true</xmlOutput>
+                </configuration>
+            </plugin>
+            <!-- License header check -->
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
@@ -79,6 +115,22 @@
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
     <profiles>
         <profile>
             <id>enforce-version-policy</id>

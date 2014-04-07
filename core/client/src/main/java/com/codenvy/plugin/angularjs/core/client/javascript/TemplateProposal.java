@@ -81,7 +81,7 @@ public class TemplateProposal implements CompletionProposal {
 
     @Override
     public char[] getTriggerCharacters() {
-        return null;
+        return new char[0];
     }
 
     @Override

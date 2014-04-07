@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package com.codenvy.plugin.angularjs.core.client.javascript.contentassist;
+package com.codenvy.plugin.angularjs.completion.dto;
+
+import com.codenvy.dto.shared.DTO;
 
 /**
- * Singleton that holds various JS-specific constants.
  * @author Florent Benoit
  */
-public class JsConstants {
+@DTO
+public interface NgObject {
 
-    private static JsConstants instance;
+    void setName(String name);
 
-    /** @return the singleton instance of this class. */
-    public static JsConstants getInstance() {
-        if (instance == null) {
-            instance = new JsConstants();
-        }
-        return instance;
-    }
+    String getName();
 
 }

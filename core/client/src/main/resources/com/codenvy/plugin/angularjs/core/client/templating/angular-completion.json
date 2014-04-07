@@ -47,12 +47,12 @@
                     },
                     {
                         "name": "self",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     },
                     {
                         "name": "locals",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -77,7 +77,7 @@
                     },
                     {
                         "name": "locals",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -112,7 +112,7 @@
                     },
                     {
                         "name": "provider",
-                        "type": "(Object|function())",
+                        "type": "(NgObject|function())",
                         "desc": null
                     }
                 ]
@@ -580,7 +580,7 @@
                 "params": [
                     {
                         "name": "name",
-                        "type": "string|Object",
+                        "type": "string|NgObject",
                         "desc": null
                     },
                     {
@@ -625,7 +625,7 @@
                 "params": [
                     {
                         "name": "name",
-                        "type": "string|Object",
+                        "type": "string|NgObject",
                         "desc": null
                     },
                     {
@@ -640,7 +640,7 @@
                 "params": [
                     {
                         "name": "name",
-                        "type": "string|Object",
+                        "type": "string|NgObject",
                         "desc": null
                     }
                 ]
@@ -1265,7 +1265,7 @@
                     },
                     {
                         "name": "config",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1280,7 +1280,7 @@
                     },
                     {
                         "name": "config",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1295,7 +1295,7 @@
                     },
                     {
                         "name": "config",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1310,7 +1310,7 @@
                     },
                     {
                         "name": "config",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1330,7 +1330,7 @@
                     },
                     {
                         "name": "config",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1350,7 +1350,7 @@
                     },
                     {
                         "name": "config",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1391,7 +1391,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1406,7 +1406,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1421,7 +1421,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1436,7 +1436,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1456,7 +1456,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1476,7 +1476,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1506,12 +1506,12 @@
                     },
                     {
                         "name": "data",
-                        "type": "(string|RegExp|function(string)|Object)=",
+                        "type": "(string|RegExp|function(string)|NgObject)=",
                         "desc": null
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1526,7 +1526,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1541,7 +1541,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1556,7 +1556,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1571,12 +1571,12 @@
                     },
                     {
                         "name": "data",
-                        "type": "(string|RegExp|function(string)|Object)=",
+                        "type": "(string|RegExp|function(string)|NgObject)=",
                         "desc": null
                     },
                     {
                         "name": "headers",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1591,12 +1591,12 @@
                     },
                     {
                         "name": "data",
-                        "type": "(string|RegExp|function(string)|Object)=",
+                        "type": "(string|RegExp|function(string)|NgObject)=",
                         "desc": null
                     },
                     {
                         "name": "headers",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1611,12 +1611,12 @@
                     },
                     {
                         "name": "data",
-                        "type": "(string|RegExp|function(string)|Object)=",
+                        "type": "(string|RegExp|function(string)|NgObject)=",
                         "desc": null
                     },
                     {
                         "name": "headers",
-                        "type": "Object=",
+                        "type": "NgObject=",
                         "desc": null
                     }
                 ]
@@ -1673,7 +1673,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1688,7 +1688,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1703,7 +1703,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1718,7 +1718,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1738,7 +1738,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1758,7 +1758,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -1778,7 +1778,7 @@
                     },
                     {
                         "name": "headers",
-                        "type": "(Object|function(Object))=",
+                        "type": "(NgObject|function(NgObject))=",
                         "desc": null
                     }
                 ]
@@ -2083,7 +2083,7 @@
                 "params": [
                     {
                         "name": "promises",
-                        "type": "Array.<Promise>|Object.<Promise>",
+                        "type": "Array.<Promise>|NgObject.<Promise>",
                         "desc": null
                     }
                 ]
@@ -2576,12 +2576,12 @@
             },
             {
                 "name": "paramDefaults",
-                "type": "Object=",
+                "type": "NgObject=",
                 "desc": null
             },
             {
                 "name": "actions",
-                "type": "Object.<Object>=",
+                "type": "NgObject.<NgObject>=",
                 "desc": null
             }
         ],

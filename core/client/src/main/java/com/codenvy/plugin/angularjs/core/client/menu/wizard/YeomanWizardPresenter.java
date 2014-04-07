@@ -40,11 +40,6 @@ import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.RE
  */
 public class YeomanWizardPresenter extends AbstractWizardPage implements YeomanWizardSelectNameView.ActionDelegate {
     private YeomanWizardSelectNameView view;
-    private NewResourceProvider        selectedResourceType;
-    private boolean                    isResourceNameValid;
-    private boolean                    hasSameResource;
-    private Folder                     parent;
-    private Project                    treeStructure;
     private BuildProjectPresenter      buildProjectPresenter;
 
     private DtoFactory dtoFactory;

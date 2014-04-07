@@ -28,8 +28,12 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,6 +98,7 @@ public class GruntBuilder extends Builder {
             case DEFAULT:
                 commandLine.add("build");
                 break;
+            default:
         }
         commandLine.add(config.getOptions());
         return commandLine;
@@ -126,7 +131,7 @@ public class GruntBuilder extends Builder {
         // Check if the build has been aborted
         boolean buildSuccess = true;
         BufferedReader logReader = null;
-        try (FileWriter fw = new FileWriter(logFile)) {
+        try (Writer fw = new OutputStreamWriter(new FileOutputStream(logFile), "UTF-8")) {
             logReader = new BufferedReader(task.getBuildLogger().getReader());
             String line;
             while ((line = logReader.readLine()) != null) {
@@ -150,7 +155,7 @@ public class GruntBuilder extends Builder {
 
         // FIXME : we may want to zip the current source folder ?
         // for now add the path to the directory
-        try (FileWriter fw = new FileWriter(sourceFile);) {
+        try (Writer fw = new OutputStreamWriter(new FileOutputStream(sourceFile), "UTF-8")) {
             fw.write(task.getConfiguration().getWorkDir().getAbsolutePath());
         } catch (IOException e) {
             throw new BuilderException(e);

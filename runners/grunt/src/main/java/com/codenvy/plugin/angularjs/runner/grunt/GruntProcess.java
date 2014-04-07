@@ -39,7 +39,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * Application process used for Grunt
@@ -159,29 +161,18 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
 
 
     protected DeploymentSources downloadApplication(String url, File destFolder) throws RunnerException {
-        final IOException[] errorHolder = new IOException[1];
-        final DeploymentSources[] resultHolder = new DeploymentSources[1];
         final File downloadDir;
         try {
             downloadDir = Files.createTempDirectory(destFolder.toPath(), "updated").toFile();
         } catch (IOException e) {
             throw new RunnerException(e);
         }
-        downloadPlugin.download(url, downloadDir, new DownloadPlugin.Callback() {
-            @Override
-            public void done(java.io.File downloaded) {
-                resultHolder[0] = new DeploymentSources(downloaded);
-            }
-
-            @Override
-            public void error(IOException e) {
-                errorHolder[0] = e;
-            }
-        });
-        if (errorHolder[0] != null) {
-            throw new RunnerException(errorHolder[0]);
+        DownloadCallback downloadCallback = new DownloadCallback();
+        downloadPlugin.download(url, downloadDir, downloadCallback);
+        if (downloadCallback.getErrorHolder() != null) {
+            throw new RunnerException(downloadCallback.getErrorHolder());
         }
-        return resultHolder[0];
+        return downloadCallback.getResultHolder();
     }
 
     /**
@@ -202,44 +193,48 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
      * Download the new source again and unpack.
      */
     protected void update(final ProjectEvent event) {
-        executorService.submit(new Callable<Void>() {
+         executorService.execute(new Runnable() {
             @Override
-            public Void call() throws Exception {
+            public void run()  {
 
                 // connect to the project API URL
                 int index = baseURL.indexOf(event.getProject());
-                HttpURLConnection conn = (HttpURLConnection)new URL(baseURL.substring(0, index).concat("/file").concat(event.getProject()).concat("/").concat(
-                        event.getPath())).openConnection();
+                HttpURLConnection conn = null;
+                try {
+                    conn = (HttpURLConnection)new URL(baseURL.substring(0, index).concat("/file").concat(event.getProject()).concat("/").concat(
+                            event.getPath())).openConnection();
                 conn.setConnectTimeout(30 * 1000);
                 conn.setRequestMethod("GET");
                 conn.addRequestProperty("content-type", "application/json");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
                 conn.connect();
+                } catch (IOException e) {
+                    throw new RuntimeException("Unable to build connection", e);
+                }
 
                 // If file has been found, dump the content
-                final int responseCode = conn.getResponseCode();
+                final int responseCode;
+                try {
+                    responseCode = conn.getResponseCode();
+                } catch (IOException e) {
+                    throw new RuntimeException("Unable to get response code", e);
+                }
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     File updatedFile = new File(workDir, event.getPath());
                     byte[] buffer = new byte[8192];
-                    InputStream input = conn.getInputStream();
-                    try {
-                        OutputStream output = new FileOutputStream(updatedFile);
-                        try {
+                    try (InputStream input = conn.getInputStream(); OutputStream output = new FileOutputStream(updatedFile)) {
                             int bytesRead;
                             while ((bytesRead = input.read(buffer)) != -1) {
                                 output.write(buffer, 0, bytesRead);
                             }
-                        } finally {
-                            output.close();
-                        }
-                    } finally {
-                        input.close();
+                    } catch (IOException ioe) {
+                        throw new RuntimeException("Unable to send answer", ioe);
                     }
                 }
 
-                return null;
             }
         });
     }
+
 }

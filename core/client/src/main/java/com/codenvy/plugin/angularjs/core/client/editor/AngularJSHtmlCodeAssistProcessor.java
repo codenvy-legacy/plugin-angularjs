@@ -153,9 +153,6 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
                 if (lastClose == -1) {
                     line++;
                 }
-
-                // use of the new text
-                text = newText;
             }
 
             // Remove < and > from the beginning of the element and the end of the element
@@ -225,11 +222,6 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
      * @return a new query
      */
     protected AngularJSQuery getQuery(String textBefore, String textAfter) {
-
-
-        // We're interested in all attributes that may exist in
-        SplitResult attributesAfter = REGEXP_SPACES.split(textAfter);
-
 
         AngularJSQuery query = new AngularJSQuery();
 
@@ -318,7 +310,7 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
     private AngularJSCompletionProposal[] jsToArray(Array<AngularJSCompletionProposal> autocompletions,
                                                     InvocationContext context) {
         if (autocompletions == null) {
-            return null;
+            return new AngularJSCompletionProposal[0];
         }
         AngularJSCompletionProposal[] proposals = new AngularJSCompletionProposal[autocompletions.size()];
         for (int i = 0; i < autocompletions.size(); i++) {

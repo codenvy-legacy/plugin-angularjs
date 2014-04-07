@@ -36,9 +36,12 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.file.Files;
 
 /**
@@ -116,7 +119,6 @@ public class GulpRunner extends Runner {
             } catch (IOException e) {
                 throw new RunnerException("Unable to create a temporary file", e);
             }
-            path.mkdirs();
             try {
                 ZipUtils.unzip(toDeploy.getFile(), path);
 
@@ -130,7 +132,7 @@ public class GulpRunner extends Runner {
             }
         } else {
 
-            try (FileReader reader = new FileReader(sourceFile); BufferedReader bufferedReader = new BufferedReader(reader)) {
+            try (Reader reader = new InputStreamReader(new FileInputStream(sourceFile), "UTF-8"); BufferedReader bufferedReader = new BufferedReader(reader)) {
                 path = new File(bufferedReader.readLine());
             } catch (IOException e) {
                 throw new RunnerException("Unable to read file", e);

@@ -17,12 +17,12 @@
 package com.codenvy.plugin.angularjs.completion.dto.parser;
 
 
+import com.codenvy.plugin.angularjs.completion.dto.NgObject;
 import com.codenvy.plugin.angularjs.completion.dto.parser.api.AngularDocType;
 import com.codenvy.plugin.angularjs.completion.dto.parser.api.CommentContext;
 
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.plugin.angularjs.completion.dto.AngularTemplate;
-import com.codenvy.plugin.angularjs.completion.dto.Object;
 import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
 
 import com.codenvy.plugin.angularjs.completion.dto.parser.api.CodeCommentParser;
@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Parse objects
+ * Parse ngObjects
  * @author Florent Benoit
  */
 public class ObjectCommentParser implements CodeCommentParser {
@@ -50,18 +50,18 @@ public class ObjectCommentParser implements CodeCommentParser {
 
     @Override
     public void onComment(CommentContext commentContext) {
-        // register a new Object for the given provider
-        Object object = dtoFactory.createDto(Object.class);
+        // register a new NgObject for the given provider
+        NgObject ngObject = dtoFactory.createDto(NgObject.class);
         String objectName = commentContext.getAttributeValue("name");
 
-        // extract object name
+        // extract ngObject name
         Matcher objectNameMatcher = OBJECT_PATTERN.matcher(objectName);
         if (objectNameMatcher.find()) {
             // get provider from method name
             String providerName = objectNameMatcher.group(1);
             String oName = objectNameMatcher.group(2);
 
-            object.setName(oName);
+            ngObject.setName(oName);
 
             TemplateDotProvider templateDotProvider = angularTemplate.getTemplateProvider(providerName);
             if (templateDotProvider == null) {
@@ -69,7 +69,7 @@ public class ObjectCommentParser implements CodeCommentParser {
                 templateDotProvider.setName(providerName);
                 angularTemplate.addOrGet(templateDotProvider);
             }
-            templateDotProvider.getObjects().add(object);
+            templateDotProvider.getObjects().add(ngObject);
 
         } else {
             // add complete name

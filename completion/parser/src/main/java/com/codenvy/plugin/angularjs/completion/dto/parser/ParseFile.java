@@ -40,8 +40,6 @@ public class ParseFile extends SimpleFileVisitor<Path> {
     private Pattern pattern;
 
     private Pattern ngDocTypePattern;
-    private Pattern ngNamePattern;
-    private Pattern ngParamPattern;
 
     private List<CodeCommentParser> callbacks;
 
@@ -84,7 +82,7 @@ public class ParseFile extends SimpleFileVisitor<Path> {
                 String ngDocType = docTypeMatcher.group(1).trim();
 
                 // not angular doc, continue
-                if (ngDocType == null || "".equals(ngDocType)) {
+                if ("".equals(ngDocType)) {
                     continue;
                 }
 

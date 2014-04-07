@@ -23,6 +23,7 @@ import com.codenvy.plugin.angularjs.completion.dto.parser.api.CommentContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,7 +46,7 @@ public class AngularCommentContext implements CommentContext {
     public AngularCommentContext(String type, String comment) {
         this.attributes = new HashMap<>();
         try {
-            this.type = AngularDocType.valueOf(type.toUpperCase());
+            this.type = AngularDocType.valueOf(type.toUpperCase(Locale.ENGLISH));
         } catch (IllegalArgumentException e) {
             this.type = AngularDocType.UNKNOWN;
         }

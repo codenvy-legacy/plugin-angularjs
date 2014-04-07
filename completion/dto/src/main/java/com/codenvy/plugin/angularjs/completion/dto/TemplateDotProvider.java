@@ -18,7 +18,6 @@ package com.codenvy.plugin.angularjs.completion.dto;
 
 import com.codenvy.dto.shared.DTO;
 
-import com.codenvy.plugin.angularjs.completion.dto.Object;
 import java.util.List;
 
 /**
@@ -42,8 +41,8 @@ public interface TemplateDotProvider {
     void setFunctions(List<Function> functions);
     List<Function> getFunctions();
 
-    void setObjects(List<Object> objects);
-    List<Object> getObjects();
+    void setObjects(List<NgObject> ngObjects);
+    List<NgObject> getObjects();
 
     void setEvents(List<Event> events);
     List<Event> getEvents();

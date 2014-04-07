@@ -33,10 +33,6 @@ import com.google.inject.Inject;
  */
 public class YeomanAddDirectiveAction extends Action {
 
-    private BuildProjectPresenter buildProjectPresenter;
-
-    private DtoFactory dtoFactory;
-
     private WizardDialogFactory wizardDialogFactory;
     private DefaultWizard wizard;
     private NotificationManager notificationManager;
@@ -45,8 +41,6 @@ public class YeomanAddDirectiveAction extends Action {
     public YeomanAddDirectiveAction(LocalizationConstant localizationConstant, BuildProjectPresenter buildProjectPresenter, DtoFactory dtoFactory, WizardDialogFactory wizardDialogFactory,
                                     @YeomanWizard DefaultWizard wizard, NotificationManager notificationManager) {
         super(localizationConstant.yeomanAddDirectiveText(), localizationConstant.runAppActionDescription(), null);
-        this.buildProjectPresenter = buildProjectPresenter;
-        this.dtoFactory = dtoFactory;
         this.wizardDialogFactory = wizardDialogFactory;
         this.wizard = wizard;
         this.notificationManager = notificationManager;
@@ -55,9 +49,7 @@ public class YeomanAddDirectiveAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-
         try {
-
             WizardDialog wizardDialog = wizardDialogFactory.create(wizard);
             wizardDialog.show();
         } catch (Exception e1) {

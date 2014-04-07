@@ -76,7 +76,9 @@ public class AngularJSCompletionProposal implements CompletionProposal {
     @Override
     public Image getImage() {
         Image image = new Image();
-        image.setResource(invocationContext.getResources().property());
+        if (invocationContext != null) {
+            image.setResource(invocationContext.getResources().property());
+        }
         return image;
     }
 

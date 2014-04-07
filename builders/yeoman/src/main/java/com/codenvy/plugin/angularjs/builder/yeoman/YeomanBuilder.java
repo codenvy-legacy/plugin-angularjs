@@ -21,39 +21,15 @@ import com.codenvy.api.builder.internal.BuildResult;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
 import com.codenvy.api.core.notification.EventService;
-import com.codenvy.api.core.rest.HttpJsonHelper;
 import com.codenvy.api.core.util.CommandLine;
-import com.codenvy.api.core.util.Pair;
-import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
-import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
-
-import org.everrest.core.impl.ContainerResponse;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.ws.rs.core.HttpHeaders;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URI;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Builder that will use Yeoman.
@@ -141,68 +117,16 @@ public class YeomanBuilder extends Builder {
             return new BuildResult(false, (File)null);
         }
 
+        Runnable runnable = new UpdateCodeRunnable(task.getConfiguration(), dtoFactory);
 
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run()  {
-        // get working directory
-        File workingDirectory = task.getConfiguration().getWorkDir();
-        // perform request to VFS
+        Future<?> future = getExecutor().submit(runnable);
         try {
-            String sourcesURL = task.getConfiguration().getRequest().getSourcesUrl();
-            // build import URL ((//FIXME: change the URL to match the new parameter available in the BuildRequest
-            String importURL = sourcesURL.replace("/export", "/import");
-
-            // build zip
-            File zipFile = new File(workingDirectory, "content.zip");
-            ZipUtils.zipDir(workingDirectory.getPath(), workingDirectory, zipFile , null);
-
-
-            ImportSourceDescriptor importSourceDescriptor = dtoFactory.createDto(ImportSourceDescriptor.class).withLocation(zipFile.getPath()).withType("zip");
-
-            // connect
-            HttpURLConnection conn;
-            conn = (HttpURLConnection)new URL(importURL).openConnection();
-            conn.setConnectTimeout(30 * 1000);
-            conn.setRequestMethod("POST");
-            conn.addRequestProperty("content-type", "application/json");
-            //conn.setRequestProperty("Content-type", "application/zip");
-            conn.setDoOutput(true);
-            //conn.setRequestProperty(HttpHeaders.CONTENT_LENGTH, Long.toString(zipFile.length()));
-
-           // conn.connect();
-
-            OutputStream output = conn.getOutputStream();
-            /*FileInputStream inputStream = new FileInputStream(zipFile);
-
-            byte[] buffer = new byte[1024];
-            int bytesRead = -1;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                output.write(buffer, 0, bytesRead);
-            }
-            inputStream.close();
-            */
-
-            output.write(dtoFactory.toJson(importSourceDescriptor).getBytes());
-
-            output.close();
-            final int responseCode = conn.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                System.out.println("Upload ok");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new BuilderException("Unable to update source code", e);
         }
-            }
-        };
-        getExecutor().execute(runnable);
-        try {
-            Thread.sleep(20000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         return new BuildResult(true, (File)null);
-
 
     }
 }
