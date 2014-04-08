@@ -41,6 +41,7 @@ import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JsPropo
 import com.google.gwt.core.client.JsArray;
 
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -139,6 +140,7 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
                     }
                 }
                 Array<String> result = subTrie.search(suffixVal);
+                result.sort(String.CASE_INSENSITIVE_ORDER);
                 for (String st : result.asIterable()) {
                     TemplateProposal templateProposal = new TemplateProposal(templatePrefix, st, prefixVal.concat(".").concat(st), offset, javaScriptResources);
                     templateProposal.setMethod();
@@ -147,6 +149,12 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
             } else if (dot == -1) {
              // Perform completion only if there is no dot
             Array<TemplateDotProvider> result = trie.search(prefix);
+            result.sort(new Comparator<TemplateDotProvider>() {
+                @Override
+                public int compare(TemplateDotProvider o1, TemplateDotProvider o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
             for (TemplateDotProvider provider : result.asIterable()) {
                 prop.add(new TemplateProposal(templatePrefix, provider.getName(), provider.getName(), offset, javaScriptResources));
             }
