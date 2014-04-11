@@ -59,7 +59,7 @@ public class GulpRunner extends Runner {
     @Inject
     public GulpRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
                       @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
-                      @Named("runner.java_webapp.host_name") String hostName,
+                      @Named("runner.javascript_gulp.host_name") String hostName,
                       ResourceAllocators allocators,
                       CustomPortService portService,
                       EventService eventService,

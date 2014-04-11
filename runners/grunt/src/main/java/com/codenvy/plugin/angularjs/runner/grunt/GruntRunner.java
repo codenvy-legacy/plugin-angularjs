@@ -60,7 +60,7 @@ public class GruntRunner extends Runner {
     @Inject
     public GruntRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
                        @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
-                       @Named("runner.java_webapp.host_name") String hostName,
+                       @Named("runner.javascript_grunt.host_name") String hostName,
                        ResourceAllocators allocators,
                        CustomPortService portService,
                        EventService eventService,
