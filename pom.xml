@@ -24,7 +24,7 @@
     </parent>
     <groupId>com.codenvy.plugin-angularjs</groupId>
     <artifactId>angularjs-parent</artifactId>
-    <version>1.0.0-M1-SNAPSHOT</version>
+    <version>1.0.0-M2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>AngularJS Plugin</name>
     <developers>

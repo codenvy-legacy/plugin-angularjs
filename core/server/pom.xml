@@ -19,7 +19,7 @@
     <parent>
         <artifactId>angularjs-core</artifactId>
         <groupId>com.codenvy.plugin-angularjs</groupId>
-        <version>1.0.0-M1-SNAPSHOT</version>
+        <version>1.0.0-M2-SNAPSHOT</version>
     </parent>
     <artifactId>angularjs-core-server</artifactId>
     <packaging>jar</packaging>
