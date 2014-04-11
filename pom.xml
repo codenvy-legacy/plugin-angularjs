@@ -42,6 +42,11 @@
         <module>runners</module>
         <module>templates</module>
     </modules>
+    <scm>
+        <connection>scm:git:git@github.com:codenvy/plugin-angularjs.git</connection>
+        <developerConnection>scm:git:git@github.com:codenvy/plugin-angularjs.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
     <properties>
         <apache-rat-plugin.ignoreErrors>false</apache-rat-plugin.ignoreErrors>
         <apache-rat-plugin.version>0.10</apache-rat-plugin.version>
