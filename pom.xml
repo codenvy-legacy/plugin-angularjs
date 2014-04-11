@@ -46,7 +46,7 @@
         <apache-rat-plugin.ignoreErrors>false</apache-rat-plugin.ignoreErrors>
         <apache-rat-plugin.version>0.10</apache-rat-plugin.version>
         <ide.version>3.0.0-M14-SNAPSHOT</ide.version>
-        <platform-api.version>0.15.0-SNAPSHOT</platform-api.version>
+        <platform-api.version>0.15.0</platform-api.version>
     </properties>
     <build>
         <pluginManagement>
