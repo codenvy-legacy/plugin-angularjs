@@ -70,7 +70,7 @@
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
             <artifactId>codenvy-gwt-client-commons</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>${platform-api-client-gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
