@@ -87,10 +87,8 @@ public class GruntRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                //FIXME : for now the http port is 9000 by default as it's managed by Grunt
-                final int httpPort = portService.acquire();
                 final GruntRunnerConfiguration configuration =
-                        new GruntRunnerConfiguration(request.getMemorySize(), httpPort, request);
+                        new GruntRunnerConfiguration(request.getMemorySize(), 9000, request);
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
                                                        .withHref(String.format("http://%s:%d", hostName, 9000)));
                 return configuration;

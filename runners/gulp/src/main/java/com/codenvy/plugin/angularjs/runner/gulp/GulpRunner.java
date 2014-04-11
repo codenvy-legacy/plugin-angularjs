@@ -86,10 +86,8 @@ public class GulpRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
-                //FIXME : for now the http port is 5000 by default as it's managed by Gulp
-                final int httpPort = portService.acquire();
                 final GulpRunnerConfiguration configuration =
-                        new GulpRunnerConfiguration(request.getMemorySize(), httpPort, request);
+                        new GulpRunnerConfiguration(request.getMemorySize(), 5000, request);
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
                                                        .withHref(String.format("http://%s:%d", hostName, 5000)));
                 return configuration;
