@@ -124,7 +124,7 @@ public class GruntRunner extends Runner {
                 // then, unzip the grunt addon (if there is no Gruntfile available in the path)
                 File gruntFile = new File(path, "Gruntfile.js");
                 if (!gruntFile.exists()) {
-                    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("builders/grunt-required.zip");
+                    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("runners/grunt-required.zip");
                     ZipUtils.unzip(is, path);
                 }
 
