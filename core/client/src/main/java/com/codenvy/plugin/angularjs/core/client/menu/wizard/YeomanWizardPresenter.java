@@ -16,6 +16,7 @@
 
 package com.codenvy.plugin.angularjs.core.client.menu.wizard;
 
+import com.codenvy.api.builder.BuildStatus;
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Folder;
@@ -24,6 +25,8 @@ import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
+import com.codenvy.plugin.angularjs.core.client.builder.BuildFinishedCallback;
+import com.codenvy.plugin.angularjs.core.client.builder.BuilderAgent;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -38,9 +41,9 @@ import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.RE
 /**
  * @author Florent Benoit
  */
-public class YeomanWizardPresenter extends AbstractWizardPage implements YeomanWizardSelectNameView.ActionDelegate {
+public class YeomanWizardPresenter extends AbstractWizardPage implements YeomanWizardSelectNameView.ActionDelegate, BuildFinishedCallback {
     private YeomanWizardSelectNameView view;
-    private BuildProjectPresenter      buildProjectPresenter;
+    private BuilderAgent      builderAgent;
 
     private DtoFactory dtoFactory;
 
@@ -52,14 +55,14 @@ public class YeomanWizardPresenter extends AbstractWizardPage implements YeomanW
      * @param view
      */
     @Inject
-    public YeomanWizardPresenter(YeomanWizardSelectNameView view, DtoFactory dtoFactory, BuildProjectPresenter buildProjectPresenter,
+    public YeomanWizardPresenter(YeomanWizardSelectNameView view, DtoFactory dtoFactory, BuilderAgent builderAgent,
                                  ResourceProvider resourceProvider) {
         super("Select a name to be generated with this Yeoman generator", null);
 
         this.view = view;
         this.view.setDelegate(this);
         this.dtoFactory = dtoFactory;
-        this.buildProjectPresenter = buildProjectPresenter;
+        this.builderAgent = builderAgent;
         this.resourceProvider = resourceProvider;
     }
 
@@ -115,26 +118,24 @@ public class YeomanWizardPresenter extends AbstractWizardPage implements YeomanW
 
         List<String> targets = Arrays.asList(new String[]{"angular:directive", wizardContext.getData(RESOURCE_NAME)});
         BuildOptions buildOptions = dtoFactory.createDto(BuildOptions.class).withTargets(targets).withBuilderName("yeoman");
-        buildProjectPresenter.buildActiveProject(buildOptions);
-
-
-        Timer t = new Timer() {
-            public void run() {
-                resourceProvider.getActiveProject().refreshChildren(new AsyncCallback<Project>() {
-                    @Override
-                    public void onSuccess(Project result) {
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                    }
-                });
-            }
-        };
-
-        // Schedule the timer to run once in 5 seconds.
-        t.schedule(5000);
-
+        builderAgent.build(buildOptions, "Generating AngularJS directive...", "AngularJS directive generated",
+                           "Failed to generate AngularJS directive", this);
     }
 
+    @Override
+    public void onFinished(BuildStatus buildStatus) {
+        // refresh the tree if it is successful
+        if (buildStatus == BuildStatus.SUCCESSFUL) {
+            resourceProvider.getActiveProject().refreshChildren(new AsyncCallback<Project>() {
+                @Override
+                public void onSuccess(Project result) {
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                }
+            });
+        }
+
+    }
 }

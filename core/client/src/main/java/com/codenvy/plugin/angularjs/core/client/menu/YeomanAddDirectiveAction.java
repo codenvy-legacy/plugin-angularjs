@@ -28,6 +28,8 @@ import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
 import com.codenvy.plugin.angularjs.core.client.menu.wizard.YeomanWizard;
 import com.google.inject.Inject;
 
+import javax.inject.Singleton;
+
 /**
  * @author Florent Benoit
  */
