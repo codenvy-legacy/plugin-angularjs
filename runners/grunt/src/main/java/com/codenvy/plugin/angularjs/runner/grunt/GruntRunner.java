@@ -27,7 +27,7 @@ import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
-import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 

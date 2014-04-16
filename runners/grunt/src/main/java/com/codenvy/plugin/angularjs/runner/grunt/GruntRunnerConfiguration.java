@@ -17,7 +17,7 @@
 package com.codenvy.plugin.angularjs.runner.grunt;
 
 import com.codenvy.api.runner.internal.RunnerConfiguration;
-import com.codenvy.api.runner.internal.dto.RunRequest;
+import com.codenvy.api.runner.dto.RunRequest;
 
 /**
  * Configuration for using Grunt as AngularJS runner.
