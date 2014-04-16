@@ -106,7 +106,7 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
 
         try {
             process = Runtime.getRuntime()
-                             .exec(new CommandLine("grunt").add("serve").toShellCommand(), null, workDir);
+                             .exec(new CommandLine("grunt").add("server").toShellCommand(), null, workDir);
         } catch (IOException e) {
             throw new RunnerException(e.getCause());
         }
