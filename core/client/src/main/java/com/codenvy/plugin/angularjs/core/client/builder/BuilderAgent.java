@@ -251,6 +251,7 @@ public class BuilderAgent {
                 String msg = "Fail to get result";
                 console.print(msg);
                 Notification notification = new Notification(msg, ERROR);
+                notificationManager.showNotification(notification);
             }
         });
     }
