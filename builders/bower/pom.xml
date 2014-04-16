@@ -17,26 +17,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>angularjs-parent</artifactId>
+        <artifactId>angularjs-builders</artifactId>
         <groupId>com.codenvy.plugin-angularjs</groupId>
         <version>1.0.0-M2-SNAPSHOT</version>
     </parent>
-    <artifactId>angularjs-builders</artifactId>
-    <packaging>pom</packaging>
-    <name>AngularJS Plugin :: Builders</name>
-    <modules>
-        <module>bower</module>
-        <module>grunt</module>
-        <module>yeoman</module>
-    </modules>
-    <dependencies>
-        <dependency>
-            <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-builder</artifactId>
-            <version>${platform-api.version}</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
-
+    <artifactId>angularjs-builder-bower</artifactId>
+    <packaging>jar</packaging>
+    <name>AngularJS Plugin :: Builders :: Bower</name>
 </project>
