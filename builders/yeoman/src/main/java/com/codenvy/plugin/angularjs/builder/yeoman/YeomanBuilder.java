@@ -95,6 +95,10 @@ public class YeomanBuilder extends Builder {
         final CommandLine commandLine = new CommandLine("yo");
         // add the given options (may be angular:directive <directive>)
         commandLine.add(config.getTargets());
+
+        // disable anonymous Insight tracking
+        commandLine.add("--no-insight");
+
         return commandLine;
     }
 
