@@ -95,6 +95,8 @@ public class BowerBuilder extends Builder {
         final CommandLine commandLine = new CommandLine("bower");
         // add the given options (like install)
         commandLine.add(config.getTargets());
+        // disable interactive mode
+        commandLine.add("--config.interactive=false");
         return commandLine;
     }
 
