@@ -21,6 +21,9 @@ import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -75,6 +78,10 @@ public class BuilderAgent {
 
     @Inject
     private ConsolePart console;
+
+    @Inject
+    private ProjectServiceClient projectServiceClient;
+
 
 
     /**
@@ -224,12 +231,59 @@ public class BuilderAgent {
             notification.setStatus(FINISHED);
             notification.setType(ERROR);
         }
+
         getBuildLogs(descriptor);
-        // notify callback
-        if (buildFinishedCallback != null) {
-            buildFinishedCallback.onFinished(descriptor.getStatus());
+
+        // import zip
+        importZipResult(descriptor, buildFinishedCallback);
+
+
+    }
+
+    /**
+     * If there is a result zip, import it.
+     * @param descriptor the build descriptor
+     * @param buildFinishedCallback the callback to call
+     */
+    protected void importZipResult(final BuildTaskDescriptor descriptor, final BuildFinishedCallback buildFinishedCallback) {
+        Link downloadLink = null;
+        List<Link> links = descriptor.getLinks();
+        for (int i = 0; i < links.size(); i++) {
+            Link link = links.get(i);
+            if (link.getRel().equalsIgnoreCase("download result")) {
+                downloadLink = link;
+            }
+        }
+
+        if (downloadLink != null) {
+
+            ImportSourceDescriptor importSourceDescriptor =
+                    dtoFactory.createDto(ImportSourceDescriptor.class).withLocation(downloadLink.getHref()).withType("zip");
+
+            projectServiceClient.importProject(resourceProvider.getActiveProject().getPath(), importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+                @Override
+                protected void onSuccess(ProjectDescriptor projectDescriptor) {
+                    // notify callback
+                    if (buildFinishedCallback != null) {
+                        buildFinishedCallback.onFinished(descriptor.getStatus());
+                    }
+                }
+
+                @Override
+                protected void onFailure(Throwable throwable) {
+                    if (buildFinishedCallback != null) {
+                        buildFinishedCallback.onFinished(descriptor.getStatus());
+                    }
+                }
+            });
+        } else {
+            // notify callback
+            if (buildFinishedCallback != null) {
+                buildFinishedCallback.onFinished(descriptor.getStatus());
+            }
         }
     }
+
 
     protected void getBuildLogs(BuildTaskDescriptor descriptor) {
         Link statusLink = null;

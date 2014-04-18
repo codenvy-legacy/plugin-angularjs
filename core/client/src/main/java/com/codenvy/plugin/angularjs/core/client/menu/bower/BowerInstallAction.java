@@ -72,6 +72,8 @@ public class BowerInstallAction extends Action implements BuildFinishedCallback 
     @Override
     public void onFinished(BuildStatus buildStatus) {
 
+
+
         // and refresh the tree if success
         if (buildStatus == BuildStatus.SUCCESSFUL) {
             resourceProvider.getActiveProject().refreshChildren(new AsyncCallback<Project>() {

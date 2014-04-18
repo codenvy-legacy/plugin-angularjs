@@ -22,12 +22,16 @@ import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
+import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -121,16 +125,38 @@ public class YeomanBuilder extends Builder {
             return new BuildResult(false, (File)null);
         }
 
-        Runnable runnable = new UpdateCodeRunnable(task.getConfiguration(), dtoFactory);
 
-        Future<?> future = getExecutor().submit(runnable);
+
+        // zip bower folder
+        List<File> artifacts = new ArrayList<File>();
+        File zipFile = zipYeomanFiles(task.getConfiguration());
+        artifacts.add(zipFile);
+
+        return new BuildResult(true, artifacts);
+    }
+
+
+    /**
+     * Build the zip file of yeoman generated stuff
+     *
+     * @param builderConfiguration
+     *         the configuration
+     * @return the expected zip file
+     * @throws BuilderException
+     */
+    protected File zipYeomanFiles(BuilderConfiguration builderConfiguration) throws BuilderException {
+        // get working directory
+        File workingDirectory = builderConfiguration.getWorkDir();
+
+        // build zip containing all the source code
+        File zipFile = new File(workingDirectory, "content.zip");
         try {
-            future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new BuilderException("Unable to update source code", e);
+            ZipUtils.zipDir(workingDirectory.getPath(), workingDirectory, zipFile, null);
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to create archive of the current workspace", e);
         }
 
-        return new BuildResult(true, (File)null);
-
+        return zipFile;
     }
+
 }

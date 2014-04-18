@@ -22,14 +22,23 @@ import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
+import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Builder that will use Bower for download dependencies.
@@ -38,6 +47,9 @@ import java.util.concurrent.Future;
  */
 @Singleton
 public class BowerBuilder extends Builder {
+
+
+    private static final Pattern DIRECTORY_PATTERN = Pattern.compile("\"directory\"\\s*:\\s*\"(.*)\"");
 
     private DtoFactory dtoFactory;
 
@@ -118,16 +130,65 @@ public class BowerBuilder extends Builder {
             return new BuildResult(false, (File)null);
         }
 
-        Runnable runnable = new UpdateCodeRunnable(task.getConfiguration(), dtoFactory);
+        // zip bower folder
+        List<File> artifacts = new ArrayList<File>();
+        File zipFile = zipBowerFiles(task.getConfiguration());
+        artifacts.add(zipFile);
 
-        Future<?> future = getExecutor().submit(runnable);
-        try {
-            future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new BuilderException("Unable to update source code", e);
+
+        return new BuildResult(true, artifacts);
+
+    }
+
+
+
+    protected File zipBowerFiles(BuilderConfiguration builderConfiguration) throws BuilderException {
+        // get working directory
+        File workingDirectory = builderConfiguration.getWorkDir();
+
+        // Default bower directory
+        File appDirectory = new File(workingDirectory, "app");
+        File bowerComponentsDirectory = new File(appDirectory, "bower_components");
+
+
+        // Check bower.rc resource ?
+        File bowerRcResource = new File(workingDirectory, ".bowerrc");
+        if (bowerRcResource.exists()) {
+            // read content
+            StringBuilder stringBuilder = new StringBuilder();
+            try (BufferedReader bufferedReader = Files.newBufferedReader(bowerRcResource.toPath(), Charset.defaultCharset());) {
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line).append("\n");
+                }
+            } catch (IOException e) {
+                throw new BuilderException("Unable to read the .bowerrc file", e);
+            }
+
+            String jsonContent = stringBuilder.toString();
+            // parse
+            Matcher paramMatcher = DIRECTORY_PATTERN.matcher(jsonContent);
+
+            if (paramMatcher.find()) {
+                String directoryName = paramMatcher.group(1);
+                bowerComponentsDirectory = new File(workingDirectory, directoryName);
+            }
         }
 
-        return new BuildResult(true, (File)null);
+        // build zip of node modules containing all the downloaded .js
+        File zipFile = new File(workingDirectory, "content.zip");
 
+        if (bowerComponentsDirectory.exists()) {
+            try {
+                ZipUtils.zipDir(workingDirectory.getPath(), bowerComponentsDirectory, zipFile, null);
+            } catch (IOException e) {
+                throw new BuilderException("Unable to create archive of the NPM dependencies", e);
+            }
+        } else {
+            throw new BuilderException("No app/bower_components directory found");
+        }
+
+
+        return zipFile;
     }
 }
