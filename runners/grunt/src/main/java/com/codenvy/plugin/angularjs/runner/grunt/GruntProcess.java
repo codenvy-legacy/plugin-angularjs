@@ -30,14 +30,25 @@ import com.codenvy.commons.lang.ZipUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -78,6 +89,12 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
     private DownloadPlugin downloadPlugin;
 
     /**
+    /**
+     * Logger.
+     */
+    private ApplicationLogger logger;
+
+    /**
      * Build a new process for the following directory
      *
      * @param workDir
@@ -110,6 +127,32 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
         } catch (IOException e) {
             throw new RunnerException(e.getCause());
         }
+
+
+        // create log file
+        final File logFile = new File(workDir, "grunt-output.log");
+
+        // start to listen output
+        new Thread() {
+            public void run() {
+                try (Writer fileWriter = new OutputStreamWriter(new FileOutputStream(logFile), "UTF-8"); BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"))) {
+                    String str;
+                    while ((str = br.readLine()) != null) {
+                        fileWriter.write(str);
+                        fileWriter.write(System.getProperty("line.separator"));
+                    }
+                } catch (IOException e) {
+                    LOG.error("Unable to write content", e);
+                }
+
+            }}.start();
+
+
+        // Capture output
+        this.logger = new GruntApplicationLogger(logFile);
+
+
+
     }
 
     /**
@@ -155,24 +198,11 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
 
     @Override
     public ApplicationLogger getLogger() throws RunnerException {
-        //FIXME : return a real logger
-        return ApplicationLogger.DUMMY;
-    }
-
-
-    protected DeploymentSources downloadApplication(String url, File destFolder) throws RunnerException {
-        final File downloadDir;
-        try {
-            downloadDir = Files.createTempDirectory(destFolder.toPath(), "updated").toFile();
-        } catch (IOException e) {
-            throw new RunnerException(e);
+        if (logger == null) {
+            // is not started yet
+            return ApplicationLogger.DUMMY;
         }
-        DownloadCallback downloadCallback = new DownloadCallback();
-        downloadPlugin.download(url, downloadDir, downloadCallback);
-        if (downloadCallback.getErrorHolder() != null) {
-            throw new RunnerException(downloadCallback.getErrorHolder());
-        }
-        return downloadCallback.getResultHolder();
+        return logger;
     }
 
     /**
