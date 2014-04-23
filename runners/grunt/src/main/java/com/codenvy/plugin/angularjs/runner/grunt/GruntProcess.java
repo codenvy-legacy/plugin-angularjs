@@ -84,11 +84,20 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
     /**
      * Base URL for Rest API.
      */
-    private String         baseURL;
+    private String baseURL;
 
     private DownloadPlugin downloadPlugin;
 
     /**
+     * Grunt runner configuration.
+     */
+    private GruntRunnerConfiguration gruntRunnerConfiguration;
+
+    /**
+     * Grunt runner used to build this process.
+     */
+    private GruntRunner gruntRunner;
+
     /**
      * Logger.
      */
@@ -100,13 +109,15 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
      * @param workDir
      *         the directory to start grunt
      */
-    public GruntProcess(ExecutorService executorService, File workDir, String baseURL) {
+    public GruntProcess(ExecutorService executorService, File workDir, String baseURL, GruntRunnerConfiguration gruntRunnerConfiguration,
+                        GruntRunner gruntRunner) {
         super();
         this.executorService = executorService;
         this.workDir = workDir;
         this.baseURL = baseURL;
         this.downloadPlugin = new HttpDownloadPlugin();
-        ;
+        this.gruntRunnerConfiguration = gruntRunnerConfiguration;
+        this.gruntRunner = gruntRunner;
     }
 
     /**
@@ -121,11 +132,32 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
             throw new IllegalStateException("Process is already started");
         }
 
+        // needs to replace the http/livreload port
+        Path path = new File(workDir, "Gruntfile.js").toPath();
+        Charset charset = StandardCharsets.UTF_8;
+
+        String content;
         try {
-            process = Runtime.getRuntime()
-                             .exec(new CommandLine("grunt").add("server").toShellCommand(), null, workDir);
+            content = new String(Files.readAllBytes(path), charset);
         } catch (IOException e) {
-            throw new RunnerException(e.getCause());
+            throw new RunnerException("Unable to read Grunt configuration file", e);
+        }
+        content = content.replaceAll("9000", String.valueOf(gruntRunnerConfiguration.getHttpPort()));
+        content = content.replaceAll("35729", String.valueOf(gruntRunnerConfiguration.getLiveReloadPort()));
+        try {
+            Files.write(path, content.getBytes(charset));
+        } catch (IOException e) {
+            throw new RunnerException("Unable to replace http port in the runner", e);
+        }
+
+
+        // Create the process builder
+        ProcessBuilder processBuilder = new ProcessBuilder().command("grunt", "server").directory(workDir).redirectErrorStream(true);
+
+        try {
+            this.process = processBuilder.start();
+        } catch (IOException e) {
+            throw new RunnerException("Unable to launch grunt command", e);
         }
 
 
@@ -166,6 +198,9 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
             throw new IllegalStateException("Process is not started yet");
         }
         process.destroy();
+
+        // callback on stop
+        gruntRunner.onStop(this, gruntRunnerConfiguration);
     }
 
 
@@ -193,7 +228,19 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
 
     @Override
     public boolean isRunning() throws RunnerException {
-        return process != null;
+        // no process so it's not running
+        if (process == null) {
+            return false;
+        }
+
+        // if we have exit value it means that process has been exited
+        try {
+            process.exitValue();
+            return false;
+        } catch (IllegalThreadStateException e) {
+            // exception so it is still running
+            return true;
+        }
     }
 
     @Override

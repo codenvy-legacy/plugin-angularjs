@@ -21,6 +21,7 @@ import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.project.server.ProjectEventService;
 import com.codenvy.api.runner.RunnerException;
+import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.ResourceAllocators;
@@ -87,10 +88,14 @@ public class GruntRunner extends Runner {
         return new RunnerConfigurationFactory() {
             @Override
             public RunnerConfiguration createRunnerConfiguration(RunRequest request) throws RunnerException {
+
+                final int httpPort = portService.acquire();
+                final int liveReloadPort = portService.acquire();
+
                 final GruntRunnerConfiguration configuration =
-                        new GruntRunnerConfiguration(request.getMemorySize(), 9000, request);
+                        new GruntRunnerConfiguration(request.getMemorySize(), httpPort, liveReloadPort, request);
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class).withRel("web url")
-                                                       .withHref(String.format("http://%s:%d", hostName, 9000)));
+                                                       .withHref(String.format("http://%s:%d", hostName, httpPort)));
                 return configuration;
             }
         };
@@ -146,7 +151,7 @@ public class GruntRunner extends Runner {
         String baseURL = configuration.getRequest().getProjectDescriptor().getBaseUrl();
 
         // Create the process
-        final GruntProcess process = new GruntProcess(getExecutor(), path, baseURL);
+        final GruntProcess process = new GruntProcess(getExecutor(), path, baseURL, gruntRunnerConfiguration, this);
 
         //FIXME : cleanup of files ?
 
@@ -158,9 +163,32 @@ public class GruntRunner extends Runner {
         // Register the listener
         projectEventService.addListener(workspace, projectName, process);
 
-        //FIXME : unregister the listener ?
-
         return process;
+    }
+
+
+    /**
+     * Callback used when the process is being stopped.
+     * @param gruntRunnerConfiguration the given configuration
+     */
+    public void onStop(GruntProcess gruntProcess, GruntRunnerConfiguration gruntRunnerConfiguration) {
+        if (gruntRunnerConfiguration != null) {
+            // free the port numbers
+            portService.release(gruntRunnerConfiguration.getHttpPort());
+            portService.release(gruntRunnerConfiguration.getLiveReloadPort());
+
+
+            // remove the listener
+            RunRequest runRequest = gruntRunnerConfiguration.getRequest();
+            String projectName = runRequest.getProject();
+            String workspace = runRequest.getWorkspace();
+            projectEventService.removeListener(workspace, projectName, gruntProcess);
+
+        }
+
+
+
+
     }
 
 }

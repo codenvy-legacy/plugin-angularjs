@@ -27,14 +27,20 @@ import com.codenvy.api.runner.dto.RunRequest;
 public class GruntRunnerConfiguration extends RunnerConfiguration {
 
     private final int httpPort;
+    private final int liveReloadPort;
 
-    public GruntRunnerConfiguration(int memory, int httpPort, RunRequest runRequest) {
+    public GruntRunnerConfiguration(int memory, int httpPort, int liveReloadPort, RunRequest runRequest) {
         super(memory, runRequest);
         this.httpPort = httpPort;
+        this.liveReloadPort = liveReloadPort;
     }
 
     public int getHttpPort() {
         return httpPort;
+    }
+
+    public int getLiveReloadPort() {
+        return liveReloadPort;
     }
 
     @Override
@@ -44,6 +50,7 @@ public class GruntRunnerConfiguration extends RunnerConfiguration {
                ", links=" + getLinks() +
                ", request=" + getRequest() +
                ", httpPort='" + getHttpPort() +
+               ", liveReloadPort='" + getHttpPort() +
                '}';
     }
 }
