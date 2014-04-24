@@ -112,6 +112,8 @@
                             <excludes>
                                 <!-- JSON are only data files -->
                                 <exclude>**/*.json</exclude>
+                                <!-- exclude also images -->
+                                <exclude>**/*.svg</exclude>
                                 <!-- BSD -->
                                 <exclude>**/esprima/*.js</exclude>
                             </excludes>
