@@ -19,6 +19,7 @@ package com.codenvy.plugin.angularjs.core.client;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.util.dom.Elements;
+import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
 import com.codenvy.plugin.angularjs.core.client.javascript.JavaScriptResources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -35,36 +36,36 @@ import java.util.Map;
 public class AngularJsExtension {
 
     @Inject
-    public AngularJsExtension(IconRegistry iconRegistry) {
+    public AngularJsExtension(IconRegistry iconRegistry, AngularJSResources resources) {
         iconRegistry.registerIcon("AngularJS.projecttype.big.icon", "angularjs-extension/newproject-angularjs.png");
         iconRegistry.registerIcon("AngularJS.projecttype.small.icon", "angularjs-extension/newproject-angularjs.png");
 
         // filename icons
-        iconRegistry.registerIcon("AngularJS/bower.json.file.small.icon", "angularjs-extension/bower-icon.png");
-        iconRegistry.registerIcon("AngularJS/Gruntfile.js.file.small.icon", "angularjs-extension/grunt-icon.png");
-        iconRegistry.registerIcon("AngularJS/gulpfile.js.file.small.icon", "angularjs-extension/gulp-icon.png");
-        iconRegistry.registerIcon("AngularJS/package.json.file.small.icon", "angularjs-extension/npm-icon.png");
-        iconRegistry.registerIcon("AngularJS/README.file.small.icon", "angularjs-extension/text-icon.png");
-        iconRegistry.registerIcon("AngularJS/LICENSE.file.small.icon", "angularjs-extension/text-icon.png");
+        iconRegistry.registerSVGIcon("AngularJS/bower.json.file.small.icon", resources.bowerFile());
+        iconRegistry.registerSVGIcon("AngularJS/Gruntfile.js.file.small.icon", resources.gruntFile());
+        iconRegistry.registerSVGIcon("AngularJS/gulpfile.js.file.small.icon", resources.gulpFile());
+        iconRegistry.registerSVGIcon("AngularJS/package.json.file.small.icon", resources.npmFile());
+        iconRegistry.registerSVGIcon("AngularJS/README.file.small.icon", resources.textFile());
+        iconRegistry.registerSVGIcon("AngularJS/LICENSE.file.small.icon", resources.textFile());
 
         // register also file extension icons
-        iconRegistry.registerIcon("AngularJS/css.file.small.icon", "angularjs-extension/css-icon.png");
-        iconRegistry.registerIcon("AngularJS/scss.file.small.icon", "angularjs-extension/css-icon.png");
-        iconRegistry.registerIcon("AngularJS/less.file.small.icon", "angularjs-extension/less-icon.png");
-        iconRegistry.registerIcon("AngularJS/html.file.small.icon", "angularjs-extension/html-icon.png");
-        iconRegistry.registerIcon("AngularJS/js.file.small.icon", "angularjs-extension/js-icon.png");
-        iconRegistry.registerIcon("AngularJS/json.file.small.icon", "angularjs-extension/json-icon.png");
-        iconRegistry.registerIcon("AngularJS/pom.xml.file.small.icon", "angularjs-extension/maven-icon.png");
-        iconRegistry.registerIcon("AngularJS/xml.file.small.icon", "angularjs-extension/xml-icon.png");
+        iconRegistry.registerSVGIcon("AngularJS/css.file.small.icon", resources.cssFile());
+        iconRegistry.registerSVGIcon("AngularJS/scss.file.small.icon", resources.cssFile());
+        iconRegistry.registerSVGIcon("AngularJS/less.file.small.icon", resources.lessFile());
+        iconRegistry.registerSVGIcon("AngularJS/html.file.small.icon", resources.htmlFile());
+        iconRegistry.registerSVGIcon("AngularJS/js.file.small.icon", resources.jsFile());
+        iconRegistry.registerSVGIcon("AngularJS/json.file.small.icon", resources.jsonFile());
+        iconRegistry.registerSVGIcon("AngularJS/pom.xml.file.small.icon", resources.mavenFile());
+        iconRegistry.registerSVGIcon("AngularJS/xml.file.small.icon", resources.xmlFile());
         // images
-        iconRegistry.registerIcon("AngularJS/gif.file.small.icon", "angularjs-extension/image-icon.png");
-        iconRegistry.registerIcon("AngularJS/jpg.file.small.icon", "angularjs-extension/image-icon.png");
-        iconRegistry.registerIcon("AngularJS/png.file.small.icon", "angularjs-extension/image-icon.png");
+        iconRegistry.registerSVGIcon("AngularJS/gif.file.small.icon", resources.imageIcon());
+        iconRegistry.registerSVGIcon("AngularJS/jpg.file.small.icon", resources.imageIcon());
+        iconRegistry.registerSVGIcon("AngularJS/png.file.small.icon", resources.imageIcon());
 
         // text
-        iconRegistry.registerIcon("AngularJS/log.file.small.icon", "angularjs-extension/text-icon.png");
-        iconRegistry.registerIcon("AngularJS/txt.file.small.icon", "angularjs-extension/text-icon.png");
-        iconRegistry.registerIcon("AngularJS/md.file.small.icon", "angularjs-extension/text-icon.png");
+        iconRegistry.registerSVGIcon("AngularJS/log.file.small.icon", resources.textFile());
+        iconRegistry.registerSVGIcon("AngularJS/txt.file.small.icon", resources.textFile());
+        iconRegistry.registerSVGIcon("AngularJS/md.file.small.icon", resources.textFile());
 
 
     }
