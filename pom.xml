@@ -50,9 +50,9 @@
     <properties>
         <apache-rat-plugin.ignoreErrors>false</apache-rat-plugin.ignoreErrors>
         <apache-rat-plugin.version>0.10</apache-rat-plugin.version>
-        <ide.version>3.0.0-M15-SNAPSHOT</ide.version>
-        <platform-api-client-gwt.version>0.5.0-SNAPSHOT</platform-api-client-gwt.version>
-        <platform-api.version>0.16.0-SNAPSHOT</platform-api.version>
+        <ide.version>3.0.0-M16-SNAPSHOT</ide.version>
+        <platform-api-client-gwt.version>0.6.0-SNAPSHOT</platform-api-client-gwt.version>
+        <platform-api.version>0.17.0-SNAPSHOT</platform-api.version>
     </properties>
     <build>
         <pluginManagement>
