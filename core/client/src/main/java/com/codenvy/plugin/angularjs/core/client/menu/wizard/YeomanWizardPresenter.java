@@ -119,7 +119,7 @@ public class YeomanWizardPresenter extends AbstractWizardPage implements YeomanW
         List<String> targets = Arrays.asList(new String[]{"angular:directive", wizardContext.getData(RESOURCE_NAME)});
         BuildOptions buildOptions = dtoFactory.createDto(BuildOptions.class).withTargets(targets).withBuilderName("yeoman");
         builderAgent.build(buildOptions, "Generating AngularJS directive...", "AngularJS directive generated",
-                           "Failed to generate AngularJS directive", this);
+                           "Failed to generate AngularJS directive", "yeoman", this);
     }
 
     @Override

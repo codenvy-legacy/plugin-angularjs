@@ -94,7 +94,7 @@ public class NpmInstallAction extends Action implements BuildFinishedCallback {
         List<String> targets = Arrays.asList(new String[]{"install"});
         BuildOptions buildOptions = dtoFactory.createDto(BuildOptions.class).withTargets(targets).withBuilderName("npm");
         builderAgent.build(buildOptions, "Installation of npm dependencies...", "Npm dependencies successfully downloaded",
-                           "Npm dependencies install failed", this);
+                           "Npm dependencies install failed", "npm", this);
     }
 
     @Override

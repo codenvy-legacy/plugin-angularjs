@@ -29,17 +29,23 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
+import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderExtension;
 import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
@@ -77,11 +83,10 @@ public class BuilderAgent {
     private EventBus eventBus;
 
     @Inject
-    private ConsolePart console;
+    private BuilderConsolePresenter console;
 
     @Inject
     private ProjectServiceClient projectServiceClient;
-
 
 
     /**
@@ -89,9 +94,10 @@ public class BuilderAgent {
      * @param notification
      * @param successMessage
      */
-    protected void buildSuccessful(Notification notification, String successMessage) {
+    protected void buildSuccessful(Notification notification, String successMessage, String prefixConsole) {
         notification.setMessage(successMessage);
         notification.setStatus(FINISHED);
+        console.print(prefixConsole + "::" + successMessage);
 
     }
 
@@ -101,9 +107,10 @@ public class BuilderAgent {
      * @param waitMessage the message to display on the notification while waiting
      * @param successMessage the message to display on the notification while it has been successful
      * @param errorMessage the message to display on the notification if there was an error
+     * @param prefixConsole the prefix to show in the console
      * @param buildFinishedCallback an optional callback to call when the build has finished
      */
-    public void build(final BuildOptions buildOptions, final String waitMessage, final String successMessage, final String errorMessage,
+    public void build(final BuildOptions buildOptions, final String waitMessage, final String successMessage, final String errorMessage, final String prefixConsole,
                       final BuildFinishedCallback buildFinishedCallback) {
 
         // Start a build so print a new notification message
@@ -118,16 +125,16 @@ public class BuilderAgent {
                                            dtoUnmarshallerFactory.newUnmarshaller(BuildTaskDescriptor.class)) {
                                        @Override
                                        protected void onSuccess(BuildTaskDescriptor result) {
-                                           // Notify the callback if already finised
+                                           // Notify the callback if already finished
                                            if (result.getStatus() == BuildStatus.SUCCESSFUL) {
                                                if (buildFinishedCallback != null) {
                                                    buildFinishedCallback.onFinished(result.getStatus());
                                                }
-                                               buildSuccessful(notification, successMessage);
+                                               buildSuccessful(notification, successMessage, prefixConsole);
                                            } else {
                                                // Check the status by registering a callback
-                                               startCheckingStatus(notification, result, successMessage, errorMessage,
-                                                                   buildFinishedCallback);
+                                               startChecking(notification, result, successMessage, errorMessage, prefixConsole,
+                                                             buildFinishedCallback);
                                                notification.setStatus(PROGRESS);
                                            }
 
@@ -142,6 +149,7 @@ public class BuilderAgent {
                                            notification.setStatus(FINISHED);
                                            notification.setType(ERROR);
                                            notification.setMessage(exception.getMessage());
+                                           console.print(prefixConsole + "::" + errorMessage);
                                        }
                                    });
 
@@ -156,14 +164,32 @@ public class BuilderAgent {
      * @param errorMessage
      * @param buildFinishedCallback
      */
-    protected void startCheckingStatus(final Notification notification, final BuildTaskDescriptor buildTaskDescriptor,
-                                     final String successMessage, final String errorMessage,
+    protected void startChecking(final Notification notification, final BuildTaskDescriptor buildTaskDescriptor,
+                                     final String successMessage, final String errorMessage, final String prefixConsole,
                                      final BuildFinishedCallback buildFinishedCallback) {
+
+        final SubscriptionHandler<String>  buildOutputHandler = new SubscriptionHandler<String>(new LineUnmarshaller()) {
+            @Override
+            protected void onMessageReceived(String result) {
+                console.print(prefixConsole + "::" + result);
+            }
+
+            @Override
+            protected void onErrorReceived(Throwable throwable) {
+                try {
+                    messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), this);
+                    Log.error(BuildProjectPresenter.class, throwable);
+                } catch (WebSocketException e) {
+                    Log.error(BuildProjectPresenter.class, e);
+                }
+            }
+        };
+
         final SubscriptionHandler<String> buildStatusHandler = new SubscriptionHandler<String>(new StringUnmarshallerWS()) {
             @Override
             protected void onMessageReceived(String result) {
-                updateBuildStatus(notification, dtoFactory.createDtoFromJson(result, BuildTaskDescriptor.class), this, successMessage,
-                                  errorMessage, buildFinishedCallback);
+                updateBuildStatus(notification, dtoFactory.createDtoFromJson(result, BuildTaskDescriptor.class), this, buildOutputHandler, successMessage,
+                                  errorMessage, prefixConsole, buildFinishedCallback);
             }
 
             @Override
@@ -188,7 +214,15 @@ public class BuilderAgent {
         } catch (WebSocketException e) {
             Log.error(BuildProjectPresenter.class, e);
         }
+
+        try {
+            messageBus.subscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), buildOutputHandler);
+        } catch (WebSocketException e) {
+            Log.error(BuildProjectPresenter.class, e);
+        }
+
     }
+
 
 
     /**
@@ -198,14 +232,14 @@ public class BuilderAgent {
      *         status of build
      */
     protected void updateBuildStatus(Notification notification, BuildTaskDescriptor descriptor,
-                                   SubscriptionHandler<String> buildStatusHandler, final String successMessage, final String errorMessage,
+                                   SubscriptionHandler<String> buildStatusHandler, SubscriptionHandler<String> buildOutputHandler, final String successMessage, final String errorMessage, final String prefixConsole,
                                    final BuildFinishedCallback buildFinishedCallback) {
         BuildStatus status = descriptor.getStatus();
         if (status == BuildStatus.IN_PROGRESS || status == BuildStatus.IN_QUEUE) {
             return;
         }
         if (status == BuildStatus.CANCELLED || status == BuildStatus.FAILED || status == BuildStatus.SUCCESSFUL) {
-            afterBuildFinished(notification, descriptor, buildStatusHandler, successMessage, errorMessage, buildFinishedCallback);
+            afterBuildFinished(notification, descriptor, buildStatusHandler, buildOutputHandler, successMessage, errorMessage, prefixConsole, buildFinishedCallback);
         }
     }
 
@@ -216,7 +250,7 @@ public class BuilderAgent {
      *         status of build job
      */
     protected void afterBuildFinished(Notification notification, BuildTaskDescriptor descriptor,
-                                    SubscriptionHandler<String> buildStatusHandler, final String successMessage, final String errorMessage,
+                                    SubscriptionHandler<String> buildStatusHandler, SubscriptionHandler<String> buildOutputHandler, final String successMessage, final String errorMessage, final String prefixConsole,
                                     BuildFinishedCallback buildFinishedCallback) {
         try {
             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
@@ -224,15 +258,21 @@ public class BuilderAgent {
             Log.error(BuildProjectPresenter.class, e);
         }
 
+        try {
+            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + descriptor.getTaskId(), buildOutputHandler);
+        } catch (Exception e) {
+            Log.error(BuildProjectPresenter.class, e);
+        }
+
+
         if (descriptor.getStatus() == BuildStatus.SUCCESSFUL) {
-            buildSuccessful(notification, successMessage);
+            buildSuccessful(notification, successMessage, prefixConsole);
         } else if (descriptor.getStatus() == BuildStatus.FAILED) {
             notification.setMessage(errorMessage);
             notification.setStatus(FINISHED);
             notification.setType(ERROR);
+            console.print(prefixConsole + "::" + errorMessage);
         }
-
-        getBuildLogs(descriptor);
 
         // import zip
         importZipResult(descriptor, buildFinishedCallback);
@@ -285,28 +325,23 @@ public class BuilderAgent {
     }
 
 
-    protected void getBuildLogs(BuildTaskDescriptor descriptor) {
-        Link statusLink = null;
-        List<Link> links = descriptor.getLinks();
-        for (int i = 0; i < links.size(); i++) {
-            Link link = links.get(i);
-            if (link.getRel().equalsIgnoreCase("view build log"))
-                statusLink = link;
+    static class LineUnmarshaller implements Unmarshallable<String> {
+        private String line;
+
+        @Override
+        public void unmarshal(Message response) throws UnmarshallerException {
+            JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
+            if (jsonObject == null) {
+                return;
+            }
+            if (jsonObject.containsKey("line")) {
+                line = jsonObject.get("line").isString().stringValue();
+            }
         }
 
-        builderServiceClient.log(statusLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-            @Override
-            protected void onSuccess(String result) {
-                console.print(result);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                String msg = "Fail to get result";
-                console.print(msg);
-                Notification notification = new Notification(msg, ERROR);
-                notificationManager.showNotification(notification);
-            }
-        });
+        @Override
+        public String getPayload() {
+            return line;
+        }
     }
 }
