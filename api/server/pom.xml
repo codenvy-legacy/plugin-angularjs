@@ -20,7 +20,7 @@
     <parent>
         <artifactId>angularjs-api</artifactId>
         <groupId>com.codenvy.plugin-angularjs</groupId>
-        <version>1.0.0-M2-SNAPSHOT</version>
+        <version>1.0.0-M3-SNAPSHOT</version>
     </parent>
     <artifactId>angularjs-api-server</artifactId>
     <packaging>jar</packaging>
