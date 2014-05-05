@@ -19,7 +19,7 @@
     <parent>
         <artifactId>angularjs-builders</artifactId>
         <groupId>com.codenvy.plugin-angularjs</groupId>
-        <version>1.0.0-M2-SNAPSHOT</version>
+        <version>1.0.0-M2</version>
     </parent>
     <artifactId>angularjs-builder-bower</artifactId>
     <packaging>jar</packaging>
