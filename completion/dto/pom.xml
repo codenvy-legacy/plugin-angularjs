@@ -28,43 +28,43 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-builder</artifactId>
-            <version>${ide.version}</version>
+            <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-runner</artifactId>
-            <version>${ide.version}</version>
+            <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
-            <version>${ide.version}</version>
+            <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
-            <version>${ide.version}</version>
+            <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-builder</artifactId>
-            <version>${platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-project</artifactId>
-            <version>${platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
-            <version>${platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

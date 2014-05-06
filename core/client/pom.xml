@@ -28,55 +28,55 @@
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-builder</artifactId>
-            <version>${ide.version}</version>
+            <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-runner</artifactId>
-            <version>${ide.version}</version>
+            <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-web</artifactId>
-            <version>${ide.version}</version>
+            <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
-            <version>${ide.version}</version>
+            <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
-            <version>${ide.version}</version>
+            <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-builder</artifactId>
-            <version>${platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-project</artifactId>
-            <version>${platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-runner</artifactId>
-            <version>${platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
             <artifactId>codenvy-gwt-client-commons</artifactId>
-            <version>${platform-api-client-gwt.version}</version>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -94,13 +94,13 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>2.6.0</version>
+            <version>${com.google.gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -128,7 +128,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5.3</version>
                 <executions>
                     <execution>
                         <goals>

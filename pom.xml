@@ -17,9 +17,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>maven-parent-pom</artifactId>
+        <artifactId>maven-depmgt-pom</artifactId>
         <groupId>com.codenvy</groupId>
-        <version>3.1.1</version>
+        <version>1.0.0-SNAPSHOT</version>
         <relativePath />
     </parent>
     <groupId>com.codenvy.plugin-angularjs</groupId>
@@ -49,23 +49,14 @@
     </scm>
     <properties>
         <apache-rat-plugin.ignoreErrors>false</apache-rat-plugin.ignoreErrors>
-        <apache-rat-plugin.version>0.10</apache-rat-plugin.version>
-        <ide.version>3.0.0-M16-SNAPSHOT</ide.version>
-        <platform-api-client-gwt.version>0.6.0-SNAPSHOT</platform-api-client-gwt.version>
-        <platform-api.version>0.17.0-SNAPSHOT</platform-api.version>
     </properties>
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.3</version>
-                </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-changes-plugin</artifactId>
-                    <version>2.9</version>
                     <configuration>
                         <skip>true</skip>
                     </configuration>
@@ -77,7 +68,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5.3</version>
                 <executions>
                     <execution>
                         <goals>
@@ -95,7 +85,7 @@
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
-                <version>${apache-rat-plugin.version}</version>
+                <version>${version.rat.plugin}</version>
                 <executions>
                     <execution>
                         <id>legal</id>
@@ -125,11 +115,6 @@
     </build>
     <reporting>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5.3</version>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>

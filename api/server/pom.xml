@@ -29,7 +29,7 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-project</artifactId>
-            <version>${platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
     </dependencies>
 </project>
