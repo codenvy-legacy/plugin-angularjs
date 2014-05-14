@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright 2014 Codenvy, S.A.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package com.codenvy.plugin.angularjs.core.client.menu;
+package com.codenvy.plugin.angularjs.core.client.menu.yeoman;
 
-import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
- * Gets properties.
+ * Panel that will allow to open/hide elements
+ *
  * @author Florent Benoit
  */
-public interface LocalizationConstant extends Messages {
+public interface FoldingPanel extends IsWidget {
 
-    @Key("control.yeomanDirective.id")
-    String yeomanAddDirectiveId();
+    /**
+     * @return element that is either visible or hidden
+     */
+    FlowPanel getTogglePanel();
 
-    @Key("control.yeomanDirective.text")
-    String yeomanAddDirectiveText();
-
-    @Key("control.yeomanDirective.description")
-    String runAppActionDescription();
 }

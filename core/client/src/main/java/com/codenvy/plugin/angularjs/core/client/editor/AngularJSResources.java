@@ -18,6 +18,7 @@ package com.codenvy.plugin.angularjs.core.client.editor;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
@@ -35,7 +36,9 @@ public interface AngularJSResources extends ClientBundle {
     @Source("com/codenvy/plugin/angularjs/core/client/completion-item-angularjs.png")
     ImageResource property();
 
-    
+    @Source("com/codenvy/plugin/angularjs/core/client/svg/trash.svg")
+    SVGResource trashIcon();
+
     @Source("com/codenvy/plugin/angularjs/core/client/svg/bower.svg")
     SVGResource bowerFile();
     
@@ -74,4 +77,18 @@ public interface AngularJSResources extends ClientBundle {
     
     @Source("com/codenvy/plugin/angularjs/core/client/svg/xml.svg")
     SVGResource xmlFile();
+
+    @Source({"com/codenvy/plugin/angularjs/core/client/ui.css", "com/codenvy/ide/api/ui/style.css"})
+    UiStyle uiCss();
+
+    public interface UiStyle extends CssResource {
+
+        @ClassName("yeoman-wizard-executeButton")
+        String yeomanWizardGenerateButton();
+
+        @ClassName("foldingPanel")
+        String foldingPanel();
+
+    }
+
 }

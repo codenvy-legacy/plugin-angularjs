@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright 2014 Codenvy, S.A.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package com.codenvy.plugin.angularjs.core.client.menu.wizard;
+package com.codenvy.plugin.angularjs.core.client.menu.yeoman;
 
-import com.google.inject.BindingAnnotation;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
+ * Item that is added to FoldingPanel and providing the name of an element and a button/trash to remove element
+ *
  * @author Florent Benoit
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD, ElementType.TYPE})
-@BindingAnnotation
-public @interface YeomanWizard {
+public interface GeneratedItemView extends IsWidget {
+
+    /**
+     * Sets the anchor of this element (upper level than a direct parent)
+     *
+     * @param yeomanPartView
+     */
+    void setAnchor(YeomanPartView yeomanPartView);
+
 }

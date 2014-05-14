@@ -68,5 +68,9 @@ public class AngularJsExtension {
         iconRegistry.registerSVGIcon("AngularJS/md.file.small.icon", resources.textFile());
 
 
+        // inject CSS
+        resources.uiCss().ensureInjected();
+
+
     }
 }

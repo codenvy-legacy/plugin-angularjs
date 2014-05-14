@@ -27,13 +27,12 @@ import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.DefaultWizard;
+import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.plugin.angularjs.core.client.menu.bower.BowerInstallAction;
 import com.codenvy.plugin.angularjs.core.client.menu.npm.NpmInstallAction;
-import com.codenvy.plugin.angularjs.core.client.menu.wizard.YeomanWizard;
-import com.codenvy.plugin.angularjs.core.client.menu.wizard.YeomanWizardPresenter;
+import com.codenvy.plugin.angularjs.core.client.menu.yeoman.YeomanPartPresenter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -49,28 +48,22 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 @Extension(title = "AngularJS Menu extension.", version = "3.0.0")
 public class AngularJSMenuExtension {
 
-    private static final String YEOMAN_GROUP_MENU = "YeomanMenu";
     private static final String NPM_GROUP_MENU = "NpmMenu";
     private static final String BOWER_GROUP_MENU = "BowerMenu";
 
     @Inject
     public AngularJSMenuExtension(ActionManager actionManager, ResourceProvider resourceProvider,
-                                  LocalizationConstant localizationConstantYeoman,
                                   com.codenvy.plugin.angularjs.core.client.menu.bower.LocalizationConstant localizationConstantBower,
                                   com.codenvy.plugin.angularjs.core.client.menu.npm.LocalizationConstant localizationConstantNpm,
-                                  YeomanAddDirectiveAction yeomanAddDirectiveAction,
                                   final NpmInstallAction npmInstallAction,
                                   final BowerInstallAction bowerInstallAction,
-                                  @YeomanWizard DefaultWizard newResourceWizard,
-                                  Provider<YeomanWizardPresenter> chooseResourcePage,
+                                  final YeomanPartPresenter yeomanPartPresenter,
+                                  final WorkspaceAgent workspaceAgent,
                                   EventBus eventBus) {
 
 
-        newResourceWizard.addPage(chooseResourcePage);
-
 
         // Register all actions
-        actionManager.registerAction(localizationConstantYeoman.yeomanAddDirectiveId(), yeomanAddDirectiveAction);
         actionManager.registerAction(localizationConstantNpm.npmInstallId(), npmInstallAction);
         actionManager.registerAction(localizationConstantBower.bowerInstallId(), bowerInstallAction);
 
@@ -79,16 +72,6 @@ public class AngularJSMenuExtension {
 
         // create constraint
         Constraints beforeWindow = new Constraints(BEFORE, GROUP_WINDOW);
-
-        // Build a new Yeoman menu
-        DefaultActionGroup yeomanActionGroup = new CustomActionGroup(resourceProvider, "Yeoman", true, actionManager);
-        actionManager.registerAction(YEOMAN_GROUP_MENU,
-                                     yeomanActionGroup);
-        mainMenu.add(yeomanActionGroup, beforeWindow);
-
-        // register actions for Yeoman menu
-        yeomanActionGroup.add(yeomanAddDirectiveAction);
-
 
         // Build NPM menu
         DefaultActionGroup npmActionGroup = new CustomActionGroup(resourceProvider, "Npm", true, actionManager);
@@ -114,7 +97,18 @@ public class AngularJSMenuExtension {
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
+
                 Project project = event.getProject();
+                final String projectTypeId = project.getDescription().getProjectTypeId();
+                boolean isAngularJSProject = "AngularJS".equals(projectTypeId);
+                if (isAngularJSProject) {
+                    // add Yeoman panel
+                    workspaceAgent.openPart(yeomanPartPresenter, PartStackType.TOOLING);
+                    workspaceAgent.hidePart(yeomanPartPresenter);
+                }
+
+
+
                 // Check if there is package.json file
                 Resource packageJsonFile = project.findChildByName("package.json");
                 if (packageJsonFile != null) {
@@ -144,6 +138,13 @@ public class AngularJSMenuExtension {
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
+                Project project = event.getProject();
+                final String projectTypeId = project.getDescription().getProjectTypeId();
+                boolean isAngularJSProject = "AngularJS".equals(projectTypeId);
+                if (isAngularJSProject) {
+                    workspaceAgent.removePart(yeomanPartPresenter);
+                }
+
             }
 
             @Override

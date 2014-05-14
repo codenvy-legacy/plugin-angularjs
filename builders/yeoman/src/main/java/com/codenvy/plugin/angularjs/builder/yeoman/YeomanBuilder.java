@@ -17,9 +17,12 @@
 package com.codenvy.plugin.angularjs.builder.yeoman;
 
 import com.codenvy.api.builder.BuilderException;
+import com.codenvy.api.builder.internal.BuildListener;
 import com.codenvy.api.builder.internal.BuildResult;
+import com.codenvy.api.builder.internal.BuildTask;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
+import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.commons.lang.ZipUtils;
@@ -28,10 +31,21 @@ import com.codenvy.dto.server.DtoFactory;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -41,7 +55,13 @@ import java.util.concurrent.Future;
  * @author Florent Benoit
  */
 @Singleton
-public class YeomanBuilder extends Builder {
+public class YeomanBuilder extends Builder implements BuildListener {
+
+    /**
+     * Map between the script to execute and the command line object.
+     */
+    private Map<CommandLine, File> commandLineToFile;
+
 
     private DtoFactory dtoFactory;
 
@@ -58,13 +78,15 @@ public class YeomanBuilder extends Builder {
      *         delay
      */
     @Inject
-    public YeomanBuilder(@Named(REPOSITORY) java.io.File rootDirectory,
-                        @Named(NUMBER_OF_WORKERS) int numberOfWorkers,
-                        @Named(INTERNAL_QUEUE_SIZE) int queueSize,
-                        @Named(CLEAN_RESULT_DELAY_TIME) int cleanBuildResultDelay,
-                        EventService eventService) {
+    public YeomanBuilder(@Named(Constants.REPOSITORY) java.io.File rootDirectory,
+                         @Named(Constants.NUMBER_OF_WORKERS) int numberOfWorkers,
+                         @Named(Constants.INTERNAL_QUEUE_SIZE) int queueSize,
+                         @Named(Constants.CLEANUP_RESULT_TIME) int cleanBuildResultDelay,
+                         EventService eventService) {
         super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay, eventService);
         this.dtoFactory = DtoFactory.getInstance();
+        this.commandLineToFile = new HashMap<>();
+        getBuildListeners().add(this);
     }
 
 
@@ -86,7 +108,7 @@ public class YeomanBuilder extends Builder {
 
 
     /**
-     * Creates the grunt build command line
+     * Creates the yeoman build command line
      *
      * @param config
      *         the configuration that may help to build the command line
@@ -96,12 +118,31 @@ public class YeomanBuilder extends Builder {
      */
     @Override
     protected CommandLine createCommandLine(BuilderConfiguration config) throws BuilderException {
-        final CommandLine commandLine = new CommandLine("yo");
-        // add the given options (may be angular:directive <directive>)
-        commandLine.add(config.getTargets());
 
-        // disable anonymous Insight tracking
-        commandLine.add("--no-insight");
+        File workDir = config.getWorkDir();
+        File scriptFile = new java.io.File(workDir.getParentFile(), workDir.getName() + ".yo-script");
+
+        // now, write the script
+        try (Writer fw = new OutputStreamWriter(new FileOutputStream(scriptFile), "UTF-8")) {
+            // for each couple of targets
+            List<String> targets = config.getTargets();
+            int i = 0;
+
+            // disable anonymous Insight tracking
+            while(i < targets.size()) {
+                fw.write("yo --no-insight ".concat(targets.get(i++)).concat(" ").concat(targets.get(i++)).concat("\n"));
+            }
+        } catch (IOException e) {
+            throw new BuilderException(e);
+        }
+
+        scriptFile.setExecutable(true);
+
+
+        final CommandLine commandLine = new CommandLine(scriptFile.getAbsolutePath());
+
+        // register the command line
+        commandLineToFile.put(commandLine, scriptFile);
 
         return commandLine;
     }
@@ -159,4 +200,30 @@ public class YeomanBuilder extends Builder {
         return zipFile;
     }
 
+    @Override
+    public void begin(BuildTask task) {
+
+    }
+
+    /**
+     * Cleanup the script file once the task has been completed
+     * @param task
+     */
+    @Override
+    public void end(BuildTask task) {
+        /*File scriptFile = commandLineToFile.remove(task.getCommandLine());
+        if (scriptFile != null) {
+            scriptFile.delete();
+        }
+        */
+    }
+
+
+    public void stop() {
+        super.stop();
+        // also cleanup scripts
+        /*for (File file : commandLineToFile.values()) {
+            file.delete();
+        }*/
+    }
 }
