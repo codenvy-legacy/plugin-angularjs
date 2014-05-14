@@ -23,6 +23,7 @@ import com.codenvy.api.project.server.ProjectEventService;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
@@ -59,8 +60,8 @@ public class GruntRunner extends Runner {
     private final ProjectEventService projectEventService;
 
     @Inject
-    public GruntRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
-                       @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
+    public GruntRunner(@Named(Constants.DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
+                       @Named(Constants.APP_CLEANUP_TIME) int cleanupDelay,
                        @Named("runner.javascript_grunt.host_name") String hostName,
                        ResourceAllocators allocators,
                        CustomPortService portService,

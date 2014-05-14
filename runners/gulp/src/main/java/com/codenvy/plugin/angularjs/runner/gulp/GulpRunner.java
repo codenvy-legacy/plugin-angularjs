@@ -22,6 +22,7 @@ import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.project.server.ProjectEventService;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationProcess;
+import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.DeploymentSources;
 import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
@@ -57,8 +58,8 @@ public class GulpRunner extends Runner {
     private final ProjectEventService projectEventService;
 
     @Inject
-    public GulpRunner(@Named(DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
-                      @Named(CLEANUP_DELAY_TIME) int cleanupDelay,
+    public GulpRunner(@Named(Constants.DEPLOY_DIRECTORY) java.io.File deployDirectoryRoot,
+                      @Named(Constants.APP_CLEANUP_TIME) int cleanupDelay,
                       @Named("runner.javascript_gulp.host_name") String hostName,
                       ResourceAllocators allocators,
                       CustomPortService portService,

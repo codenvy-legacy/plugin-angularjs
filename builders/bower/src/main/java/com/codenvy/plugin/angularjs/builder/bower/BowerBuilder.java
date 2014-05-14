@@ -20,6 +20,7 @@ import com.codenvy.api.builder.BuilderException;
 import com.codenvy.api.builder.internal.BuildResult;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
+import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.commons.lang.ZipUtils;
@@ -66,10 +67,10 @@ public class BowerBuilder extends Builder {
      *         delay
      */
     @Inject
-    public BowerBuilder(@Named(REPOSITORY) File rootDirectory,
-                        @Named(NUMBER_OF_WORKERS) int numberOfWorkers,
-                        @Named(INTERNAL_QUEUE_SIZE) int queueSize,
-                        @Named(CLEAN_RESULT_DELAY_TIME) int cleanBuildResultDelay,
+    public BowerBuilder(@Named(Constants.REPOSITORY) java.io.File rootDirectory,
+                        @Named(Constants.NUMBER_OF_WORKERS) int numberOfWorkers,
+                        @Named(Constants.INTERNAL_QUEUE_SIZE) int queueSize,
+                        @Named(Constants.CLEANUP_RESULT_TIME) int cleanBuildResultDelay,
                         EventService eventService) {
         super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay, eventService);
         this.dtoFactory = DtoFactory.getInstance();
