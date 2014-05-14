@@ -44,7 +44,7 @@ public class ParseFile extends SimpleFileVisitor<Path> {
     private List<CodeCommentParser> callbacks;
 
     public ParseFile() {
-        this.callbacks = new ArrayList<CodeCommentParser>();
+        this.callbacks = new ArrayList<>();
         this.pattern = Pattern.compile("/\\*\\*(.*?)\\*/", Pattern.DOTALL);
 
         this.ngDocTypePattern = Pattern.compile("@ngdoc(.*?)\n");
@@ -60,7 +60,7 @@ public class ParseFile extends SimpleFileVisitor<Path> {
         // Parse comments and send them to the parser
         BufferedReader bufferedReader = Files.newBufferedReader(file, Charset.defaultCharset());
         StringBuilder stringBuilder = new StringBuilder();
-        String line = null;
+        String line;
         while ((line = bufferedReader.readLine()) != null) {
             stringBuilder.append(line).append("\n");
         }

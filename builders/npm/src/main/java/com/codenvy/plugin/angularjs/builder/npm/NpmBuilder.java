@@ -20,10 +20,10 @@ import com.codenvy.api.builder.BuilderException;
 import com.codenvy.api.builder.internal.BuildResult;
 import com.codenvy.api.builder.internal.Builder;
 import com.codenvy.api.builder.internal.BuilderConfiguration;
+import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.commons.lang.ZipUtils;
-import com.codenvy.dto.server.DtoFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,8 +32,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * Builder that will use NPM for download dependencies.
@@ -42,8 +40,6 @@ import java.util.concurrent.Future;
  */
 @Singleton
 public class NpmBuilder extends Builder {
-
-    private DtoFactory dtoFactory;
 
     /**
      * Default constructor.
@@ -58,13 +54,12 @@ public class NpmBuilder extends Builder {
      *         delay
      */
     @Inject
-    public NpmBuilder(@Named(REPOSITORY) File rootDirectory,
-                      @Named(NUMBER_OF_WORKERS) int numberOfWorkers,
-                      @Named(INTERNAL_QUEUE_SIZE) int queueSize,
-                      @Named(CLEAN_RESULT_DELAY_TIME) int cleanBuildResultDelay,
+    public NpmBuilder(@Named(Constants.REPOSITORY) File rootDirectory,
+                      @Named(Constants.NUMBER_OF_WORKERS) int numberOfWorkers,
+                      @Named(Constants.INTERNAL_QUEUE_SIZE) int queueSize,
+                      @Named(Constants.CLEANUP_RESULT_TIME) int cleanBuildResultDelay,
                       EventService eventService) {
         super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay, eventService);
-        this.dtoFactory = DtoFactory.getInstance();
     }
 
 
@@ -121,7 +116,7 @@ public class NpmBuilder extends Builder {
         }
 
         // zip bower folder
-        List<File> artifacts = new ArrayList<File>();
+        List<File> artifacts = new ArrayList<>();
         File zipFile = zipNpmFiles(task.getConfiguration());
         artifacts.add(zipFile);
 
@@ -147,7 +142,7 @@ public class NpmBuilder extends Builder {
         try {
             ZipUtils.zipDir(workingDirectory.getPath(), nodeModulesDirectory, zipFile, null);
         } catch (IOException e) {
-            throw new IllegalStateException("Unable to create archive of the NPM dependencies", e);
+            throw new BuilderException("Unable to create archive of the NPM dependencies", e);
         }
 
 

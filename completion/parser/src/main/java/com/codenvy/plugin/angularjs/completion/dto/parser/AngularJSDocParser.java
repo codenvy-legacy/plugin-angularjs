@@ -29,7 +29,7 @@ public class AngularJSDocParser {
     private List<CodeCommentParser> callbacks;
 
     public AngularJSDocParser() {
-        this.callbacks = new ArrayList<CodeCommentParser>();
+        this.callbacks = new ArrayList<>();
     }
 
     public void parse(Path path) throws IOException {

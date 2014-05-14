@@ -189,7 +189,7 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
         SplitResult fullAttributes = REGEXP_SPACES.split(text);
 
         // init list
-        List<String> attributesName = new ArrayList<String>();
+        List<String> attributesName = new ArrayList<>();
 
         // now, for each attribute, gets only the name of the attribute
         if (fullAttributes.length() > 0) {
@@ -225,7 +225,7 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
 
         AngularJSQuery query = new AngularJSQuery();
 
-        List<String> attributes = new ArrayList<String>();
+        List<String> attributes = new ArrayList<>();
         List<String> attributesBefore = getAngularAttributes(textBefore, true);
 
         attributes.addAll(attributesBefore);

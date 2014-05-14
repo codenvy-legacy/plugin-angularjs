@@ -16,10 +16,10 @@
 
 package com.codenvy.plugin.angularjs.core.server;
 
+import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.shared.AttributeDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.api.project.server.ProjectTypeDescriptionExtension;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

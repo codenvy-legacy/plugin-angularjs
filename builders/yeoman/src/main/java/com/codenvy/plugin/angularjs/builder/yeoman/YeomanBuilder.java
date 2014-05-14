@@ -26,28 +26,22 @@ import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.commons.lang.ZipUtils;
-import com.codenvy.dto.server.DtoFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * Builder that will use Yeoman.
@@ -58,12 +52,14 @@ import java.util.concurrent.Future;
 public class YeomanBuilder extends Builder implements BuildListener {
 
     /**
+     * Logger.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(YeomanBuilder.class);
+
+    /**
      * Map between the script to execute and the command line object.
      */
     private Map<CommandLine, File> commandLineToFile;
-
-
-    private DtoFactory dtoFactory;
 
     /**
      * Default constructor.
@@ -84,7 +80,6 @@ public class YeomanBuilder extends Builder implements BuildListener {
                          @Named(Constants.CLEANUP_RESULT_TIME) int cleanBuildResultDelay,
                          EventService eventService) {
         super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay, eventService);
-        this.dtoFactory = DtoFactory.getInstance();
         this.commandLineToFile = new HashMap<>();
         getBuildListeners().add(this);
     }
@@ -136,7 +131,9 @@ public class YeomanBuilder extends Builder implements BuildListener {
             throw new BuilderException(e);
         }
 
-        scriptFile.setExecutable(true);
+        if (!scriptFile.setExecutable(true)) {
+            throw new BuilderException("Unable to set executable flag on '" + scriptFile + "'");
+        }
 
 
         final CommandLine commandLine = new CommandLine(scriptFile.getAbsolutePath());
@@ -169,7 +166,7 @@ public class YeomanBuilder extends Builder implements BuildListener {
 
 
         // zip bower folder
-        List<File> artifacts = new ArrayList<File>();
+        List<File> artifacts = new ArrayList<>();
         File zipFile = zipYeomanFiles(task.getConfiguration());
         artifacts.add(zipFile);
 
@@ -194,7 +191,7 @@ public class YeomanBuilder extends Builder implements BuildListener {
         try {
             ZipUtils.zipDir(workingDirectory.getPath(), workingDirectory, zipFile, null);
         } catch (IOException e) {
-            throw new IllegalStateException("Unable to create archive of the current workspace", e);
+            throw new BuilderException("Unable to create archive of the current workspace", e);
         }
 
         return zipFile;
@@ -211,19 +208,23 @@ public class YeomanBuilder extends Builder implements BuildListener {
      */
     @Override
     public void end(BuildTask task) {
-        /*File scriptFile = commandLineToFile.remove(task.getCommandLine());
+        File scriptFile = commandLineToFile.remove(task.getCommandLine());
         if (scriptFile != null) {
-            scriptFile.delete();
+            if (!scriptFile.delete()) {
+                LOG.warn("Unable to delete ''{0}''", scriptFile);
+            }
         }
-        */
+
     }
 
 
     public void stop() {
         super.stop();
         // also cleanup scripts
-        /*for (File file : commandLineToFile.values()) {
-            file.delete();
-        }*/
+        for (File file : commandLineToFile.values()) {
+            if (!file.delete()) {
+                LOG.warn("Unable to delete ''{0}''", file);
+            }
+        }
     }
 }

@@ -37,10 +37,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
 /**
  * Application process used for Gulp
@@ -88,7 +85,6 @@ public class GulpProcess extends ApplicationProcess implements ProjectEventListe
         this.workDir = workDir;
         this.baseURL = baseURL;
         this.downloadPlugin = new HttpDownloadPlugin();
-        ;
     }
 
     /**
@@ -198,7 +194,7 @@ public class GulpProcess extends ApplicationProcess implements ProjectEventListe
 
                 // connect to the project API URL
                 int index = baseURL.indexOf(event.getProject());
-                HttpURLConnection conn = null;
+                HttpURLConnection conn;
                 try {
                     conn = (HttpURLConnection)new URL(baseURL.substring(0, index).concat("/file").concat(event.getProject()).concat("/").concat(
                             event.getPath())).openConnection();

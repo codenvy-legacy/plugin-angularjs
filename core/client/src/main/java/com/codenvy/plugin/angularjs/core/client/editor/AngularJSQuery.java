@@ -39,7 +39,7 @@ public class AngularJSQuery {
     private List<String> existingAttributes;
 
     public AngularJSQuery() {
-        this.existingAttributes = new ArrayList<String>();
+        this.existingAttributes = new ArrayList<>();
     }
 
     public List<String> getExistingAttributes() {

@@ -16,16 +16,11 @@
 
 package com.codenvy.plugin.angularjs.runner.grunt;
 
-import com.codenvy.api.core.util.CommandLine;
-import com.codenvy.api.core.util.DownloadPlugin;
-import com.codenvy.api.core.util.HttpDownloadPlugin;
 import com.codenvy.api.project.server.ProjectEvent;
 import com.codenvy.api.project.server.ProjectEventListener;
 import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.internal.ApplicationLogger;
 import com.codenvy.api.runner.internal.ApplicationProcess;
-import com.codenvy.api.runner.internal.DeploymentSources;
-import com.codenvy.commons.lang.ZipUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -46,13 +40,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
 /**
  * Application process used for Grunt
@@ -86,8 +74,6 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
      */
     private String baseURL;
 
-    private DownloadPlugin downloadPlugin;
-
     /**
      * Grunt runner configuration.
      */
@@ -115,7 +101,6 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
         this.executorService = executorService;
         this.workDir = workDir;
         this.baseURL = baseURL;
-        this.downloadPlugin = new HttpDownloadPlugin();
         this.gruntRunnerConfiguration = gruntRunnerConfiguration;
         this.gruntRunner = gruntRunner;
     }
@@ -276,7 +261,7 @@ public class GruntProcess extends ApplicationProcess implements ProjectEventList
 
                 // connect to the project API URL
                 int index = baseURL.indexOf(event.getProject());
-                HttpURLConnection conn = null;
+                HttpURLConnection conn;
                 try {
                     conn = (HttpURLConnection)new URL(baseURL.substring(0, index).concat("/file").concat(event.getProject()).concat("/").concat(
                             event.getPath())).openConnection();

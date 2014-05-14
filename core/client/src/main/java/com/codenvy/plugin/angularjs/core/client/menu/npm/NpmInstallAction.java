@@ -18,46 +18,18 @@ package com.codenvy.plugin.angularjs.core.client.menu.npm;
 
 import com.codenvy.api.builder.BuildStatus;
 import com.codenvy.api.builder.dto.BuildOptions;
-import com.codenvy.api.builder.dto.BuildTaskDescriptor;
-import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
-import com.codenvy.api.core.rest.shared.dto.Link;
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.wizard.DefaultWizard;
-import com.codenvy.ide.api.ui.wizard.WizardDialog;
-import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.extension.builder.client.BuilderExtension;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.StringUnmarshaller;
-import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.websocket.MessageBus;
-import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
-import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.codenvy.plugin.angularjs.core.client.builder.BuildFinishedCallback;
 import com.codenvy.plugin.angularjs.core.client.builder.BuilderAgent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
 
-import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
-import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-import static com.codenvy.ide.api.ui.wizard.newresource.NewResourceWizardKeys.RESOURCE_NAME;
 
 /**
  * Action that install NPM dependencies.
@@ -91,7 +63,7 @@ public class NpmInstallAction extends Action implements BuildFinishedCallback {
 
     public void installDependencies() {
         buildInProgress = true;
-        List<String> targets = Arrays.asList(new String[]{"install"});
+        List<String> targets = Arrays.asList("install");
         BuildOptions buildOptions = dtoFactory.createDto(BuildOptions.class).withTargets(targets).withBuilderName("npm");
         builderAgent.build(buildOptions, "Installation of npm dependencies...", "Npm dependencies successfully downloaded",
                            "Npm dependencies install failed", "npm", this);

@@ -85,7 +85,7 @@ public class AngularJSTrie {
 
 
     private static AbstractTrie<AngularJSCompletionProposal> createTrie() {
-        AbstractTrie<AngularJSCompletionProposal> result = new AbstractTrie<AngularJSCompletionProposal>();
+        AbstractTrie<AngularJSCompletionProposal> result = new AbstractTrie<>();
         for (String name : ELEMENTS.asIterable()) {
             result.put(name, new AngularJSCompletionProposal(name));
         }

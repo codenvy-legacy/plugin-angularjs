@@ -17,15 +17,13 @@
 package com.codenvy.plugin.angularjs.completion.dto.parser;
 
 
-import com.codenvy.plugin.angularjs.completion.dto.NgObject;
-import com.codenvy.plugin.angularjs.completion.dto.parser.api.AngularDocType;
-import com.codenvy.plugin.angularjs.completion.dto.parser.api.CommentContext;
-
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.plugin.angularjs.completion.dto.AngularTemplate;
+import com.codenvy.plugin.angularjs.completion.dto.NgObject;
 import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
-
+import com.codenvy.plugin.angularjs.completion.dto.parser.api.AngularDocType;
 import com.codenvy.plugin.angularjs.completion.dto.parser.api.CodeCommentParser;
+import com.codenvy.plugin.angularjs.completion.dto.parser.api.CommentContext;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

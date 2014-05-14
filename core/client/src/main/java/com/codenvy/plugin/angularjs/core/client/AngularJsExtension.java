@@ -18,14 +18,9 @@ package com.codenvy.plugin.angularjs.core.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.IconRegistry;
-import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
-import com.codenvy.plugin.angularjs.core.client.javascript.JavaScriptResources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Florent Benoit

@@ -24,7 +24,6 @@ import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.commons.lang.ZipUtils;
-import com.codenvy.dto.server.DtoFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,8 +35,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,8 +48,6 @@ public class BowerBuilder extends Builder {
 
 
     private static final Pattern DIRECTORY_PATTERN = Pattern.compile("\"directory\"\\s*:\\s*\"(.*)\"");
-
-    private DtoFactory dtoFactory;
 
     /**
      * Default constructor.
@@ -73,7 +68,6 @@ public class BowerBuilder extends Builder {
                         @Named(Constants.CLEANUP_RESULT_TIME) int cleanBuildResultDelay,
                         EventService eventService) {
         super(rootDirectory, numberOfWorkers, queueSize, cleanBuildResultDelay, eventService);
-        this.dtoFactory = DtoFactory.getInstance();
     }
 
 
@@ -132,7 +126,7 @@ public class BowerBuilder extends Builder {
         }
 
         // zip bower folder
-        List<File> artifacts = new ArrayList<File>();
+        List<File> artifacts = new ArrayList<>();
         File zipFile = zipBowerFiles(task.getConfiguration());
         artifacts.add(zipFile);
 
@@ -157,8 +151,8 @@ public class BowerBuilder extends Builder {
         if (bowerRcResource.exists()) {
             // read content
             StringBuilder stringBuilder = new StringBuilder();
-            try (BufferedReader bufferedReader = Files.newBufferedReader(bowerRcResource.toPath(), Charset.defaultCharset());) {
-                String line = null;
+            try (BufferedReader bufferedReader = Files.newBufferedReader(bowerRcResource.toPath(), Charset.defaultCharset())) {
+                String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     stringBuilder.append(line).append("\n");
                 }

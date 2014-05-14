@@ -27,7 +27,6 @@ import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -64,8 +63,7 @@ public class AngularJSCompletionProposal implements CompletionProposal {
         String directiveName = "ng".concat(name.substring(3, 4).toUpperCase()).concat(name.substring(4));
         String link = "http://docs.angularjs.org/api/ng/directive/".concat(directiveName);
         // Don't use String.format (not gwt compliant)
-        HTML html = new HTML("Full documentation available on <a href='".concat(link).concat("'>").concat(link).concat("</a>"));
-        return html;
+        return new HTML("Full documentation available on <a href='".concat(link).concat("'>").concat(link).concat("</a>"));
     }
 
     @Override
@@ -108,9 +106,7 @@ public class AngularJSCompletionProposal implements CompletionProposal {
                     e.apply(document);
                     // Do not try a new codeassist proposal
                     // invocationContext.getEditor().doOperation(TextEditorOperations.CODEASSIST_PROPOSALS);
-                } catch (MalformedTreeException e1) {
-                    Log.error(getClass(), e1);
-                } catch (BadLocationException e1) {
+                } catch (MalformedTreeException | BadLocationException e1) {
                     Log.error(getClass(), e1);
                 }
             }

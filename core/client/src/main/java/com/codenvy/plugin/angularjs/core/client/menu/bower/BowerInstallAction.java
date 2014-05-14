@@ -63,7 +63,7 @@ public class BowerInstallAction extends Action implements BuildFinishedCallback 
 
     public void installDependencies() {
         buildInProgress = true;
-        List<String> targets = Arrays.asList(new String[]{"install"});
+        List<String> targets = Arrays.asList("install");
         BuildOptions buildOptions = dtoFactory.createDto(BuildOptions.class).withTargets(targets).withBuilderName("bower");
         builderAgent.build(buildOptions, "Installation of Bower dependencies...", "Bower dependencies successfully downloaded",
                            "Bower install failed", "bower", this);

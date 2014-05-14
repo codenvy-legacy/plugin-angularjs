@@ -1298,7 +1298,6 @@
             }
             throwUnexpected(token);
         }
-        return;
     }
 
     // 11.1.4 Array Initialiser

@@ -87,9 +87,7 @@ public class JavaScriptProposal implements CompletionProposal {
                     e.apply(document);
                     // Do not try a new codeassist proposal
                     // invocationContext.getEditor().doOperation(TextEditorOperations.CODEASSIST_PROPOSALS);
-                } catch (MalformedTreeException e1) {
-                    Log.error(getClass(), e1);
-                } catch (BadLocationException e1) {
+                } catch (MalformedTreeException | BadLocationException e1) {
                     Log.error(getClass(), e1);
                 }
             }

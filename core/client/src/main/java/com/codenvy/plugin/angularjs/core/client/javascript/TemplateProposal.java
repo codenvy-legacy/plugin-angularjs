@@ -25,7 +25,6 @@ import com.codenvy.ide.text.edits.ReplaceEdit;
 import com.codenvy.ide.texteditor.api.codeassistant.Completion;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.plugin.angularjs.core.client.javascript.JavaScriptResources;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -100,9 +99,7 @@ public class TemplateProposal implements CompletionProposal {
                     e.apply(document);
                     // Do not try a new codeassist proposal
                     // invocationContext.getEditor().doOperation(TextEditorOperations.CODEASSIST_PROPOSALS);
-                } catch (MalformedTreeException e1) {
-                    Log.error(getClass(), e1);
-                } catch (BadLocationException e1) {
+                } catch (MalformedTreeException | BadLocationException e1) {
                     Log.error(getClass(), e1);
                 }
             }

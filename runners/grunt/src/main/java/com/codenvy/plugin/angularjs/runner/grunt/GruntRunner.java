@@ -21,7 +21,7 @@ import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.CustomPortService;
 import com.codenvy.api.project.server.ProjectEventService;
 import com.codenvy.api.runner.RunnerException;
-import com.codenvy.api.runner.dto.DebugMode;
+import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.DeploymentSources;
@@ -29,7 +29,6 @@ import com.codenvy.api.runner.internal.ResourceAllocators;
 import com.codenvy.api.runner.internal.Runner;
 import com.codenvy.api.runner.internal.RunnerConfiguration;
 import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
-import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 
@@ -39,12 +38,10 @@ import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 /**
@@ -145,9 +142,6 @@ public class GruntRunner extends Runner {
                 throw new RunnerException("Unable to read file", e);
             }
         }
-
-        // Gets the source url from the request
-        String sourceURL = configuration.getRequest().getDeploymentSourcesUrl();
 
         String baseURL = configuration.getRequest().getProjectDescriptor().getBaseUrl();
 

@@ -30,11 +30,9 @@ import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,7 +159,7 @@ public class GruntBuilder extends Builder {
         } catch (IOException e) {
             throw new BuilderException(e);
         }
-        List<File> artifacts = new ArrayList<File>();
+        List<File> artifacts = new ArrayList<>();
         artifacts.add(sourceFile);
 
         return new BuildResult(buildSuccess, artifacts, logFile);

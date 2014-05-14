@@ -16,9 +16,6 @@
 
 package com.codenvy.plugin.angularjs.core.client.editor;
 
-import com.codenvy.plugin.angularjs.core.client.editor.AngularJSHtmlCodeAssistProcessor;
-import com.codenvy.plugin.angularjs.core.client.editor.AngularJSQuery;
-
 import org.junit.Test;
 
 import java.util.Arrays;

@@ -19,24 +19,21 @@ package com.codenvy.plugin.angularjs.core.client.javascript;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.web.html.editor.HTMLCodeAssistProcessor;
 import com.codenvy.ide.ext.web.js.editor.JsCodeAssistProcessor;
-import com.codenvy.plugin.angularjs.completion.dto.Method;
-import com.codenvy.plugin.angularjs.completion.dto.Param;
-import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
-import com.codenvy.plugin.angularjs.completion.dto.Templating;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.AbstractTrie;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.plugin.angularjs.completion.dto.Method;
+import com.codenvy.plugin.angularjs.completion.dto.Param;
+import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
+import com.codenvy.plugin.angularjs.completion.dto.Templating;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.Context;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JavaScriptContentAssistProvider;
-import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JsProgram;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JsProposal;
 import com.google.gwt.core.client.JsArray;
 
@@ -50,8 +47,6 @@ import java.util.List;
 public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
 
     private static final char ACTIVATION_CHARACTER = '.';
-
-    private boolean isTextToCompleteBeforeDot;
 
     private native JavaScriptContentAssistProvider getProvider()/*-{
         return $wnd.jsEsprimaContentAssistProvider;
@@ -78,7 +73,7 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
     /** Complete will all stuff except directives for now
      * */
     protected void buildTrie() {
-        this.trie = new AbstractTrie<TemplateDotProvider>();
+        this.trie = new AbstractTrie<>();
         for (TemplateDotProvider provider : templating.getTemplateDotProviders()) {
             if ("DIRECTIVE".equals(provider.getType())) {
                 continue;
@@ -111,7 +106,7 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
             // get the current template provider
             String prefixVal = templatePrefix.substring(0, dot);
             String suffixVal = templatePrefix.substring(dot + 1, templatePrefix.length());
-            AbstractTrie<String> subTrie = new AbstractTrie<String>();
+            AbstractTrie<String> subTrie = new AbstractTrie<>();
 
             for (TemplateDotProvider provider : templating.getTemplateDotProviders()) {
                 if (prefixVal.equals(provider.getName())) {
@@ -194,8 +189,7 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
         try {
             Region lineInfo = document.getLineInformationOfOffset(offset);
             String line = document.get(lineInfo.getOffset(), lineInfo.getLength());
-            String partLine = line.substring(0, offset - lineInfo.getOffset());
-            return partLine;
+            return line.substring(0, offset - lineInfo.getOffset());
         } catch (BadLocationException e) {
             Log.error(JavaScriptCodeAssistProcessor.class, e);
         }
@@ -209,7 +203,6 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
      * @return
      */
     private String computePrefix(Document document, int offset) {
-        isTextToCompleteBeforeDot = false;
         try {
             Region lineInfo = document.getLineInformationOfOffset(offset);
             String line = document.get(lineInfo.getOffset(), lineInfo.getLength());
@@ -217,7 +210,6 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
             for (int i = partLine.length() - 1; i >= 0; i--) {
                 switch (partLine.charAt(i)) {
                     case '.':
-                        isTextToCompleteBeforeDot = true;
                         break;
                     case ' ':
                     case '(':

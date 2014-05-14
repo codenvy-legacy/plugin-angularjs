@@ -26,7 +26,6 @@ import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
@@ -36,7 +35,6 @@ import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBus;
@@ -288,8 +286,7 @@ public class BuilderAgent {
     protected void importZipResult(final BuildTaskDescriptor descriptor, final BuildFinishedCallback buildFinishedCallback) {
         Link downloadLink = null;
         List<Link> links = descriptor.getLinks();
-        for (int i = 0; i < links.size(); i++) {
-            Link link = links.get(i);
+        for (Link link : links) {
             if (link.getRel().equalsIgnoreCase("download result")) {
                 downloadLink = link;
             }

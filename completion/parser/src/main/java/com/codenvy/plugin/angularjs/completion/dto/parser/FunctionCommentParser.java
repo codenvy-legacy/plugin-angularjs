@@ -17,16 +17,14 @@
 package com.codenvy.plugin.angularjs.completion.dto.parser;
 
 
-import com.codenvy.plugin.angularjs.completion.dto.parser.api.AngularDocType;
-import com.codenvy.plugin.angularjs.completion.dto.parser.api.CommentContext;
-
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.plugin.angularjs.completion.dto.AngularTemplate;
 import com.codenvy.plugin.angularjs.completion.dto.Function;
 import com.codenvy.plugin.angularjs.completion.dto.Param;
 import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
-
+import com.codenvy.plugin.angularjs.completion.dto.parser.api.AngularDocType;
 import com.codenvy.plugin.angularjs.completion.dto.parser.api.CodeCommentParser;
+import com.codenvy.plugin.angularjs.completion.dto.parser.api.CommentContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,7 @@ public class FunctionCommentParser implements CodeCommentParser {
     public void onComment(CommentContext commentContext) {
         // register a new Method for the given provider
         Function function = dtoFactory.createDto(Function.class);
-        List<Param> params = new ArrayList<Param>();
+        List<Param> params = new ArrayList<>();
         function.setParams(params);
         List<String> paramNames = commentContext.getAttributeValues("param");
         String methodName = commentContext.getAttributeValue("name");
