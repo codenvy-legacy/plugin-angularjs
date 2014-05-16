@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Florent Benoit
  */
-public class TestAngularJSHtmlCodeAssistProcessor {
+public class AngularJSHtmlCodeAssistProcessorTest {
 
     @Test
     public void testAngularAttributes() {
