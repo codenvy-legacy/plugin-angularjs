@@ -24,7 +24,7 @@
     </parent>
     <groupId>com.codenvy.plugin-angularjs</groupId>
     <artifactId>angularjs-parent</artifactId>
-    <version>1.0.0-M3</version>
+    <version>1.0.0-M4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>AngularJS Plugin</name>
     <developers>
@@ -45,7 +45,7 @@
     <scm>
         <connection>scm:git:git@github.com:codenvy/plugin-angularjs.git</connection>
         <developerConnection>scm:git:git@github.com:codenvy/plugin-angularjs.git</developerConnection>
-        <tag>1.0.0-M3</tag>
+        <tag>HEAD</tag>
     </scm>
     <properties>
         <apache-rat-plugin.ignoreErrors>false</apache-rat-plugin.ignoreErrors>
