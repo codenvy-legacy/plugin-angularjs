@@ -31,7 +31,30 @@ public interface YeomanPartView extends View<YeomanPartView.ActionDelegate> {
 
     void removeItem(YeomanGeneratorType type, String name, GeneratedItemView generatedItemView);
 
+    void clear();
+
+    /**
+     * Enable the button
+     */
+    void enableGenerateButton();
+
+    /**
+     * Disable the generate button
+     */
+    void disableGenerateButton();
+
+
+    void addFoldingPanel(FoldingPanel foldingPanel);
+    void removeFoldingPanel(FoldingPanel foldingPanel);
+
+
     public interface ActionDelegate extends BaseActionDelegate {
+
+        void addItem(String name, YeomanGeneratorType type);
+
+        void generate();
+
+        void removeItem(YeomanGeneratorType type, String name, GeneratedItemView itemView);
 
     }
 }

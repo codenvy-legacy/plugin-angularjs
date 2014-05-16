@@ -50,11 +50,11 @@ public enum YeomanGeneratorType {
         this.labelName = labelName;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    String getLabelName() {
+    public String getLabelName() {
         return labelName;
     }
 

@@ -111,8 +111,19 @@ public class FoldingPanelImpl extends Composite implements FoldingPanel {
         }
     }
 
-    public FlowPanel getTogglePanel() {
-        return togglePanel;
+    @Override
+    public String getName() {
+        return this.foldingTitle.getText();
+    }
+
+    @Override
+    public void add(GeneratedItemView element) {
+        togglePanel.add(element);
+    }
+
+    @Override
+    public void remove(GeneratedItemView element) {
+        togglePanel.remove(element);
     }
 
 

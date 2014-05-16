@@ -32,9 +32,7 @@ public interface GeneratedItemViewFactory {
      *         the given name
      * @param type
      *         the tpe of this element
-     * @param angularJSResources
-     *         the resource for retrieving data
      * @return a new UI element
      */
-    GeneratedItemView create(String name, YeomanGeneratorType type, AngularJSResources angularJSResources);
+    GeneratedItemView create(String name, YeomanGeneratorType type);
 }

@@ -18,6 +18,7 @@ package com.codenvy.plugin.angularjs.core.client.menu.yeoman;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Panel that will allow to open/hide elements
@@ -26,9 +27,17 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface FoldingPanel extends IsWidget {
 
+    String getName();
+
     /**
-     * @return element that is either visible or hidden
+     * Add element
      */
-    FlowPanel getTogglePanel();
+    void add(GeneratedItemView element);
+
+    /**
+     * Remove element
+     */
+    void remove(GeneratedItemView element);
+
 
 }

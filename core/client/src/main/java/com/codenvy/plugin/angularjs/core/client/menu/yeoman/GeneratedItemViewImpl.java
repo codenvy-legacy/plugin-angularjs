@@ -89,7 +89,7 @@ public class GeneratedItemViewImpl extends Composite implements GeneratedItemVie
      * @return a new UI element
      */
     @AssistedInject
-    public GeneratedItemViewImpl(@Assisted String name, @Assisted YeomanGeneratorType type, @Assisted AngularJSResources uiResources) {
+    public GeneratedItemViewImpl(@Assisted String name, @Assisted YeomanGeneratorType type, AngularJSResources uiResources) {
         super();
         this.name = name;
         this.type = type;
