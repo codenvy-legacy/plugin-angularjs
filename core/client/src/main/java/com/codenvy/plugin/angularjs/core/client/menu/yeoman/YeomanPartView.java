@@ -23,9 +23,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  * Interface of the view panel that will manage the yeoman generator view.
  */
 public interface YeomanPartView extends View<YeomanPartView.ActionDelegate> {
-    AcceptsOneWidget getContainer();
-
-    void showNoYeoman();
 
     void setTitle(String title);
 

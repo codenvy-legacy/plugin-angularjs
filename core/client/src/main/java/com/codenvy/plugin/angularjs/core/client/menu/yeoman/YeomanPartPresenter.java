@@ -46,18 +46,13 @@ import java.util.Map;
  * @author Florent Benoit
  */
 @Singleton
-public class YeomanPartPresenter extends BasePresenter implements ActivePartChangedHandler, YeomanPartView.ActionDelegate,
+public class YeomanPartPresenter extends BasePresenter implements YeomanPartView.ActionDelegate,
                                                                   BuildFinishedCallback {
 
     /**
      * The view of the yeoman panel.
      */
     private final YeomanPartView view;
-
-    /**
-     * Current active part.
-     */
-    private TextEditorPartPresenter activePart;
 
     private FoldingPanelFactory      foldingPanelFactory;
     private GeneratedItemViewFactory generatedItemViewFactory;
@@ -88,7 +83,6 @@ public class YeomanPartPresenter extends BasePresenter implements ActivePartChan
         this.namesByTypes = new HashMap<>();
         this.widgetByTypes = new HashMap<>();
 
-        eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
         view.setTitle("Yeoman");
         view.setDelegate(this);
         updateGenerateButton();
@@ -116,21 +110,6 @@ public class YeomanPartPresenter extends BasePresenter implements ActivePartChan
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onActivePartChanged(ActivePartChangedEvent event) {
-        if (event.getActivePart() instanceof TextEditorPartPresenter) {
-            if (activePart != event.getActivePart()) {
-                activePart = (TextEditorPartPresenter)event.getActivePart();
-                if (activePart.getOutline() != null) {
-                    activePart.getOutline().go(view.getContainer());
-                } else {
-                    view.showNoYeoman();
-                }
-            }
-        }
     }
 
     /**

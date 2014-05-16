@@ -56,14 +56,12 @@ public class YeomanPartViewImpl extends BaseView<YeomanPartView.ActionDelegate> 
     @UiField
     FlowPanel resultZone;
     private SimplePanel container;
-    private Label noYeoman;
 
     @Inject
     public YeomanPartViewImpl(AngularJSResources angularJSResources, PartStackUIResources resources) {
         super(resources);
         this.uiResources = angularJSResources;
 
-        noYeoman = new Label("Yeoman is not available.");
         container = new SimplePanel();
         super.container.add(container);
         container.add(uiBinder.createAndBindUi(this));
@@ -109,13 +107,6 @@ public class YeomanPartViewImpl extends BaseView<YeomanPartView.ActionDelegate> 
 
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void showNoYeoman() {
-        container.clear();
-        container.add(noYeoman);
-    }
-
     public void clear() {
         resultZone.clear();
     }
@@ -147,13 +138,6 @@ public class YeomanPartViewImpl extends BaseView<YeomanPartView.ActionDelegate> 
     public void disableGenerateButton() {
         generateButton.setEnabled(false);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public AcceptsOneWidget getContainer() {
-        return container;
-    }
-
 
 
     interface YeomanPartViewImplUiBinder extends UiBinder<Widget, YeomanPartViewImpl> {
