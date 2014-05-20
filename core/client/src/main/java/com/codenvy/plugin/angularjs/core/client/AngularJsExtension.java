@@ -17,10 +17,21 @@
 package com.codenvy.plugin.angularjs.core.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.IconRegistry;
+import com.codenvy.ide.api.ui.action.Anchor;
+import com.codenvy.ide.api.ui.action.Constraints;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
+import com.codenvy.plugin.angularjs.core.client.wizard.AngularPagePresenter;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD;
 
 /**
  * @author Florent Benoit
@@ -31,7 +42,7 @@ import com.google.inject.Singleton;
 public class AngularJsExtension {
 
     @Inject
-    public AngularJsExtension(IconRegistry iconRegistry, AngularJSResources resources) {
+    public AngularJsExtension(IconRegistry iconRegistry, AngularJSResources resources, ProjectTypeWizardRegistry projectTypeWizardRegistry, NotificationManager notificationManager, Provider<AngularPagePresenter> angularPagePresenter) {
         iconRegistry.registerIcon("AngularJS.projecttype.big.icon", "angularjs-extension/newproject-angularjs.png");
         iconRegistry.registerIcon("AngularJS.projecttype.small.icon", "angularjs-extension/newproject-angularjs.png");
 
@@ -65,6 +76,12 @@ public class AngularJsExtension {
 
         // inject CSS
         resources.uiCss().ensureInjected();
+
+        // add wizard
+        ProjectWizard wizard = new ProjectWizard(notificationManager);
+        wizard.addPage(angularPagePresenter);
+        projectTypeWizardRegistry.addWizard("AngularJS", wizard);
+
 
 
     }
