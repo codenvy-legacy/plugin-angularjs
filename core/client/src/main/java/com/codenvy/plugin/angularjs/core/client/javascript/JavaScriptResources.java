@@ -28,9 +28,6 @@ import com.google.gwt.resources.client.TextResource;
  */
 public interface JavaScriptResources extends ClientBundle {
 
-    JavaScriptResources INSTANCE = GWT.create(JavaScriptResources.class);
-
-
     @Source("com/codenvy/plugin/angularjs/core/client/completion-item-js.png")
     ImageResource property();
 

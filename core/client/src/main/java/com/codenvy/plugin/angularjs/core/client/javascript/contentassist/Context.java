@@ -21,7 +21,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author Florent Benoit
  */
-public final class Context extends JavaScriptObject {
+public final class Context extends JavaScriptObject implements IContext {
 
     protected Context() {
     }

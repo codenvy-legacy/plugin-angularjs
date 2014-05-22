@@ -33,10 +33,15 @@ import com.codenvy.plugin.angularjs.completion.dto.Param;
 import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
 import com.codenvy.plugin.angularjs.completion.dto.Templating;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.Context;
+import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.ContextFactory;
+import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.IContentAssistProvider;
+import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.IContext;
+import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JSNIContextFactory;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JavaScriptContentAssistProvider;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JsProposal;
 import com.google.gwt.core.client.JsArray;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.Comparator;
 import java.util.List;
@@ -46,29 +51,62 @@ import java.util.List;
  */
 public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
 
-    private static final char ACTIVATION_CHARACTER = '.';
+    protected static final char ACTIVATION_CHARACTER = '.';
 
-    private native JavaScriptContentAssistProvider getProvider()/*-{
+    private native IContentAssistProvider getNativeProvider()/*-{
         return $wnd.jsEsprimaContentAssistProvider;
     }-*/;
 
-    private JavaScriptContentAssistProvider provider;
-
-    private JavaScriptResources javaScriptResources;
+    private IContentAssistProvider provider;
 
     private Templating templating;
 
     private AbstractTrie<TemplateDotProvider> trie;
 
     @Inject
-    public JavaScriptCodeAssistProcessor(DtoFactory dtoFactory, JavaScriptResources javaScriptResources) {
-        this.templating = dtoFactory.createDtoFromJson(javaScriptResources.completionTemplatingJson().getText(), Templating.class);
+    private DtoFactory dtoFactory;
+
+    private JavaScriptResources javaScriptResources;
+
+    private ContextFactory contextFactory;
+
+    /**
+     * Sets the javascript resources
+     * Also if resources is injected it means we're in GWT so initialize()
+     * @param javaScriptResources
+     */
+    @Inject
+    public void setJavaScriptResources(JavaScriptResources javaScriptResources) {
         this.javaScriptResources = javaScriptResources;
-        provider = getProvider();
+
+        // Initialize
+        init();
+    }
+
+
+    protected void init() {
+        setProvider(getNativeProvider());
+        setTemplating(dtoFactory.createDtoFromJson(javaScriptResources.completionTemplatingJson().getText(), Templating.class));
 
         // build trie
         buildTrie();
+
+        // set context factory using JSNI
+        setContextFactory(new JSNIContextFactory());
     }
+
+    protected void setTemplating(Templating templating) {
+        this.templating = templating;
+    }
+
+    protected void setProvider(IContentAssistProvider provider) {
+        this.provider = provider;
+    }
+
+    public void setContextFactory(ContextFactory contextFactory) {
+        this.contextFactory = contextFactory;
+    }
+
 
     /** Complete will all stuff except directives for now
      * */
@@ -84,9 +122,9 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
 
     @Override
     public void computeCompletionProposals(TextEditorPartView view, int offset, CodeAssistCallback codeAssistCallback) {
-        Context c = Context.create();
+        IContext context = contextFactory.create();
         String prefix = computePrefix(view.getDocument(), offset);
-        c.setPrefix(prefix);
+        context.setPrefix(prefix);
         Array<CompletionProposal> prop = Collections.createArray();
 
 
@@ -104,7 +142,7 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
 
         if (dot != -1 && dot == lastDot) {
             // get the current template provider
-            String prefixVal = templatePrefix.substring(0, dot);
+            String prefixVal = templatePrefix.substring(0, dot).trim();
             String suffixVal = templatePrefix.substring(dot + 1, templatePrefix.length());
             AbstractTrie<String> subTrie = new AbstractTrie<>();
 
@@ -119,10 +157,10 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
                                 fullName = fullName.concat("(");
                                 int i = 1;
                                 for (Param param : m.getParams()) {
-                                        fullName = fullName.concat(param.getName());
-                                        if (i < m.getParams().size()) {
-                                            fullName = fullName.concat(",");
-                                        }
+                                    fullName = fullName.concat(param.getName());
+                                    if (i < m.getParams().size()) {
+                                        fullName = fullName.concat(",");
+                                    }
                                         i++;
                                     }
                                     fullName = fullName.concat(")");
@@ -159,7 +197,7 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
 
 
         try {
-            JsArray<JsProposal> jsProposals = provider.computeProposals(view.getDocument().get(), offset, c);
+            JsArray<JsProposal> jsProposals = provider.computeProposals(view.getDocument().get(), offset, context);
             if (jsProposals != null && jsProposals.length() != 0) {
                 for (int i = 0; i < jsProposals.length(); i++) {
                     JsProposal jsProposal = jsProposals.get(i);

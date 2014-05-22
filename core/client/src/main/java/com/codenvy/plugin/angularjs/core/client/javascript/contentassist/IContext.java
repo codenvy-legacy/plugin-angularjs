@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright 2014 Codenvy, S.A.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,25 +16,10 @@
 
 package com.codenvy.plugin.angularjs.core.client.javascript.contentassist;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
-
-
 /**
  * @author Florent Benoit
  */
-public final class JavaScriptContentAssistProvider extends JavaScriptObject implements IContentAssistProvider {
+public interface IContext {
 
-    protected JavaScriptContentAssistProvider() {
-    }
-
-    public native JsArray<JsProposal> computeProposals(String buffer, int offset, IContext context)/*-{
-        return this['computeProposals'](buffer, offset, context);
-    }-*/;
-
-
-    public native JsProgram parse(String content)/*-{
-        return $wnd.esprima.parse(content, {tolerant: true});
-    }-*/;
-
+    void setPrefix(String prefix);
 }
