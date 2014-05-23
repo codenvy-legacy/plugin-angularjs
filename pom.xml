@@ -41,6 +41,7 @@
         <module>builders</module>
         <module>runners</module>
         <module>templates</module>
+        <module>itests</module>
     </modules>
     <scm>
         <connection>scm:git:git@github.com:codenvy/plugin-angularjs.git</connection>
@@ -53,7 +54,6 @@
     <build>
         <pluginManagement>
             <plugins>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-changes-plugin</artifactId>
