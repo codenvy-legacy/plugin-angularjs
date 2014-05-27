@@ -29,6 +29,7 @@ import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.plugin.angularjs.core.client.menu.bower.BowerInstallAction;
 import com.codenvy.plugin.angularjs.core.client.menu.npm.NpmInstallAction;
 import com.codenvy.plugin.angularjs.core.client.menu.yeoman.YeomanPartPresenter;
@@ -36,9 +37,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import static com.codenvy.ide.api.ui.action.Anchor.BEFORE;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_MENU;
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
+import static com.codenvy.ide.api.ui.action.Anchor.AFTER;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD;
 
 
 /**
@@ -48,11 +48,10 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 @Extension(title = "AngularJS Menu extension.", version = "3.0.0")
 public class AngularJSMenuExtension {
 
-    private static final String NPM_GROUP_MENU = "NpmMenu";
-    private static final String BOWER_GROUP_MENU = "BowerMenu";
 
     @Inject
     public AngularJSMenuExtension(ActionManager actionManager, ResourceProvider resourceProvider,
+                                  BuilderLocalizationConstant builderLocalizationConstant,
                                   com.codenvy.plugin.angularjs.core.client.menu.bower.LocalizationConstant localizationConstantBower,
                                   com.codenvy.plugin.angularjs.core.client.menu.npm.LocalizationConstant localizationConstantNpm,
                                   final NpmInstallAction npmInstallAction,
@@ -67,30 +66,17 @@ public class AngularJSMenuExtension {
         actionManager.registerAction(localizationConstantNpm.npmInstallId(), npmInstallAction);
         actionManager.registerAction(localizationConstantBower.bowerInstallId(), bowerInstallAction);
 
-        // Get main menu
-        DefaultActionGroup mainMenu = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_MENU);
+        // Get Build menu
+        DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
 
         // create constraint
-        Constraints beforeWindow = new Constraints(BEFORE, GROUP_WINDOW);
+        Constraints afterBuildConstraints = new Constraints(AFTER, builderLocalizationConstant.buildProjectControlId());
 
-        // Build NPM menu
-        DefaultActionGroup npmActionGroup = new CustomActionGroup(resourceProvider, "Npm", true, actionManager);
-        actionManager.registerAction(NPM_GROUP_MENU,
-                                     npmActionGroup);
-        mainMenu.add(npmActionGroup, beforeWindow);
+        // Add NPM in build menu
+        buildMenuActionGroup.add(npmInstallAction, afterBuildConstraints);
 
-        // register actions for Yeoman menu
-        npmActionGroup.add(npmInstallAction);
-
-
-        // Build Bower menu
-        DefaultActionGroup bowerActionGroup = new CustomActionGroup(resourceProvider, "Bower", true, actionManager);
-        actionManager.registerAction(BOWER_GROUP_MENU,
-                                     bowerActionGroup);
-        mainMenu.add(bowerActionGroup, beforeWindow);
-
-        // register actions for Bower menu
-        bowerActionGroup.add(bowerInstallAction);
+        // Add Bower in build menu
+        buildMenuActionGroup.add(bowerInstallAction, afterBuildConstraints);
 
 
         // Install NPM dependencies when projects is being opened and that there is no node_modules directory

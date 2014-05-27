@@ -25,6 +25,7 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.plugin.angularjs.core.client.builder.BuildFinishedCallback;
 import com.codenvy.plugin.angularjs.core.client.builder.BuilderAgent;
+import com.codenvy.plugin.angularjs.core.client.menu.CustomAction;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -35,7 +36,7 @@ import java.util.List;
  * Action that install bower dependencies.
  * @author Florent Benoit
  */
-public class BowerInstallAction extends Action implements BuildFinishedCallback {
+public class BowerInstallAction extends CustomAction implements BuildFinishedCallback {
 
     private DtoFactory dtoFactory;
 
@@ -48,7 +49,7 @@ public class BowerInstallAction extends Action implements BuildFinishedCallback 
     @Inject
     public BowerInstallAction(LocalizationConstant localizationConstant,
                               DtoFactory dtoFactory, BuilderAgent builderAgent, ResourceProvider resourceProvider) {
-        super(localizationConstant.bowerInstallText(), localizationConstant.bowerInstallDescription(), null);
+        super(resourceProvider, localizationConstant.bowerInstallText(), localizationConstant.bowerInstallDescription());
         this.dtoFactory = dtoFactory;
         this.builderAgent = builderAgent;
         this.resourceProvider = resourceProvider;
@@ -94,6 +95,7 @@ public class BowerInstallAction extends Action implements BuildFinishedCallback 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
+        super.update(e);
         e.getPresentation().setEnabled(!buildInProgress);
     }
 

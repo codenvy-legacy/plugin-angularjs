@@ -25,6 +25,7 @@ import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.plugin.angularjs.core.client.builder.BuildFinishedCallback;
 import com.codenvy.plugin.angularjs.core.client.builder.BuilderAgent;
+import com.codenvy.plugin.angularjs.core.client.menu.CustomAction;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -35,7 +36,7 @@ import java.util.List;
  * Action that install NPM dependencies.
  * @author Florent Benoit
  */
-public class NpmInstallAction extends Action implements BuildFinishedCallback {
+public class NpmInstallAction extends CustomAction implements BuildFinishedCallback {
 
     private DtoFactory dtoFactory;
 
@@ -48,7 +49,7 @@ public class NpmInstallAction extends Action implements BuildFinishedCallback {
     @Inject
     public NpmInstallAction(LocalizationConstant localizationConstant,
                             DtoFactory dtoFactory, BuilderAgent builderAgent, ResourceProvider resourceProvider) {
-        super(localizationConstant.npmInstallText(), localizationConstant.npmInstallDescription(), null);
+        super(resourceProvider, localizationConstant.npmInstallText(), localizationConstant.npmInstallDescription());
         this.dtoFactory = dtoFactory;
         this.builderAgent = builderAgent;
         this.resourceProvider = resourceProvider;
@@ -93,6 +94,7 @@ public class NpmInstallAction extends Action implements BuildFinishedCallback {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
+        super.update(e);
         e.getPresentation().setEnabled(!buildInProgress);
     }
 }

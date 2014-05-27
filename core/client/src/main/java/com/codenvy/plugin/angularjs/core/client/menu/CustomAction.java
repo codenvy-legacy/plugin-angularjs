@@ -17,36 +17,38 @@
 package com.codenvy.plugin.angularjs.core.client.menu;
 
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.google.inject.Inject;
 
 /**
  * Allow to hide elements if the current project is not an angular project.
  * @author Florent Benoit
  */
-public class CustomActionGroup extends DefaultActionGroup {
+public abstract class CustomAction extends Action {
 
     private ResourceProvider resourceProvider;
 
-    public CustomActionGroup(ResourceProvider resourceProvider, String shortName, boolean popup, ActionManager actionManager) {
-        super(shortName, popup, actionManager);
+    public CustomAction(ResourceProvider resourceProvider, String name, String description) {
+        super(name, description, null);
         this.resourceProvider = resourceProvider;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
-        if (activeProject != null) {
-            final String projectTypeId = activeProject.getDescription().getProjectTypeId();
-            boolean isAngularJSProject = "AngularJS".equals(projectTypeId);
-            e.getPresentation().setVisible(isAngularJSProject);
-            e.getPresentation().setEnabled(isAngularJSProject);
-        } else {
-            e.getPresentation().setEnabledAndVisible(false);
+        /** {@inheritDoc} */
+        @Override
+        public void update (ActionEvent e){
+            Project activeProject = resourceProvider.getActiveProject();
+            if (activeProject != null) {
+                final String projectTypeId = activeProject.getDescription().getProjectTypeId();
+                boolean isAngularJSProject = "AngularJS".equals(projectTypeId);
+                e.getPresentation().setVisible(isAngularJSProject);
+            } else {
+                e.getPresentation().setEnabledAndVisible(false);
+            }
         }
     }
-}
