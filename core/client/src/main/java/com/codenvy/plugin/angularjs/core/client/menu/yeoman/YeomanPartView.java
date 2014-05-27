@@ -40,6 +40,16 @@ public interface YeomanPartView extends View<YeomanPartView.ActionDelegate> {
      */
     void disableGenerateButton();
 
+    /**
+     * Disable spinner on the generate button
+     */
+    void disableProgressOnGenerateButton();
+
+    /**
+     * Enable spinner on the generate button
+     */
+    void enableProgressOnGenerateButton();
+
 
     void addFoldingPanel(FoldingPanel foldingPanel);
     void removeFoldingPanel(FoldingPanel foldingPanel);

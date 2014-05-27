@@ -86,6 +86,9 @@ public interface AngularJSResources extends ClientBundle {
         @ClassName("yeoman-wizard-generateButton")
         String yeomanWizardGenerateButton();
 
+        @ClassName("yeoman-wizard-generateButton-icon")
+        String yeomanWizardGenerateButtonIcon();
+
         @ClassName("foldingPanel")
         String foldingPanel();
 

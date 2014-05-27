@@ -18,6 +18,7 @@ package com.codenvy.plugin.angularjs.core.client.menu.yeoman;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.notification.NotificationResources;
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,6 +35,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 /**
  * @author Florent Benoit
  */
@@ -45,6 +48,13 @@ public class YeomanPartViewImpl extends BaseView<YeomanPartView.ActionDelegate> 
      */
     @UiField(provided = true)
     protected final AngularJSResources uiResources;
+
+    /**
+     * CSS resource.
+     */
+    protected final NotificationResources notificationResources;
+
+
     @UiField
     TextBox resourceName;
     @UiField
@@ -55,12 +65,18 @@ public class YeomanPartViewImpl extends BaseView<YeomanPartView.ActionDelegate> 
     Button generateButton;
     @UiField
     FlowPanel resultZone;
+
+    SimplePanel iconField;
+
     private SimplePanel container;
 
+    private SVGImage progressIcon;
+
     @Inject
-    public YeomanPartViewImpl(AngularJSResources angularJSResources, PartStackUIResources resources) {
+    public YeomanPartViewImpl(AngularJSResources angularJSResources, PartStackUIResources resources, NotificationResources notificationResources) {
         super(resources);
         this.uiResources = angularJSResources;
+        this.notificationResources = notificationResources;
 
         container = new SimplePanel();
         super.container.add(container);
@@ -80,6 +96,15 @@ public class YeomanPartViewImpl extends BaseView<YeomanPartView.ActionDelegate> 
         resourceType.addItem("View");
 
         minimizeButton.ensureDebugId("outline-minimizeBut");
+
+        // add iconPanel inside the button
+        iconField = new SimplePanel();
+        iconField.setStyleName(angularJSResources.uiCss().yeomanWizardGenerateButtonIcon());
+        generateButton.getElement().appendChild(iconField.getElement());
+
+        // create icon
+        progressIcon = new SVGImage(notificationResources.progress());
+        progressIcon.getElement().setAttribute("class", notificationResources.notificationCss().progress());
 
         disableGenerateButton();
 
@@ -137,6 +162,16 @@ public class YeomanPartViewImpl extends BaseView<YeomanPartView.ActionDelegate> 
      */
     public void disableGenerateButton() {
         generateButton.setEnabled(false);
+    }
+
+    @Override
+    public void disableProgressOnGenerateButton() {
+        iconField.remove(progressIcon);
+    }
+
+    @Override
+    public void enableProgressOnGenerateButton() {
+        iconField.setWidget(progressIcon);
     }
 
 

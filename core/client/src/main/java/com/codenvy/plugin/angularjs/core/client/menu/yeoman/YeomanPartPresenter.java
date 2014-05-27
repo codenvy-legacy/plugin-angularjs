@@ -208,6 +208,8 @@ public class YeomanPartPresenter extends BasePresenter implements YeomanPartView
 
         // disable the button
         view.disableGenerateButton();
+        // enable progress the button
+        view.enableProgressOnGenerateButton();
     }
 
 
@@ -246,6 +248,7 @@ public class YeomanPartPresenter extends BasePresenter implements YeomanPartView
     protected void updateGenerateButton() {
         if (namesByTypes.isEmpty()) {
             view.disableGenerateButton();
+            view.disableProgressOnGenerateButton();
         } else {
             view.enableGenerateButton();
         }

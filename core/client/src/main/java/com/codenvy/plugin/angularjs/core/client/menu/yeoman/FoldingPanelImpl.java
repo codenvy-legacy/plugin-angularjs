@@ -103,9 +103,11 @@ public class FoldingPanelImpl extends Composite implements FoldingPanel {
 
     protected void setOpen(final boolean open) {
         if (open) {
+            this.togglePanel.setVisible(true);
             this.togglePanel.removeStyleName(style.folded());
             this.toggleButton.removeStyleName(style.toggleButtonClosed());
         } else {
+            this.togglePanel.setVisible(false);
             this.togglePanel.addStyleName(style.folded());
             this.toggleButton.addStyleName(style.toggleButtonClosed());
         }
