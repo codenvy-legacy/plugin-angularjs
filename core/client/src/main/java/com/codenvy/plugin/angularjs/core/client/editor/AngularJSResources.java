@@ -83,7 +83,7 @@ public interface AngularJSResources extends ClientBundle {
 
     public interface UiStyle extends CssResource {
 
-        @ClassName("yeoman-wizard-executeButton")
+        @ClassName("yeoman-wizard-generateButton")
         String yeomanWizardGenerateButton();
 
         @ClassName("foldingPanel")
