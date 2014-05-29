@@ -14,7 +14,7 @@
     <parent>
         <artifactId>angularjs-api</artifactId>
         <groupId>com.codenvy.plugin-angularjs</groupId>
-        <version>1.0.0-M4-SNAPSHOT</version>
+        <version>1.0.0-M4</version>
     </parent>
     <artifactId>angularjs-api-client</artifactId>
     <packaging>jar</packaging>
