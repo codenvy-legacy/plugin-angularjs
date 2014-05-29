@@ -14,7 +14,7 @@
     <parent>
         <artifactId>angularjs-completion</artifactId>
         <groupId>com.codenvy.plugin-angularjs</groupId>
-        <version>1.0.0-M4</version>
+        <version>1.0.0-M5-SNAPSHOT</version>
     </parent>
     <artifactId>angularjs-completion-parser</artifactId>
     <packaging>jar</packaging>
