@@ -8,7 +8,6 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-
 package com.codenvy.plugin.angularjs.core.client.wizard;
 
 import com.google.gwt.core.client.GWT;

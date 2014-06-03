@@ -8,7 +8,6 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-
 package com.codenvy.plugin.angularjs.core.client.javascript;
 
 import com.codenvy.ide.api.extension.Extension;

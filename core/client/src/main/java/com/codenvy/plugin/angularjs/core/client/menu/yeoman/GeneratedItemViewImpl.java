@@ -8,7 +8,6 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-
 package com.codenvy.plugin.angularjs.core.client.menu.yeoman;
 
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;

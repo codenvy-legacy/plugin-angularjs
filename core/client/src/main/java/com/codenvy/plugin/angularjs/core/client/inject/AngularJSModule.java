@@ -8,7 +8,6 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-
 package com.codenvy.plugin.angularjs.core.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;

@@ -8,7 +8,6 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-
 package com.codenvy.plugin.angularjs.completion.dto.parser;
 
 import com.codenvy.plugin.angularjs.completion.dto.parser.api.CodeCommentParser;
