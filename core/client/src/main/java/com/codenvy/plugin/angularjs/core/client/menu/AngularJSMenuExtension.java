@@ -87,19 +87,6 @@ public class AngularJSMenuExtension {
                     workspaceAgent.hidePart(yeomanPartPresenter);
                 }
 
-
-
-                // Check if there is package.json file
-                Resource packageJsonFile = project.findChildByName("package.json");
-                if (packageJsonFile != null) {
-                    Resource nodeModulesDirectory = project.findChildByName("node_modules");
-                    // NPM configured for the project but not yet initialized ?
-                    if (nodeModulesDirectory == null) {
-                        // Install npm dependencies
-                        npmInstallAction.installDependencies();
-                    }
-                }
-
                 // Check if there is bower.json file
                 Resource bowerJsonFile = project.findChildByName("bower.json");
                 if (bowerJsonFile != null) {
@@ -116,6 +103,10 @@ public class AngularJSMenuExtension {
 
             }
 
+            /**
+             * Remove Yeoman panel when closing the project if this panel is displayed.
+             * @param event the project event
+             */
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 Project project = event.getProject();
