@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.javascript;
 
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -20,10 +21,7 @@ import com.codenvy.ide.texteditor.api.codeassistant.Completion;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JsProposal;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-
-import org.vectomatic.dom.svg.ui.SVGImage;
 
 
 /**
@@ -55,10 +53,8 @@ public class JavaScriptProposal implements CompletionProposal {
     }
 
     @Override
-    public Image getImage() {
-        Image image = new Image();
-        image.setResource(javaScriptResources.property());
-        return image;
+    public Icon getIcon() {
+        return new Icon("javascript.property", javaScriptResources.property());
     }
 
 
@@ -95,12 +91,4 @@ public class JavaScriptProposal implements CompletionProposal {
             }
         });
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public SVGImage getSVGImage() {
-        // TODO create SVG image to be displayed in JS autocomplition.
-        return null;
-    }
-
 }

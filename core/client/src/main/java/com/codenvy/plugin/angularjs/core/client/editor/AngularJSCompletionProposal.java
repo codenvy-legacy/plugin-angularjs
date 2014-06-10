@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.editor;
 
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -21,10 +22,7 @@ import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-
-import org.vectomatic.dom.svg.ui.SVGImage;
 
 
 /**
@@ -65,15 +63,6 @@ public class AngularJSCompletionProposal implements CompletionProposal {
     @Override
     public String getDisplayString() {
         return new SafeHtmlBuilder().appendEscaped(name).toSafeHtml().asString();
-    }
-
-    @Override
-    public Image getImage() {
-        Image image = new Image();
-        if (invocationContext != null) {
-            image.setResource(invocationContext.getResources().property());
-        }
-        return image;
     }
 
     @Override
@@ -133,8 +122,10 @@ public class AngularJSCompletionProposal implements CompletionProposal {
 
     /** {@inheritDoc} */
     @Override
-    public SVGImage getSVGImage() {
-        // TODO create SVG image to be displayed in autocomplition.
+    public Icon getIcon() {
+        if (invocationContext != null) {
+            new Icon("angularjs.property", invocationContext.getResources().property());
+        }
         return null;
     }
 
