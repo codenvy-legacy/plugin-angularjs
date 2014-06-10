@@ -23,6 +23,8 @@ import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JsPropo
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 
 /**
  * @author Florent Benoit
@@ -92,6 +94,13 @@ public class JavaScriptProposal implements CompletionProposal {
                 return new RegionImpl(offset + jsProposal.getProposal().length() - prefix.length(), 0);
             }
         });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGImage getSVGImage() {
+        // TODO create SVG image to be displayed in JS autocomplition.
+        return null;
     }
 
 }

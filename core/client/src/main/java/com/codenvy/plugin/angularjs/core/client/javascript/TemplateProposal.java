@@ -22,6 +22,8 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -115,6 +117,13 @@ public class TemplateProposal implements CompletionProposal {
 
     public void setMethod() {
         this.isMethod = true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGImage getSVGImage() {
+        // TODO create SVG image to be displayed in Template autocomplition.
+        return null;
     }
 
 }

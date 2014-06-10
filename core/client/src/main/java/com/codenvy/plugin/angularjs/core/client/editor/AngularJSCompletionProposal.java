@@ -24,6 +24,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 
 /**
  * AngularJS completion proposal that is called when the user has selected a completion.
@@ -126,6 +128,14 @@ public class AngularJSCompletionProposal implements CompletionProposal {
         this.addedString = name + PROPERTY_SEPARATOR + PROPERTY_TERMINATOR;
         // input should be in the middle of quotes
         this.jumpLength = addedString.length() - 1;
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGImage getSVGImage() {
+        // TODO create SVG image to be displayed in autocomplition.
+        return null;
     }
 
 }
