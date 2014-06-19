@@ -27,6 +27,7 @@ import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.plugin.angularjs.core.client.menu.bower.BowerInstallAction;
 import com.codenvy.plugin.angularjs.core.client.menu.npm.NpmInstallAction;
 import com.codenvy.plugin.angularjs.core.client.menu.yeoman.YeomanPartPresenter;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -90,19 +91,29 @@ public class AngularJSMenuExtension {
                     // Check if there is bower.json file
                     Resource bowerJsonFile = project.findChildByName("bower.json");
                     if (bowerJsonFile != null) {
-                        Resource appDirectory = project.findChildByName("app");
+                        final Resource appDirectory = project.findChildByName("app");
                         if (appDirectory != null && appDirectory instanceof Folder) {
-                            // Bower configured for the project but not yet initialized ?
-                            Resource bowerComponentsDirectory = ((Folder) appDirectory).findChildByName("bower_components");
-                            if (bowerComponentsDirectory == null) {
-                                // Install bower dependencies as the folder doesn't exist
-                                bowerInstallAction.installDependencies();
-                            }
+                            project.refreshChildren((Folder) appDirectory, new AsyncCallback<Folder>() {
+                                @Override
+                                public void onFailure(Throwable caught) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(Folder result) {
+                                    // Bower configured for the project but not yet initialized ?
+                                    Resource bowerComponentsDirectory = ((Folder) appDirectory).findChildByName("bower_components");
+                                    if (bowerComponentsDirectory == null) {
+                                        // Install bower dependencies as the folder doesn't exist
+                                        bowerInstallAction.installDependencies();
+                                    }
+
+                                }
+                            });
                         }
                     }
 
                 }
-
 
             }
 
