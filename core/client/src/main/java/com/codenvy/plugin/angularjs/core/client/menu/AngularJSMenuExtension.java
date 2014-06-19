@@ -110,6 +110,9 @@ public class AngularJSMenuExtension {
 
                                 }
                             });
+                        } else {
+                            // Install bower dependencies as the folder has not been found
+                            bowerInstallAction.installDependencies();
                         }
                     }
 
