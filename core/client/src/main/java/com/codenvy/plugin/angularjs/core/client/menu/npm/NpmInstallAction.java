@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.menu.npm;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.logger.EventLogger;
 import com.codenvy.api.builder.BuildStatus;
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -17,6 +19,7 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.plugin.angularjs.core.client.AngularJsExtension;
 import com.codenvy.plugin.angularjs.core.client.builder.BuildFinishedCallback;
 import com.codenvy.plugin.angularjs.core.client.builder.BuilderAgent;
 import com.codenvy.plugin.angularjs.core.client.menu.CustomAction;
@@ -40,18 +43,23 @@ public class NpmInstallAction extends CustomAction implements BuildFinishedCallb
 
     private boolean buildInProgress;
 
+    private final AnalyticsEventLogger analyticsEventLogger;
+
+
     @Inject
     public NpmInstallAction(LocalizationConstant localizationConstant,
-                            DtoFactory dtoFactory, BuilderAgent builderAgent, ResourceProvider resourceProvider) {
+                            DtoFactory dtoFactory, BuilderAgent builderAgent, ResourceProvider resourceProvider, AnalyticsEventLogger analyticsEventLogger) {
         super(resourceProvider, localizationConstant.npmInstallText(), localizationConstant.npmInstallDescription());
         this.dtoFactory = dtoFactory;
         this.builderAgent = builderAgent;
         this.resourceProvider = resourceProvider;
+        this.analyticsEventLogger = analyticsEventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        analyticsEventLogger.log(AngularJsExtension.class, "Install NPM");
         installDependencies();
     }
 
