@@ -85,21 +85,24 @@ public class AngularJSMenuExtension {
                     // add Yeoman panel
                     workspaceAgent.openPart(yeomanPartPresenter, PartStackType.TOOLING);
                     workspaceAgent.hidePart(yeomanPartPresenter);
-                }
 
-                // Check if there is bower.json file
-                Resource bowerJsonFile = project.findChildByName("bower.json");
-                if (bowerJsonFile != null) {
-                    Resource appDirectory = project.findChildByName("app");
-                    if (appDirectory != null && appDirectory instanceof Folder) {
-                        // Bower configured for the project but not yet initialized ?
-                        Resource bowerComponentsDirectory = ((Folder) appDirectory).findChildByName("bower_components");
-                        if (bowerComponentsDirectory == null) {
-                            // Install bower dependencies as the folder doesn't exist
-                            bowerInstallAction.installDependencies();
+
+                    // Check if there is bower.json file
+                    Resource bowerJsonFile = project.findChildByName("bower.json");
+                    if (bowerJsonFile != null) {
+                        Resource appDirectory = project.findChildByName("app");
+                        if (appDirectory != null && appDirectory instanceof Folder) {
+                            // Bower configured for the project but not yet initialized ?
+                            Resource bowerComponentsDirectory = ((Folder) appDirectory).findChildByName("bower_components");
+                            if (bowerComponentsDirectory == null) {
+                                // Install bower dependencies as the folder doesn't exist
+                                bowerInstallAction.installDependencies();
+                            }
                         }
                     }
+
                 }
+
 
             }
 
