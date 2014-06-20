@@ -7,8 +7,7 @@
  *
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
- ******************************************************************************/
-
+ *******************************************************************************/
 package com.codenvy.plugin.angularjs.runner.grunt;
 
 import com.codenvy.api.builder.BuildStatus;
