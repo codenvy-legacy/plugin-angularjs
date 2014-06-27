@@ -42,8 +42,6 @@
         <module>api</module>
         <module>completion</module>
         <module>core</module>
-        <module>builders</module>
-        <module>runners</module>
         <module>templates</module>
         <module>itests</module>
     </modules>

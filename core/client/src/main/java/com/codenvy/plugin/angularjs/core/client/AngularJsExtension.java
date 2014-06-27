@@ -14,19 +14,13 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
-import com.codenvy.ide.api.ui.action.Anchor;
-import com.codenvy.ide.api.ui.action.Constraints;
-import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
-import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
 import com.codenvy.plugin.angularjs.core.client.wizard.AngularPagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD;
 
 /**
  * @author Florent Benoit
@@ -68,16 +62,9 @@ public class AngularJsExtension {
         iconRegistry.registerIcon(new Icon("AngularJS/txt.file.small.icon", resources.textFile()));
         iconRegistry.registerIcon(new Icon("AngularJS/md.file.small.icon", resources.textFile()));
 
-
-        // inject CSS
-        resources.uiCss().ensureInjected();
-
         // add wizard
         ProjectWizard wizard = new ProjectWizard(notificationManager);
         wizard.addPage(angularPagePresenter);
         projectTypeWizardRegistry.addWizard("AngularJS", wizard);
-
-
-
     }
 }
