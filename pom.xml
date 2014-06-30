@@ -51,21 +51,9 @@
         <tag>HEAD</tag>
     </scm>
     <properties>
-        <apache-rat-plugin.ignoreErrors>false</apache-rat-plugin.ignoreErrors>
         <license_years>2014</license_years>
     </properties>
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-changes-plugin</artifactId>
-                    <configuration>
-                        <skip>true</skip>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <!-- FindBugs -->
             <plugin>
@@ -84,89 +72,6 @@
                     <xmlOutput>true</xmlOutput>
                 </configuration>
             </plugin>
-            <!-- License header check -->
-            <plugin>
-                <groupId>org.apache.rat</groupId>
-                <artifactId>apache-rat-plugin</artifactId>
-                <version>${version.rat.plugin}</version>
-                <executions>
-                    <execution>
-                        <id>legal</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <ignoreErrors>${apache-rat-plugin.ignoreErrors}</ignoreErrors>
-                            <includes>
-                                <include>src/**</include>
-                                <include>pom.xml</include>
-                            </includes>
-                            <excludes>
-                                <!-- JSON are only data files -->
-                                <exclude>**/*.json</exclude>
-                                <!-- exclude also images -->
-                                <exclude>**/*.svg</exclude>
-                                <!-- BSD -->
-                                <exclude>**/esprima/*.js</exclude>
-                            </excludes>
-                            <licenses>
-                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>EPL</licenseFamilyCategory>
-                                    <licenseFamilyName>Eclipse Public License - v 1.0</licenseFamilyName>
-                                    <patterns>
-                                        <pattern>Eclipse Public License</pattern>
-                                    </patterns>
-                                </license>
-                            </licenses>
-                            <licenseFamilies>
-                                <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>Eclipse Public License - v 1.0</familyName>
-                                </licenseFamily>
-                            </licenseFamilies>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-    <profiles>
-        <profile>
-            <id>enforce-version-policy</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>enforce-plugin-version</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requirePluginVersions>
-                                            <banSnapshots>false</banSnapshots>
-                                        </requirePluginVersions>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
