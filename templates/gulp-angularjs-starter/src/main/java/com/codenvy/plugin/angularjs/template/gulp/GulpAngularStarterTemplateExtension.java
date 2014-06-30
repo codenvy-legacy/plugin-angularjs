@@ -28,10 +28,10 @@ public class GulpAngularStarterTemplateExtension implements AngularProjectTempla
     public List<ProjectTemplateDescription> getTemplates() {
         final List<ProjectTemplateDescription> list = new ArrayList<>(1);
 
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("git",
                                                 "AngularJS (Gulp AngularJS starter)",
                                                 "Project using gulp and AngularJS scaffolding.",
-                                                "templates/gulp-starter.zip"));
+                                                "https://github.com/codenvy-templates/web-angularjs-javascript-gulp-starter"));
 
         return list;
     }
