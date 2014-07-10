@@ -28,7 +28,7 @@ public class YeomanTemplateExtension implements AngularProjectTemplateExtension 
     public List<ProjectTemplateDescription> getTemplates() {
         final List<ProjectTemplateDescription> list = new ArrayList<>(1);
         list.add(new ProjectTemplateDescription("Samples - Hello World",
-                                                "git",
+                                                "git-less",
                                                 "AngularJS (Yeoman)",
                                                 "Project using yeoman scaffolding.",
                                                 "https://github.com/codenvy-templates/web-angularjs-javascript-yeoman"));
