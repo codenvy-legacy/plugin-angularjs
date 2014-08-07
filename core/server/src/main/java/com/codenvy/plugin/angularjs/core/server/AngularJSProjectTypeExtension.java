@@ -15,7 +15,7 @@ import com.codenvy.api.project.server.ProjectTypeExtension;
 import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
-import com.codenvy.ide.ext.java.shared.Constants;
+import com.codenvy.ide.Constants;
 import com.codenvy.plugin.angularjs.api.server.AngularProjectTemplateExtension;
 
 import javax.annotation.PostConstruct;
