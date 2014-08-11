@@ -11,9 +11,9 @@
 package com.codenvy.plugin.angularjs.core.client.editor;
 
 
+import com.codenvy.ide.api.texteditor.AutoEditStrategy;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.ext.web.html.editor.AutoEditStrategyFactory;
-import com.codenvy.ide.texteditor.api.AutoEditStrategy;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.google.inject.Singleton;
 
 /**

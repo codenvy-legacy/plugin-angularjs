@@ -10,32 +10,29 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.javascript;
 
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.texteditor.CodeAssistCallback;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.web.js.editor.JsCodeAssistProcessor;
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.Region;
-import com.codenvy.ide.texteditor.api.CodeAssistCallback;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.AbstractTrie;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.plugin.angularjs.completion.dto.Method;
 import com.codenvy.plugin.angularjs.completion.dto.Param;
 import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
 import com.codenvy.plugin.angularjs.completion.dto.Templating;
-import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.Context;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.ContextFactory;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.IContentAssistProvider;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.IContext;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JSNIContextFactory;
-import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JavaScriptContentAssistProvider;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JsProposal;
 import com.google.gwt.core.client.JsArray;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.Comparator;
 import java.util.List;

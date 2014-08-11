@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.editor;
 
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
 
 /**
  * Store data for Angular JS codeassist processor.
