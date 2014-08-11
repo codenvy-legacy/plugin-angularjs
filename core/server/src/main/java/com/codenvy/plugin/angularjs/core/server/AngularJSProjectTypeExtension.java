@@ -75,4 +75,9 @@ public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
         return list;
     }
 
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return null;
+    }
+
 }
