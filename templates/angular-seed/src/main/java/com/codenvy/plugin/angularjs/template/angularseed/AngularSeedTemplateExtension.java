@@ -30,7 +30,7 @@ public class AngularSeedTemplateExtension implements AngularProjectTemplateExten
 
         list.add(new ProjectTemplateDescription("Samples - Hello World",
                                                 "git-less",
-                                                "AngularJS (Angular seed)",
+                                                "AngularJS - Seed",
                                                 "Project using Angular seed scaffolding.",
                                                 "https://github.com/codenvy-templates/web-angularjs-javascript-angular-seed"));
 

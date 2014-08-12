@@ -45,7 +45,7 @@ public class AngularPagePresenter extends AbstractWizardPage implements AngularP
     @Inject
     public AngularPagePresenter(AngularPageView view, ProjectServiceClient projectServiceClient, ResourceProvider resourceProvider,
                                 DtoFactory factory) {
-        super("AngularJS project settings", null);
+        super("AngularJS Project Settings", null);
         this.view = view;
         this.projectServiceClient = projectServiceClient;
         this.resourceProvider = resourceProvider;

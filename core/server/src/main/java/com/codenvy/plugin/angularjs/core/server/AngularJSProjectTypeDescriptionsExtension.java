@@ -34,7 +34,7 @@ public class AngularJSProjectTypeDescriptionsExtension implements ProjectTypeDes
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType("AngularJS", "AngularJS project", "JavaScript"));
+        list.add(new ProjectType("AngularJS", "AngularJS Project", "JavaScript"));
         return list;
     }
 
