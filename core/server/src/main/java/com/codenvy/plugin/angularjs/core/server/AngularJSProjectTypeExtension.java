@@ -55,7 +55,7 @@ public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
         list.add(new Attribute("language", "javascript"));
         list.add(new Attribute(Constants.LANGUAGE, "javascript"));
         list.add(new Attribute(Constants.FRAMEWORK, "AngularJS"));
-        list.add(new Attribute(Constants.RUNNER_NAME, "grunt"));
+        list.add(new Attribute(Constants.RUNNER_NAME, "javascript-webapp-grunt"));
         return list;
     }
 
