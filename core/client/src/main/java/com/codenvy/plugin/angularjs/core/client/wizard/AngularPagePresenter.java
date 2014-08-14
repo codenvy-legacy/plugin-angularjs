@@ -13,7 +13,7 @@ package com.codenvy.plugin.angularjs.core.client.wizard;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.ide.api.event.ProjectActionEvent_2;
+import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.dto.DtoFactory;
@@ -136,7 +136,7 @@ public class AngularPagePresenter extends AbstractWizardPage implements AngularP
                 ProjectReference projectToOpen = factory.createDto(ProjectReference.class)
                                                         .withPath(project.getPath())
                                                         .withName(project.getName());
-                eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
+                eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
                 callback.onSuccess();
             }
 
@@ -158,7 +158,7 @@ public class AngularPagePresenter extends AbstractWizardPage implements AngularP
                                        ProjectReference projectToOpen = factory.createDto(ProjectReference.class)
                                                                                .withPath(result.getPath())
                                                                                .withName(result.getName());
-                                       eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
+                                       eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
                                        callback.onSuccess();
                                    }
 
