@@ -16,7 +16,7 @@
     <parent>
         <artifactId>angularjs-templates</artifactId>
         <groupId>com.codenvy.plugin-angularjs</groupId>
-        <version>1.3.0-SNAPSHOT</version>
+        <version>1.3.0</version>
     </parent>
     <artifactId>angularjs-template-yeoman</artifactId>
     <packaging>jar</packaging>
