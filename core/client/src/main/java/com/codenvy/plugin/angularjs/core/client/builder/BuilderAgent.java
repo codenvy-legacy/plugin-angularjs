@@ -18,9 +18,9 @@ import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
@@ -60,7 +60,7 @@ public class BuilderAgent {
     private BuilderServiceClient builderServiceClient;
 
     @Inject
-    private ResourceProvider resourceProvider;
+    private AppContext appContext;
 
     @Inject
     private NotificationManager notificationManager;
@@ -111,7 +111,7 @@ public class BuilderAgent {
 
 
         // Ask the build service to perform the build
-        builderServiceClient.build(resourceProvider.getActiveProject().getPath(),
+        builderServiceClient.build(appContext.getCurrentProject().getProjectDescription().getName(),
                                    buildOptions,
                                    new AsyncRequestCallback<BuildTaskDescriptor>(
                                            dtoUnmarshallerFactory.newUnmarshaller(BuildTaskDescriptor.class)) {
@@ -291,7 +291,7 @@ public class BuilderAgent {
             ImportSourceDescriptor importSourceDescriptor =
                     dtoFactory.createDto(ImportSourceDescriptor.class).withLocation(downloadLink.getHref()).withType("zip");
 
-            projectServiceClient.importProject(resourceProvider.getActiveProject().getPath(), importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+            projectServiceClient.importProject(appContext.getCurrentProject().getProjectDescription().getPath(), importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
                 @Override
                 protected void onSuccess(ProjectDescriptor projectDescriptor) {
                     // notify callback

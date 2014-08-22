@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.editor;
 
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentCommand;
-import com.codenvy.ide.text.Position;
-import com.codenvy.ide.texteditor.api.AutoEditStrategy;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.DocumentCommand;
+import com.codenvy.ide.api.text.Position;
+import com.codenvy.ide.api.texteditor.AutoEditStrategy;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.util.loging.Log;
 
 /**

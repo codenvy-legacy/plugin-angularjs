@@ -11,11 +11,11 @@
 package com.codenvy.plugin.angularjs.core.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.icon.Icon;
+import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.ui.Icon;
-import com.codenvy.ide.api.ui.IconRegistry;
-import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
 import com.codenvy.plugin.angularjs.core.client.wizard.AngularPagePresenter;
 import com.google.inject.Inject;

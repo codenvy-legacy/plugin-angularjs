@@ -10,24 +10,21 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.javascript;
 
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.texteditor.CodeAssistCallback;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.Region;
-import com.codenvy.ide.texteditor.api.CodeAssistCallback;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.plugin.angularjs.completion.dto.Method;
 import com.codenvy.plugin.angularjs.completion.dto.Param;
 import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
 import com.codenvy.plugin.angularjs.completion.dto.Templating;
 import com.codenvy.plugin.angularjs.completion.dto.client.DtoClientImpls;
-import com.codenvy.plugin.angularjs.core.client.editor.AngularJSHtmlCodeAssistProcessor;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.ContextFactory;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.IContentAssistProvider;
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.IContext;
-import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JavaScriptContentAssistProvider;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,26 +34,12 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static com.codenvy.plugin.angularjs.core.client.javascript.JavaScriptCodeAssistProcessor.ACTIVATION_CHARACTER;
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyList;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -136,7 +119,6 @@ public class JavaScriptCodeAssistProcessorTest {
         Method reloadMethod = DtoClientImpls.MethodImpl.make();
         reloadMethod.setName("reload");
         routeProvider.getMethods().add(reloadMethod);
-
 
 
         javaScriptCodeAssistProcessor.setTemplating(templating);
