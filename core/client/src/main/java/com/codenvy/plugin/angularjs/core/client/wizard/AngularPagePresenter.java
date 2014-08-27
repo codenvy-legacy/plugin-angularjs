@@ -12,7 +12,6 @@ package com.codenvy.plugin.angularjs.core.client.wizard;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
@@ -133,10 +132,7 @@ public class AngularPagePresenter extends AbstractWizardPage implements AngularP
         projectServiceClient.updateProject(project.getPath(), projectDescriptorToUpdate, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                ProjectReference projectToOpen = factory.createDto(ProjectReference.class)
-                                                        .withPath(project.getPath())
-                                                        .withName(project.getName());
-                eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+                eventBus.fireEvent(new OpenProjectEvent(project.getName()));
                 callback.onSuccess();
             }
 
@@ -155,10 +151,7 @@ public class AngularPagePresenter extends AbstractWizardPage implements AngularP
 
                                    @Override
                                    protected void onSuccess(ProjectDescriptor result) {
-                                       ProjectReference projectToOpen = factory.createDto(ProjectReference.class)
-                                                                               .withPath(result.getPath())
-                                                                               .withName(result.getName());
-                                       eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+                                       eventBus.fireEvent(new OpenProjectEvent(result.getName()));
                                        callback.onSuccess();
                                    }
 
