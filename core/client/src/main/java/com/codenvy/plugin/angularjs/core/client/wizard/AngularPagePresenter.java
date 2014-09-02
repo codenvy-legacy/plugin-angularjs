@@ -18,6 +18,7 @@ import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -26,10 +27,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Florent Benoit
@@ -71,6 +68,14 @@ public class AngularPagePresenter extends AbstractWizardPage implements AngularP
 
     }
 
+    /**
+     *  This page is only there to setup project and display nothing so we should skip this page
+     */
+    @Override
+    public boolean canSkip() {
+        return true;
+    }
+
     @Override
     public void removeOptions() {
 
@@ -92,14 +97,10 @@ public class AngularPagePresenter extends AbstractWizardPage implements AngularP
     @Override
     public void commit(@NotNull final CommitCallback callback) {
 
-        // TODO: Allow to pickup the runner name
-        Map<String, List<String>> options = new HashMap<>();
-        options.put("runner.name", Arrays.asList("grunt"));
-
         final ProjectDescriptor projectDescriptorToUpdate = factory.createDto(ProjectDescriptor.class);
         projectDescriptorToUpdate.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
 
-        projectDescriptorToUpdate.setAttributes(options);
+
         boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
         projectDescriptorToUpdate.setVisibility(visibility ? "public" : "private");
         final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
@@ -128,30 +129,34 @@ public class AngularPagePresenter extends AbstractWizardPage implements AngularP
         }
     }
 
-    private void updateProject(final ProjectDescriptor project, ProjectDescriptor projectDescriptorToUpdate, final CommitCallback callback) {
-        projectServiceClient.updateProject(project.getPath(), projectDescriptorToUpdate, new AsyncRequestCallback<ProjectDescriptor>() {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                eventBus.fireEvent(new OpenProjectEvent(project.getName()));
-                callback.onSuccess();
-            }
+    private void updateProject(final ProjectDescriptor project, ProjectDescriptor projectDescriptorToUpdate,
+                               final CommitCallback callback) {
+        Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        projectServiceClient
+                .updateProject(project.getPath(), projectDescriptorToUpdate, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(ProjectDescriptor result) {
+                        eventBus.fireEvent(new OpenProjectEvent(result.getName()));
+                        wizardContext.putData(ProjectWizard.PROJECT, result);
+                        callback.onSuccess();
+                    }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        callback.onFailure(exception);
+                    }
+                });
     }
 
     private void createProject(final CommitCallback callback, ProjectDescriptor projectDescriptor, final String name) {
         projectServiceClient
                 .createProject(name, projectDescriptor,
-                               new AsyncRequestCallback<ProjectDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
-
-
+                               new AsyncRequestCallback<ProjectDescriptor>(
+                                       dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                    @Override
                                    protected void onSuccess(ProjectDescriptor result) {
                                        eventBus.fireEvent(new OpenProjectEvent(result.getName()));
+                                       wizardContext.putData(ProjectWizard.PROJECT, result);
                                        callback.onSuccess();
                                    }
 

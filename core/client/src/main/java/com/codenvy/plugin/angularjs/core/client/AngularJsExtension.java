@@ -16,6 +16,7 @@ import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.extension.runner.client.wizard.SelectRunnerPagePresenter;
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
 import com.codenvy.plugin.angularjs.core.client.wizard.AngularPagePresenter;
 import com.google.inject.Inject;
@@ -31,7 +32,7 @@ import com.google.inject.Singleton;
 public class AngularJsExtension {
 
     @Inject
-    public AngularJsExtension(IconRegistry iconRegistry, AngularJSResources resources, ProjectTypeWizardRegistry projectTypeWizardRegistry, NotificationManager notificationManager, Provider<AngularPagePresenter> angularPagePresenter) {
+    public AngularJsExtension(IconRegistry iconRegistry, AngularJSResources resources, ProjectTypeWizardRegistry projectTypeWizardRegistry, NotificationManager notificationManager, Provider<AngularPagePresenter> angularPagePresenter, Provider<SelectRunnerPagePresenter> runnerPagePresenter) {
         iconRegistry.registerIcon(new Icon("AngularJS.projecttype.big.icon", "angularjs-extension/newproject-angularjs.png"));
         iconRegistry.registerIcon(new Icon("AngularJS.projecttype.small.icon", "angularjs-extension/newproject-angularjs.png"));
 
@@ -65,6 +66,8 @@ public class AngularJsExtension {
         // add wizard
         ProjectWizard wizard = new ProjectWizard(notificationManager);
         wizard.addPage(angularPagePresenter);
+        wizard.addPage(runnerPagePresenter);
+
         projectTypeWizardRegistry.addWizard("AngularJS", wizard);
     }
 }
