@@ -291,7 +291,7 @@ public class BuilderAgent {
             ImportSourceDescriptor importSourceDescriptor =
                     dtoFactory.createDto(ImportSourceDescriptor.class).withLocation(downloadLink.getHref()).withType("zip");
 
-            projectServiceClient.importProject(appContext.getCurrentProject().getProjectDescription().getPath(), importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+            projectServiceClient.importProject(appContext.getCurrentProject().getProjectDescription().getPath(), true, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
                 @Override
                 protected void onSuccess(ProjectDescriptor projectDescriptor) {
                     // notify callback
