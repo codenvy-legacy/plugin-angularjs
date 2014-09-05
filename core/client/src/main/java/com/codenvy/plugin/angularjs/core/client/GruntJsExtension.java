@@ -26,19 +26,21 @@ import com.google.inject.Singleton;
  * @author Florent Benoit
  */
 @Singleton
-@Extension(title = "AngularJS extension")
+@Extension(title = "GruntJS extension")
 
-public class AngularJsExtension extends JsExtension {
+public class GruntJsExtension extends JsExtension {
 
     @Inject
-    public AngularJsExtension(IconRegistry iconRegistry, AngularJSResources resources, ProjectTypeWizardRegistry projectTypeWizardRegistry, NotificationManager notificationManager, Provider<AngularPagePresenter> angularPagePresenter, Provider<SelectRunnerPagePresenter> runnerPagePresenter) {
-        super("AngularJS", iconRegistry, resources, projectTypeWizardRegistry, notificationManager, angularPagePresenter, runnerPagePresenter);
+    public GruntJsExtension(IconRegistry iconRegistry, AngularJSResources resources, ProjectTypeWizardRegistry projectTypeWizardRegistry,
+                            NotificationManager notificationManager, Provider<AngularPagePresenter> angularPagePresenter,
+                            Provider<SelectRunnerPagePresenter> runnerPagePresenter) {
+        super("GruntJS", iconRegistry, resources, projectTypeWizardRegistry, notificationManager, angularPagePresenter, runnerPagePresenter);
 
         // add wizard
         ProjectWizard wizard = new ProjectWizard(notificationManager);
         wizard.addPage(angularPagePresenter);
         wizard.addPage(runnerPagePresenter);
 
-        projectTypeWizardRegistry.addWizard("AngularJS", wizard);
+        projectTypeWizardRegistry.addWizard("GruntJS", wizard);
     }
 }

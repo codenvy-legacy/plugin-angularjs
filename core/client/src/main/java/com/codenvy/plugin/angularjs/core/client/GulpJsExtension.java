@@ -26,19 +26,21 @@ import com.google.inject.Singleton;
  * @author Florent Benoit
  */
 @Singleton
-@Extension(title = "AngularJS extension")
+@Extension(title = "GulpJS extension")
 
-public class AngularJsExtension extends JsExtension {
+public class GulpJsExtension extends JsExtension {
 
     @Inject
-    public AngularJsExtension(IconRegistry iconRegistry, AngularJSResources resources, ProjectTypeWizardRegistry projectTypeWizardRegistry, NotificationManager notificationManager, Provider<AngularPagePresenter> angularPagePresenter, Provider<SelectRunnerPagePresenter> runnerPagePresenter) {
-        super("AngularJS", iconRegistry, resources, projectTypeWizardRegistry, notificationManager, angularPagePresenter, runnerPagePresenter);
+    public GulpJsExtension(IconRegistry iconRegistry, AngularJSResources resources, ProjectTypeWizardRegistry projectTypeWizardRegistry,
+                           NotificationManager notificationManager, Provider<AngularPagePresenter> angularPagePresenter,
+                           Provider<SelectRunnerPagePresenter> runnerPagePresenter) {
+        super("GulpJS", iconRegistry, resources, projectTypeWizardRegistry, notificationManager, angularPagePresenter, runnerPagePresenter);
 
         // add wizard
         ProjectWizard wizard = new ProjectWizard(notificationManager);
         wizard.addPage(angularPagePresenter);
         wizard.addPage(runnerPagePresenter);
 
-        projectTypeWizardRegistry.addWizard("AngularJS", wizard);
+        projectTypeWizardRegistry.addWizard("GulpJS", wizard);
     }
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
+
 package com.codenvy.plugin.angularjs.core.server;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
@@ -16,24 +17,20 @@ import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
 import com.codenvy.ide.Constants;
-import com.codenvy.plugin.angularjs.api.server.AngularProjectTemplateExtension;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Singleton
-public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
+public class GulpJSProjectTypeExtension implements ProjectTypeExtension {
 
     @Inject
     private ProjectTypeDescriptionRegistry registry;
-
-    @com.google.inject.Inject(optional = true)
-    private Set<AngularProjectTemplateExtension> extensions;
 
     @PostConstruct
     public void init() {
@@ -43,15 +40,13 @@ public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("AngularJS", "AngularJS (javascript)", "JavaScript", null, "javascript-webapp-grunt");
+        return new ProjectType("GruntJS", "GruntJS (javascript)", "JavaScript", null, "javascript-webapp-gulp");
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(3);
-        list.add(new Attribute("language", "javascript"));
+        final List<Attribute> list = new ArrayList<>(1);
         list.add(new Attribute(Constants.LANGUAGE, "javascript"));
-        list.add(new Attribute(Constants.FRAMEWORK, "AngularJS"));
         return list;
     }
 
@@ -62,13 +57,7 @@ public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
      */
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
-        final List<ProjectTemplateDescription> list = new ArrayList<>();
-        if (extensions != null) {
-            for (AngularProjectTemplateExtension extension : extensions) {
-                list.addAll(extension.getTemplates());
-            }
-        }
-        return list;
+        return Collections.emptyList();
     }
 
     @Override

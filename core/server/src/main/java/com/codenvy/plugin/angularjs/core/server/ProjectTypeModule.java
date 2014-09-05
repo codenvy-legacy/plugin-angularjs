@@ -23,7 +23,7 @@ public class ProjectTypeModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(AngularJSProjectTypeDescriptionsExtension.class);
+        bind(JSProjectTypeDescriptionsExtension.class);
         bind(AngularJSProjectTypeExtension.class);
     }
 }

@@ -21,20 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Register angularjs extension {@link com.codenvy.api.project.server.ProjectTypeDescriptionExtension} to register project types.
+ * Register JavaScript extension {@link com.codenvy.api.project.server.ProjectTypeDescriptionExtension} to register project types.
  * @author Florent Benoit
  */
 @Singleton
-public class AngularJSProjectTypeDescriptionsExtension implements ProjectTypeDescriptionExtension {
+public class JSProjectTypeDescriptionsExtension implements ProjectTypeDescriptionExtension {
     @Inject
-    public AngularJSProjectTypeDescriptionsExtension(ProjectTypeDescriptionRegistry registry) {
+    public JSProjectTypeDescriptionsExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerDescription(this);
     }
 
     @Override
     public List<ProjectType> getProjectTypes() {
-        final List<ProjectType> list = new ArrayList<>(1);
+        final List<ProjectType> list = new ArrayList<>(3);
         list.add(new ProjectType("AngularJS", "AngularJS Project", "JavaScript"));
+        list.add(new ProjectType("GruntJS", "Grunt Project", "JavaScript"));
+        list.add(new ProjectType("GulpJS", "Gulp Project", "JavaScript"));
         return list;
     }
 
