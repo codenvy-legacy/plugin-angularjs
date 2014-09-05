@@ -111,7 +111,7 @@ public class BuilderAgent {
 
 
         // Ask the build service to perform the build
-        builderServiceClient.build(appContext.getCurrentProject().getProjectDescription().getName(),
+        builderServiceClient.build(appContext.getCurrentProject().getRootProject().getName(),
                                    buildOptions,
                                    new AsyncRequestCallback<BuildTaskDescriptor>(
                                            dtoUnmarshallerFactory.newUnmarshaller(BuildTaskDescriptor.class)) {
@@ -291,7 +291,7 @@ public class BuilderAgent {
             ImportSourceDescriptor importSourceDescriptor =
                     dtoFactory.createDto(ImportSourceDescriptor.class).withLocation(downloadLink.getHref()).withType("zip");
 
-            projectServiceClient.importProject(appContext.getCurrentProject().getProjectDescription().getPath(), true, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+            projectServiceClient.importProject(appContext.getCurrentProject().getRootProject().getPath(), true, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
                 @Override
                 protected void onSuccess(ProjectDescriptor projectDescriptor) {
                     // notify callback
