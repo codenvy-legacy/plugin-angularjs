@@ -15,7 +15,9 @@ import com.codenvy.plugin.angularjs.api.server.AngularProjectTemplateExtension;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides the Gulp AngularJS starter template for AngularJS project type.
@@ -26,13 +28,21 @@ public class GulpAngularStarterTemplateExtension implements AngularProjectTempla
 
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
+        Map<String, String> params = new HashMap<>(2);
+        params.put("branch", "3.1.0");
+        params.put("cleanVcs", "true");
         final List<ProjectTemplateDescription> list = new ArrayList<>(1);
-
         list.add(new ProjectTemplateDescription("Samples - Hello World",
-                                                "git-less",
+                                                "git",
                                                 "AngularJS - Gulp",
                                                 "Project using gulp and AngularJS scaffolding.",
-                                                "https://github.com/codenvy-templates/web-angularjs-javascript-gulp-starter"));
+                                                "https://github.com/codenvy-templates/web-angularjs-javascript-gulp-starter",
+                                                params,
+                                                null,
+                                                null,
+                                                "javascript-webapp-gulp",
+                                                null,
+                                                null));
 
         return list;
     }

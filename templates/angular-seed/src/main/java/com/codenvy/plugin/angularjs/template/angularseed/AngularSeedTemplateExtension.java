@@ -15,7 +15,9 @@ import com.codenvy.plugin.angularjs.api.server.AngularProjectTemplateExtension;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides the Angular Seed template for AngularJS project type.
@@ -26,13 +28,22 @@ public class AngularSeedTemplateExtension implements AngularProjectTemplateExten
 
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
+        Map<String, String> params = new HashMap<>(2);
+        params.put("branch", "3.1.0");
+        params.put("cleanVcs", "true");
         final List<ProjectTemplateDescription> list = new ArrayList<>(1);
 
         list.add(new ProjectTemplateDescription("Samples - Hello World",
-                                                "git-less",
+                                                "git",
                                                 "AngularJS - Seed",
                                                 "Project using Angular seed scaffolding.",
-                                                "https://github.com/codenvy-templates/web-angularjs-javascript-angular-seed"));
+                                                "https://github.com/codenvy-templates/web-angularjs-javascript-angular-seed",
+                                                params,
+                                                null,
+                                                null,
+                                                "javascript-webapp-grunt",
+                                                null,
+                                                null));
 
         return list;
     }
