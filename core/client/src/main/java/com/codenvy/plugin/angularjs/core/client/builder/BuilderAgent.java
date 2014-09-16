@@ -25,7 +25,6 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderExtension;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -170,9 +169,9 @@ public class BuilderAgent {
             protected void onErrorReceived(Throwable throwable) {
                 try {
                     messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), this);
-                    Log.error(BuildProjectPresenter.class, throwable);
+                    Log.error(BuilderAgent.class, throwable);
                 } catch (WebSocketException e) {
-                    Log.error(BuildProjectPresenter.class, e);
+                    Log.error(BuilderAgent.class, e);
                 }
             }
         };
@@ -189,7 +188,7 @@ public class BuilderAgent {
                 try {
                     messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), this);
                 } catch (WebSocketException e) {
-                    Log.error(BuildProjectPresenter.class, e);
+                    Log.error(BuilderAgent.class, e);
                 }
                 notification.setType(ERROR);
                 notification.setStatus(FINISHED);
@@ -204,13 +203,13 @@ public class BuilderAgent {
         try {
             messageBus.subscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), buildStatusHandler);
         } catch (WebSocketException e) {
-            Log.error(BuildProjectPresenter.class, e);
+            Log.error(BuilderAgent.class, e);
         }
 
         try {
             messageBus.subscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), buildOutputHandler);
         } catch (WebSocketException e) {
-            Log.error(BuildProjectPresenter.class, e);
+            Log.error(BuilderAgent.class, e);
         }
 
     }
@@ -247,13 +246,13 @@ public class BuilderAgent {
         try {
             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + descriptor.getTaskId(), buildStatusHandler);
         } catch (Exception e) {
-            Log.error(BuildProjectPresenter.class, e);
+            Log.error(BuilderAgent.class, e);
         }
 
         try {
             messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + descriptor.getTaskId(), buildOutputHandler);
         } catch (Exception e) {
-            Log.error(BuildProjectPresenter.class, e);
+            Log.error(BuilderAgent.class, e);
         }
 
 
