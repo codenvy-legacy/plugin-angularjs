@@ -25,8 +25,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * @author Florent Benoit
@@ -95,7 +95,7 @@ public class AngularPagePresenter extends AbstractWizardPage implements AngularP
     }
 
     @Override
-    public void commit(@NotNull final CommitCallback callback) {
+    public void commit(@Nonnull final CommitCallback callback) {
 
         final ProjectDescriptor projectDescriptorToUpdate = factory.createDto(ProjectDescriptor.class);
         projectDescriptorToUpdate.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
