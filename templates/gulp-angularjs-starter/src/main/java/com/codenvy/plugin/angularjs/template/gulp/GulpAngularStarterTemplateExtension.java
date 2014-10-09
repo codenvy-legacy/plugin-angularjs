@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.template.gulp;
 
-import com.codenvy.api.project.shared.ProjectTemplateDescription;
+import com.codenvy.api.project.server.ProjectTemplateDescription;
+import com.codenvy.api.project.server.Runners;
 import com.codenvy.plugin.angularjs.api.server.AngularProjectTemplateExtension;
 
 import javax.inject.Singleton;
@@ -39,11 +40,7 @@ public class GulpAngularStarterTemplateExtension implements AngularProjectTempla
                                                 "https://github.com/codenvy-templates/web-angularjs-javascript-gulp-starter",
                                                 params,
                                                 null,
-                                                null,
-                                                "javascript-webapp-gulp",
-                                                null,
-                                                null));
-
+                                                new Runners("javascript-webapp-gulp")));
         return list;
     }
 }

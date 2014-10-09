@@ -10,11 +10,13 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.server;
 
+import com.codenvy.api.project.server.Builders;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeExtension;
-import com.codenvy.api.project.shared.Attribute;
-import com.codenvy.api.project.shared.ProjectTemplateDescription;
-import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.api.project.server.Attribute;
+import com.codenvy.api.project.server.ProjectTemplateDescription;
+import com.codenvy.api.project.server.ProjectType;
+import com.codenvy.api.project.server.Runners;
 import com.codenvy.ide.Constants;
 
 import javax.annotation.PostConstruct;
@@ -34,26 +36,33 @@ public class GruntJSProjectTypeExtension implements ProjectTypeExtension {
     @PostConstruct
     public void init() {
         registry.registerProjectType(this);
-
     }
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("GruntJS", "GruntJS (javascript)", "JavaScript", null, "javascript-webapp-grunt");
+        return new ProjectType("GruntJS", "GruntJS (javascript)", "JavaScript");
     }
 
     @Override
     public List<Attribute> getPredefinedAttributes() {
-        final List<Attribute> list = new ArrayList<>(1);
+        final List<Attribute> list = new ArrayList<>(2);
         list.add(new Attribute("language", "javascript"));
         list.add(new Attribute(Constants.LANGUAGE, "javascript"));
         return list;
     }
 
+    @Override
+    public Builders getBuilders() {
+        return null;
+    }
+
+    @Override
+    public Runners getRunners() {
+        return new Runners("javascript-webapp-grunt");
+    }
 
     /**
      * Adds all extensions that have been found.
-     * @return
      */
     @Override
     public List<ProjectTemplateDescription> getTemplates() {

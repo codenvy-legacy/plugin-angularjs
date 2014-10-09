@@ -10,11 +10,13 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.server;
 
+import com.codenvy.api.project.server.Builders;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeExtension;
-import com.codenvy.api.project.shared.Attribute;
-import com.codenvy.api.project.shared.ProjectTemplateDescription;
-import com.codenvy.api.project.shared.ProjectType;
+import com.codenvy.api.project.server.Runners;
+import com.codenvy.api.project.server.Attribute;
+import com.codenvy.api.project.server.ProjectTemplateDescription;
+import com.codenvy.api.project.server.ProjectType;
 import com.codenvy.ide.Constants;
 import com.codenvy.plugin.angularjs.api.server.AngularProjectTemplateExtension;
 
@@ -38,12 +40,11 @@ public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
     @PostConstruct
     public void init() {
         registry.registerProjectType(this);
-
     }
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType("AngularJS", "AngularJS (javascript)", "JavaScript", null, "javascript-webapp-grunt");
+        return new ProjectType("AngularJS", "AngularJS (javascript)", "JavaScript");
     }
 
     @Override
@@ -55,10 +56,18 @@ public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
         return list;
     }
 
+    @Override
+    public Builders getBuilders() {
+        return null;
+    }
+
+    @Override
+    public Runners getRunners() {
+        return new Runners("javascript-webapp-grunt");
+    }
 
     /**
      * Adds all extensions that have been found.
-     * @return
      */
     @Override
     public List<ProjectTemplateDescription> getTemplates() {

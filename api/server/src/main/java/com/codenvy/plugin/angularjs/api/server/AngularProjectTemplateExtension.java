@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.api.server;
 
-import com.codenvy.api.project.shared.ProjectTemplateDescription;
+import com.codenvy.api.project.server.ProjectTemplateDescription;
 
 import java.util.List;
 

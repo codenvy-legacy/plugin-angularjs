@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.template.yeoman;
 
-import com.codenvy.api.project.shared.ProjectTemplateDescription;
+import com.codenvy.api.project.server.ProjectTemplateDescription;
+import com.codenvy.api.project.server.Runners;
 import com.codenvy.plugin.angularjs.api.server.AngularProjectTemplateExtension;
 
 import javax.inject.Singleton;
@@ -31,7 +32,7 @@ public class YeomanTemplateExtension implements AngularProjectTemplateExtension 
     public List<ProjectTemplateDescription> getTemplates() {
         Map<String, String> params = new HashMap<>(2);
         params.put("branch", "3.1.0");
-        params.put("cleanVcs", "true");
+        params.put("keepVcs", "false");
         final List<ProjectTemplateDescription> list = new ArrayList<>(1);
         list.add(new ProjectTemplateDescription("Samples - Hello World",
                                                 "git",
@@ -40,11 +41,7 @@ public class YeomanTemplateExtension implements AngularProjectTemplateExtension 
                                                 "https://github.com/codenvy-templates/web-angularjs-javascript-yeoman",
                                                 params,
                                                 null,
-                                                null,
-                                                "javascript-webapp-grunt",
-                                                null,
-                                                null));
+                                                new Runners("javascript-webapp-grunt")));
         return list;
-
     }
 }
