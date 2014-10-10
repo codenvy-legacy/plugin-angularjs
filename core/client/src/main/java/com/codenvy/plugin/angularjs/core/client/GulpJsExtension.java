@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
  * @author Florent Benoit
  */
 @Singleton
-@Extension(title = "GulpJS extension")
+@Extension(title = "GulpJS")
 
 public class GulpJsExtension extends JsExtension {
 

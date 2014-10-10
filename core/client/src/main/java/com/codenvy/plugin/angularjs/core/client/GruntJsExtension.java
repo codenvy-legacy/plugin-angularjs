@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
  * @author Florent Benoit
  */
 @Singleton
-@Extension(title = "GruntJS extension")
+@Extension(title = "GruntJS")
 
 public class GruntJsExtension extends JsExtension {
 

@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
  * @author Florent Benoit
  */
 @Singleton
-@Extension(title = "AngularJS extension")
+@Extension(title = "AngularJS")
 
 public class AngularJsExtension extends JsExtension {
 

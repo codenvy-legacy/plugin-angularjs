@@ -19,7 +19,7 @@ import com.google.inject.Singleton;
  * @author Florent Benoit
  */
 @Singleton
-@Extension(title = "JavaScript extension.", version = "1.0.0")
+@Extension(title = "JavaScript", version = "1.0.0")
 
 public class JavaScriptExtension {
 
