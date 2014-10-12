@@ -14,7 +14,7 @@ import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 
 /**
- * Module for Grunt builder.
+ * Module for binding type extension.
  *
  * @author Florent Benoit
  */

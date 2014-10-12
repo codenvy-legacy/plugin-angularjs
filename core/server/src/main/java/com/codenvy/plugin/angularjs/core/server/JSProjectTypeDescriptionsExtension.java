@@ -37,6 +37,7 @@ public class JSProjectTypeDescriptionsExtension implements ProjectTypeDescriptio
         list.add(new ProjectType("AngularJS", "AngularJS Project", "JavaScript"));
         list.add(new ProjectType("GruntJS", "Grunt Project", "JavaScript"));
         list.add(new ProjectType("GulpJS", "Gulp Project", "JavaScript"));
+        list.add(new ProjectType("BasicJS", "Basic Project", "JavaScript"));
         return list;
     }
 
