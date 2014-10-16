@@ -63,7 +63,7 @@ public class BasicJSProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public Runners getRunners() {
-        return new Runners("system:/java-webapp-default/default");
+        return new Runners("system:/java/web/tomcat7");
     }
 
     /**

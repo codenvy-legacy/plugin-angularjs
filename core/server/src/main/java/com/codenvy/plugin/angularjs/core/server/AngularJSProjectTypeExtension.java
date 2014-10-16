@@ -63,7 +63,7 @@ public class AngularJSProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public Runners getRunners() {
-        return new Runners("javascript-webapp-grunt");
+        return new Runners("system:/javascript/webapp/grunt");
     }
 
     /**

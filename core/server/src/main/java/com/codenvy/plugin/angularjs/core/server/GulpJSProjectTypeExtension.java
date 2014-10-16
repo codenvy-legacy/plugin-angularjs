@@ -59,7 +59,7 @@ public class GulpJSProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public Runners getRunners() {
-        return new Runners("javascript-webapp-gulp");
+        return new Runners("system:/javascript/web/gulp");
     }
 
     /**

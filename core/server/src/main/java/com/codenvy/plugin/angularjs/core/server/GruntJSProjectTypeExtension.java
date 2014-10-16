@@ -58,7 +58,7 @@ public class GruntJSProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public Runners getRunners() {
-        return new Runners("javascript-webapp-grunt");
+        return new Runners("system:/javascript/web/grunt");
     }
 
     /**
