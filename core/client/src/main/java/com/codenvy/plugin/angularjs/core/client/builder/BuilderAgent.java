@@ -288,7 +288,7 @@ public class BuilderAgent {
 
         if (downloadLink != null) {
 
-            Source source = dtoFactory.createDto(Source.class).withSourceDescriptor(
+            Source source = dtoFactory.createDto(Source.class).withProject(
                     dtoFactory.createDto(ImportSourceDescriptor.class).withLocation(downloadLink.getHref()).withType("zip"));
 
             projectServiceClient.importProject(appContext.getCurrentProject().getRootProject().getPath(), true, source,
