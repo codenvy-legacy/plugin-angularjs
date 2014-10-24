@@ -10,21 +10,13 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.javascript;
 
-import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.text.Region;
-import com.codenvy.ide.api.texteditor.CodeAssistCallback;
-import com.codenvy.ide.api.texteditor.TextEditorPartView;
-import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
-import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.plugin.angularjs.completion.dto.Method;
-import com.codenvy.plugin.angularjs.completion.dto.Param;
-import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
-import com.codenvy.plugin.angularjs.completion.dto.Templating;
-import com.codenvy.plugin.angularjs.completion.dto.client.DtoClientImpls;
-import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.ContextFactory;
-import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.IContentAssistProvider;
-import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.IContext;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,13 +26,22 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.codenvy.plugin.angularjs.core.client.javascript.JavaScriptCodeAssistProcessor.ACTIVATION_CHARACTER;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistCallback;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
+import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
+import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
+import com.codenvy.plugin.angularjs.completion.dto.Method;
+import com.codenvy.plugin.angularjs.completion.dto.Param;
+import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
+import com.codenvy.plugin.angularjs.completion.dto.Templating;
+import com.codenvy.plugin.angularjs.completion.dto.client.DtoClientImpls;
+import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.ContextFactory;
+import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.IContentAssistProvider;
+import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.IContext;
 
 /**
  * @author Florent Benoit
@@ -55,7 +56,7 @@ public class JavaScriptCodeAssistProcessorTest {
     private JavaScriptResources resources;
 
     @Mock
-    private TextEditorPartView textEditorPartView;
+    private TextEditor textEditor;
 
     @Mock
     private JavaScriptCodeAssistProcessor javaScriptCodeAssistProcessor;
@@ -70,27 +71,23 @@ public class JavaScriptCodeAssistProcessorTest {
     private IContext context;
 
     @Mock
-    private Document document;
-
-    @Mock
-    private Region region;
+    private EmbeddedDocument document;
 
     @Mock
     private IContentAssistProvider provider;
 
 
     @Captor
-    ArgumentCaptor<CompletionProposal[]> callbackCompletionProposals;
+    ArgumentCaptor<List<CompletionProposal>> callbackCompletionProposals;
 
     /**
      * Setup
      */
     @Before
-
     public void setUp() throws BadLocationException {
         this.javaScriptCodeAssistProcessor = new JavaScriptCodeAssistProcessor();
         Templating templating = DtoClientImpls.TemplatingImpl.make();
-        //populate
+        // populate
         TemplateDotProvider templateDotProvider = DtoClientImpls.TemplateDotProviderImpl.make();
         templateDotProvider.setName("$http");
         templating.getTemplateDotProviders().add(templateDotProvider);
@@ -126,8 +123,7 @@ public class JavaScriptCodeAssistProcessorTest {
         javaScriptCodeAssistProcessor.setContextFactory(contextFactory);
         javaScriptCodeAssistProcessor.buildTrie();
 
-        doReturn(document).when(textEditorPartView).getDocument();
-        doReturn(region).when(document).getLineInformationOfOffset(anyInt());
+        doReturn(document).when(textEditor).getDocument();
         doReturn(context).when(contextFactory).create();
 
 
@@ -135,91 +131,92 @@ public class JavaScriptCodeAssistProcessorTest {
 
     @Test
     public void testSimpleCompletion() throws BadLocationException {
-        checkBasicCompletion("$");
+        checkBasicCompletion("$", new TextPosition(0, 1), LinearRange.createWithStart(0).andEnd(1));
     }
 
     @Test
     public void testSimpleCompletionWithSpacesBefore() throws BadLocationException {
-        checkBasicCompletion("          $");
+        checkBasicCompletion("          $", new TextPosition(0, 10), LinearRange.createWithStart(0).andEnd(10));
     }
 
-    protected void checkBasicCompletion(String line) throws BadLocationException {
-        doReturn(line).when(document).get(anyInt(), anyInt());
-        javaScriptCodeAssistProcessor.computeCompletionProposals(textEditorPartView, line.length(), codeAssistCallback);
+    protected void checkBasicCompletion(String line, TextPosition position, LinearRange lineRange) throws BadLocationException {
+        doReturn(line).when(document).getLineContent(anyInt());
+        doReturn(position).when(document).getPositionFromIndex(anyInt());
+        doReturn(lineRange).when(document).getLinearRangeForLine(anyInt());
+        javaScriptCodeAssistProcessor.computeCompletionProposals(textEditor, line.length(), codeAssistCallback);
         verify(codeAssistCallback).proposalComputed(callbackCompletionProposals.capture());
 
-        CompletionProposal[] proposals = callbackCompletionProposals.getValue();
+        List<CompletionProposal> proposals = callbackCompletionProposals.getValue();
 
 
         // 2 proposals
-        assertEquals(2, proposals.length);
+        assertEquals(2, proposals.size());
 
-        assertEquals("$http", proposals[0].getDisplayString());
-        assertEquals("$route", proposals[1].getDisplayString());
+        assertEquals("$http", proposals.get(0).getDisplayString());
+        assertEquals("$route", proposals.get(1).getDisplayString());
 
     }
 
 
     @Test
     public void testSimpleCompletionWithDotPrefix() throws BadLocationException {
-        checkCompletionDotWithParams("$http.");
+        checkCompletionDotWithParams("$http.", new TextPosition(0, 5), LinearRange.createWithStart(0).andLength(5));
     }
 
     @Test
     public void testSimpleCompletionWithDotPrefixNoParams() throws BadLocationException {
-        checkCompletionDotWithoutParams("$route.");
+        final String line = "$route.";
+        checkCompletionDotWithoutParams(line, new TextPosition(0, line.length()), LinearRange.createWithStart(0).andLength(line.length()));
     }
 
 
     @Test
     public void testSimpleCompletionWithDotPrefixAndSpacesWithParams() throws BadLocationException {
-        checkCompletionDotWithParams("      $http.");
+        final String line = "      $http.";
+        checkCompletionDotWithParams(line, new TextPosition(0, line.length()), LinearRange.createWithStart(0).andLength(line.length()));
     }
 
     @Test
     public void testSimpleCompletionWithDotPrefixAndSpacesNoParams() throws BadLocationException {
-        checkCompletionDotWithoutParams("      $route.");
+        final String line = "      $route.";
+        checkCompletionDotWithoutParams(line, new TextPosition(0, line.length()), LinearRange.createWithStart(0).andLength(line.length()));
     }
 
-
-    protected void checkCompletionDotWithParams(String line)  throws BadLocationException {
-        doReturn(line).when(document).get(anyInt(), anyInt());
-        javaScriptCodeAssistProcessor.computeCompletionProposals(textEditorPartView, line.length(), codeAssistCallback);
+    protected void checkCompletionDotWithParams(String line, TextPosition position, LinearRange lineRange) throws BadLocationException {
+        doReturn(line).when(document).getLineContent(anyInt());
+        doReturn(position).when(document).getPositionFromIndex(anyInt());
+        doReturn(lineRange).when(document).getLinearRangeForLine(anyInt());
+        javaScriptCodeAssistProcessor.computeCompletionProposals(textEditor, line.length(), codeAssistCallback);
         verify(codeAssistCallback).proposalComputed(callbackCompletionProposals.capture());
 
-        CompletionProposal[] proposals = callbackCompletionProposals.getValue();
+        List<CompletionProposal> proposals = callbackCompletionProposals.getValue();
 
         // 2 proposals
-        assertEquals(2, proposals.length);
+        assertEquals(2, proposals.size());
 
-        assertEquals("delete(url,config)", proposals[0].getDisplayString());
-        assertEquals("get(url,config)", proposals[1].getDisplayString());
+        assertEquals("delete(url,config)", proposals.get(0).getDisplayString());
+        assertEquals("get(url,config)", proposals.get(1).getDisplayString());
     }
 
-    protected void checkCompletionDotWithoutParams(String line)  throws BadLocationException {
-        doReturn(line).when(document).get(anyInt(), anyInt());
-        javaScriptCodeAssistProcessor.computeCompletionProposals(textEditorPartView, line.length(), codeAssistCallback);
+    protected void checkCompletionDotWithoutParams(String line, TextPosition position, LinearRange lineRange) throws BadLocationException {
+        doReturn(line).when(document).getLineContent(anyInt());
+        doReturn(position).when(document).getPositionFromIndex(anyInt());
+        doReturn(lineRange).when(document).getLinearRangeForLine(anyInt());
+        javaScriptCodeAssistProcessor.computeCompletionProposals(textEditor, line.length(), codeAssistCallback);
         verify(codeAssistCallback).proposalComputed(callbackCompletionProposals.capture());
 
-        CompletionProposal[] proposals = callbackCompletionProposals.getValue();
+        List<CompletionProposal> proposals = callbackCompletionProposals.getValue();
 
         // 1 proposals
-        assertEquals(1, proposals.length);
+        assertEquals(1, proposals.size());
 
-        assertEquals("reload()", proposals[0].getDisplayString());
-    }
-
-
-    @Test
-    public void checkActivationCharacter() {
-        assertArrayEquals(new char[] {ACTIVATION_CHARACTER}, javaScriptCodeAssistProcessor.getCompletionProposalAutoActivationCharacters());
+        assertEquals("reload()", proposals.get(0).getDisplayString());
     }
 
     @Test
     public void checkErrorMessage() {
         assertNull(javaScriptCodeAssistProcessor.getErrorMessage());
     }
-
 
 
 }

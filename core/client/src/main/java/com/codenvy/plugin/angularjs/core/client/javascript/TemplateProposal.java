@@ -11,16 +11,12 @@
 package com.codenvy.plugin.angularjs.core.client.javascript;
 
 import com.codenvy.ide.api.icon.Icon;
-import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.text.Region;
-import com.codenvy.ide.api.text.RegionImpl;
-import com.codenvy.ide.api.text.edits.MalformedTreeException;
-import com.codenvy.ide.api.text.edits.ReplaceEdit;
-import com.codenvy.ide.api.texteditor.codeassistant.Completion;
-import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
-import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.user.client.ui.Widget;
+import com.codenvy.ide.jseditor.client.codeassist.Completion;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
+import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
+
+import elemental.dom.Element;
 
 
 /**
@@ -29,10 +25,10 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class TemplateProposal implements CompletionProposal {
 
-    private String              prefix;
-    private int                 offset;
-    private String              replaceName;
-    private String              displayName;
+    private String prefix;
+    private int offset;
+    private String replaceName;
+    private String displayName;
     private JavaScriptResources javaScriptResources;
     private boolean isMethod = false;
 
@@ -45,17 +41,13 @@ public class TemplateProposal implements CompletionProposal {
         this.javaScriptResources = javaScriptResources;
     }
 
-/*
-    public Point getSelection(IDocument document) {
-        int escapePosition = prop.getEscapePosition();
-        if (escapePosition == -1) {
-            escapePosition = offset + prop.getProposal().length();
-        }
-        return new Point(escapePosition, 0);
-    }*/
+    /*
+     * public Point getSelection(IDocument document) { int escapePosition = prop.getEscapePosition(); if (escapePosition == -1) {
+     * escapePosition = offset + prop.getProposal().length(); } return new Point(escapePosition, 0); }
+     */
 
     @Override
-    public Widget getAdditionalProposalInfo() {
+    public Element getAdditionalProposalInfo() {
         return null;
     }
 
@@ -69,43 +61,25 @@ public class TemplateProposal implements CompletionProposal {
         return new Icon("template.property", javaScriptResources.propertyAngular());
     }
 
-
-    @Override
-    public char[] getTriggerCharacters() {
-        return new char[0];
-    }
-
-    @Override
-    public boolean isAutoInsertable() {
-        return true;
-    }
-
     @Override
     public void getCompletion(CompletionCallback completionCallback) {
         completionCallback.onCompletion(new Completion() {
             /** {@inheritDoc} */
             @Override
-            public void apply(Document document) {
-                ReplaceEdit e = new ReplaceEdit(offset - prefix.length(), prefix.length(), replaceName);
-                try {
-                    e.apply(document);
-                    // Do not try a new codeassist proposal
-                    // invocationContext.getEditor().doOperation(TextEditorOperations.CODEASSIST_PROPOSALS);
-                } catch (MalformedTreeException | BadLocationException e1) {
-                    Log.error(getClass(), e1);
-                }
+            public void apply(EmbeddedDocument document) {
+                document.replace(offset - prefix.length(), prefix.length(), replaceName);
             }
 
             /** {@inheritDoc} */
             @Override
-            public Region getSelection(Document document) {
+            public LinearRange getSelection(EmbeddedDocument document) {
                 if (isMethod) {
                     // search parenthesis
                     int leftPar = replaceName.substring(prefix.length()).indexOf("(");
                     int rightPar = replaceName.substring(replaceName.indexOf("(")).indexOf(")");
-                    return new RegionImpl(offset + leftPar + 1, rightPar - 1);
+                    return LinearRange.createWithStart(offset + leftPar + 1).andLength(rightPar - 1);
                 }
-                return new RegionImpl(offset + replaceName.length() - prefix.length(), 0);
+                return LinearRange.createWithStart(offset + replaceName.length() - prefix.length()).andLength(0);
             }
         });
     }

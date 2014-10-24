@@ -10,14 +10,13 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.javascript;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
 
 /**
  * Defines image used for tab completion for AngularJS.
- *
+ * 
  * @author Florent Benoit
  */
 public interface JavaScriptResources extends ClientBundle {
@@ -40,5 +39,3 @@ public interface JavaScriptResources extends ClientBundle {
 
 
 }
-
-

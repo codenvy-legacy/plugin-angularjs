@@ -10,67 +10,51 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.editor;
 
-import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.text.DocumentCommand;
-import com.codenvy.ide.api.text.Position;
-import com.codenvy.ide.api.texteditor.AutoEditStrategy;
-import com.codenvy.ide.api.texteditor.TextEditorPartView;
-import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.jseditor.client.changeintercept.TextChange;
+import com.codenvy.ide.jseditor.client.changeintercept.TextChangeInterceptor;
+import com.codenvy.ide.jseditor.client.document.ReadOnlyDocument;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
 
 /**
  * This strategy will add }} if user is entering {{
- *
+ * 
  * @author Florent Benoit
  */
-public class AngularJSInterpolationBraceStrategy implements AutoEditStrategy {
-
-    private TextEditorPartView textEditorPartView;
-
-    public AngularJSInterpolationBraceStrategy(TextEditorPartView textEditorPartView) {
-        this.textEditorPartView = textEditorPartView;
-    }
+public class AngularJSInterpolationBraceStrategy implements TextChangeInterceptor {
 
     @Override
-    public void customizeDocumentCommand(Document document, DocumentCommand command) {
+    public TextChange processChange(TextChange change, ReadOnlyDocument document) {
+
         // early pruning to slow down normal typing as little as possible
-        if (!command.doit || textEditorPartView.getSelection().hasSelection() || command.text.isEmpty()) {
-            return;
+        if (!change.getTo().equals(change.getFrom()) || change.getNewText().isEmpty()) {
+            return null;
         }
 
         // Current character
-        final char character = command.text.charAt(0);
+        final char character = change.getNewText().charAt(0);
         if ('{' != character) {
-            return;
+            return null;
         }
 
         // current cursor position
-        Position cursorPosition = textEditorPartView.getSelection().getCursorPosition();
-        int offset = cursorPosition.getOffset();
+        final int offset = document.getCursorOffset();
 
         // not enough characters
         if (offset <= 1) {
-            return;
+            return null;
         }
 
+        // character before the {
+        final String before = document.getContentRange(offset - 1, 1);
 
-        try {
-            // character before the {
-            char beforeChar = document.getChar(offset - 1);
-            char beforeBeforeChar = document.getChar(offset - 2);
-
-            // well we have two {{ then we can close these brackets (and don't forget to add the current character which is {
-            if ('{' == beforeChar && ' ' == beforeBeforeChar) {
-                command.text = "{}}";
-                command.caretOffset = offset + 1;
-                command.doit = false;
-            }
-
-        } catch (BadLocationException e) {
-            // only debug as we may not have previous characters
-            Log.debug(AngularJSInterpolationBraceStrategy.class, e);
+        // well we have two {{ then we can close these brackets (and don't forget to add the current character which is {
+        if (" ".equals(before)) {
+            return new TextChange.Builder().from(change.getFrom())
+                                           .to(new TextPosition(change.getTo().getLine(),
+                                                                change.getTo().getCharacter() + 2))
+                                           .insert("{{}}").build();
+        } else {
+            return null;
         }
-
-
     }
 }

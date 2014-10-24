@@ -11,36 +11,36 @@
 package com.codenvy.plugin.angularjs.core.client.editor;
 
 import com.codenvy.ide.api.icon.Icon;
-import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.text.Region;
-import com.codenvy.ide.api.text.RegionImpl;
-import com.codenvy.ide.api.text.edits.MalformedTreeException;
-import com.codenvy.ide.api.text.edits.ReplaceEdit;
-import com.codenvy.ide.api.texteditor.codeassistant.Completion;
-import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
-import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.jseditor.client.codeassist.Completion;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
+import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
+import com.codenvy.ide.util.dom.Elements;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
+
+import elemental.dom.Element;
 
 
 /**
- * AngularJS completion proposal that is called when the user has selected a completion.
- * It will add the property at the right place
- *
+ * AngularJS completion proposal that is called when the user has selected a completion. It will add the property at the right place
+ * 
  * @author Florent Benoit
  */
 public class AngularJSCompletionProposal implements CompletionProposal {
 
     private static final String PROPERTY_TERMINATOR = "\"\"";
-    private static final String PROPERTY_SEPARATOR  = "=";
+    private static final String PROPERTY_SEPARATOR = "=";
 
-    private String            name;
-    private String            addedString;
-    private int               jumpLength;
+    /** The template used to format the additional info snippet. */
+    private static final AdditionalInfoTemplate TEMPLATE = GWT.create(AdditionalInfoTemplate.class);
+
+    private String name;
+    private String addedString;
+    private int jumpLength;
     private InvocationContext invocationContext;
-
 
     public AngularJSCompletionProposal(String name) {
         this.name = name;
@@ -48,7 +48,7 @@ public class AngularJSCompletionProposal implements CompletionProposal {
 
 
     @Override
-    public Widget getAdditionalProposalInfo() {
+    public Element getAdditionalProposalInfo() {
         // if it's an angular directive, return a link to the documentation
         if (!name.startsWith("ng-")) {
             return null;
@@ -56,8 +56,10 @@ public class AngularJSCompletionProposal implements CompletionProposal {
         // convert the name ng-xxxx into ngXxxx
         String directiveName = "ng".concat(name.substring(3, 4).toUpperCase()).concat(name.substring(4));
         String link = "http://docs.angularjs.org/api/ng/directive/".concat(directiveName);
-        // Don't use String.format (not gwt compliant)
-        return new HTML("Full documentation available on <a href='".concat(link).concat("'>").concat(link).concat("</a>"));
+
+        final Element result = Elements.createDivElement();
+        result.setInnerHTML(TEMPLATE.additionalInfo(link).asString());
+        return result;
     }
 
     @Override
@@ -66,40 +68,22 @@ public class AngularJSCompletionProposal implements CompletionProposal {
     }
 
     @Override
-    public char[] getTriggerCharacters() {
-        // when space is entered we may have completion
-        return new char[]{' '};
-        //return new char[0];
-    }
-
-    @Override
-    public boolean isAutoInsertable() {
-        return true;
-    }
-
-    @Override
     public void getCompletion(CompletionCallback completionCallback) {
         completionCallback.onCompletion(new Completion() {
             /** {@inheritDoc} */
             @Override
-            public void apply(Document document) {
+            public void apply(EmbeddedDocument document) {
                 computeInsertedString();
-                ReplaceEdit e =
-                        new ReplaceEdit(invocationContext.getOffset() - invocationContext.getQuery().getPrefix().length(),
-                                        invocationContext.getQuery().getPrefix().length(), addedString);
-                try {
-                    e.apply(document);
-                    // Do not try a new codeassist proposal
-                    // invocationContext.getEditor().doOperation(TextEditorOperations.CODEASSIST_PROPOSALS);
-                } catch (MalformedTreeException | BadLocationException e1) {
-                    Log.error(getClass(), e1);
-                }
+                final int start = invocationContext.getOffset() - invocationContext.getQuery().getPrefix().length();
+                final int length = invocationContext.getQuery().getPrefix().length();
+                document.replace(start, length, addedString);
             }
 
             /** {@inheritDoc} */
             @Override
-            public Region getSelection(Document document) {
-                return new RegionImpl(invocationContext.getOffset() + jumpLength - invocationContext.getQuery().getPrefix().length(), 0);
+            public LinearRange getSelection(EmbeddedDocument document) {
+                final int start = invocationContext.getOffset() + jumpLength - invocationContext.getQuery().getPrefix().length();
+                return LinearRange.createWithStart(start).andLength(0);
             }
         });
     }
@@ -129,4 +113,8 @@ public class AngularJSCompletionProposal implements CompletionProposal {
         return null;
     }
 
+    interface AdditionalInfoTemplate extends SafeHtmlTemplates {
+        @Template("Full documentation available on <a href='{0}'>{0}</a>")
+        SafeHtml additionalInfo(String link);
+    }
 }

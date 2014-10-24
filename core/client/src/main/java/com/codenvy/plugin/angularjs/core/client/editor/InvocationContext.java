@@ -11,11 +11,11 @@
 package com.codenvy.plugin.angularjs.core.client.editor;
 
 
-import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
 
 /**
  * Store data for Angular JS codeassist processor.
- *
+ * 
  * @author Florent Benoit
  */
 public class InvocationContext {
@@ -25,9 +25,9 @@ public class InvocationContext {
 
     private final AngularJSResources resources;
 
-    private final TextEditorPartView editor;
+    private final TextEditor editor;
 
-    public InvocationContext(AngularJSQuery query, int offset, AngularJSResources resources, TextEditorPartView editor) {
+    public InvocationContext(AngularJSQuery query, int offset, AngularJSResources resources, TextEditor editor) {
         super();
         this.query = query;
         this.offset = offset;
@@ -56,8 +56,7 @@ public class InvocationContext {
     /**
      * @return the editor
      */
-    public TextEditorPartView getEditor() {
+    public TextEditor getEditor() {
         return editor;
     }
 }
-

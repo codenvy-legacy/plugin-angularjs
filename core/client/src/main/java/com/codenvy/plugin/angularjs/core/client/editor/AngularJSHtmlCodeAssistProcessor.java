@@ -10,25 +10,23 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.editor;
 
-import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.text.Position;
-import com.codenvy.ide.api.text.Region;
-import com.codenvy.ide.api.texteditor.CodeAssistCallback;
-import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.web.html.editor.HTMLCodeAssistProcessor;
-import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistCallback;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
+import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
+import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
 import com.google.inject.Inject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * CodeAssist processor will manage AngularJS directives proposals.
- *
+ * 
  * @author Florent Benoit
  */
 public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor {
@@ -50,9 +48,8 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
 
     /**
      * Build a new processor based on the given resources.
-     *
-     * @param angularJSResources
-     *         the AngularJS resource
+     * 
+     * @param angularJSResources the AngularJS resource
      */
     @Inject
     public AngularJSHtmlCodeAssistProcessor(AngularJSResources angularJSResources) {
@@ -62,118 +59,111 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
 
     /**
      * Build a query for the given editor.
-     *
-     * @param textEditorPartView
-     *         the editor containing the user selection
+     * 
+     * @param textEditor the editor containing the user selection
      * @return the query used to provide completion
      */
-    protected AngularJSQuery getQuery(TextEditorPartView textEditorPartView) {
-
-        // current cursor position
-        Position cursorPosition = textEditorPartView.getSelection().getCursorPosition();
+    protected AngularJSQuery getQuery(TextEditor textEditor) {
 
         // document being edited
-        Document document = textEditorPartView.getDocument();
+        EmbeddedDocument document = textEditor.getDocument();
 
-        int totalNumberOfLines = document.getNumberOfLines();
+        // current cursor position
+        TextPosition cursorPosition = document.getCursorPosition();
+
+
+        int totalNumberOfLines = document.getLineCount();
 
         // search the HTML element being managed
-        try {
-            int line = document.getLineOfOffset(cursorPosition.getOffset());
-            Region region = document.getLineInformation(line);
-            int column = cursorPosition.getOffset() - region.getOffset();
-            int lineWithCursor = line;
+        int line = cursorPosition.getLine();
+        int column = cursorPosition.getCharacter();
+        int lineWithCursor = line;
 
-            String textBefore = "";
+        String textBefore = "";
 
-            boolean parsingLineWithCursor = true;
+        boolean parsingLineWithCursor = true;
 
-            // search the beginning of the element or stop if no element has been found
-            while ((line >= 0) && (!textBefore.contains("<"))) {
-                String text;
-                int lastOpen;
+        // search the beginning of the element or stop if no element has been found
+        while ((line >= 0) && (!textBefore.contains("<"))) {
+            String text;
+            int lastOpen;
 
-                if (parsingLineWithCursor) {
-                    Region information = document.getLineInformation(line);
-                    text = document.get(information.getOffset(), column);
-                    parsingLineWithCursor = false;
-                } else {
-                    Region information = document.getLineInformation(line);
-                    text = document.get(information.getOffset(), information.getLength());
-                }
-
-                textBefore = text.concat(textBefore);
-                lastOpen = text.lastIndexOf('<');
-
-                // Element was not opened on this line, go the the previous one
-                if (lastOpen == -1) {
-                    line--;
-                }
+            if (parsingLineWithCursor) {
+                // start of line until column=cursor
+                final String lineContent = document.getLineContent(line);
+                text = lineContent.substring(0, column);
+                parsingLineWithCursor = false;
+            } else {
+                // whole line
+                text = document.getLineContent(line);
             }
 
-            // No completion on end elements
-            if (textBefore.startsWith("</")) {
-                return null;
+            textBefore = text.concat(textBefore);
+            lastOpen = text.lastIndexOf('<');
+
+            // Element was not opened on this line, go the the previous one
+            if (lastOpen == -1) {
+                line--;
             }
+        }
 
-            // search the end of the HTML element (or break when number of lines is reached)
-            String textAfter = "";
-            line = lineWithCursor;
-            while (line < totalNumberOfLines && !textAfter.contains(">")) {
-                int lastOpen;
-                int lastClose;
-
-                String text;
-                Region information = document.getLineInformation(line);
-                if (parsingLineWithCursor) {
-                    text = document.get(information.getOffset(), information.getLength()).substring(column);
-                    parsingLineWithCursor = false;
-                } else {
-                    text = document.get(information.getOffset(), information.getLength()).trim();
-                }
-
-                String newText = textAfter + text;
-                lastClose = newText.lastIndexOf('>');
-                lastOpen = newText.lastIndexOf('<');
-
-                // We have a new element and the current one is not finished
-                if (lastClose != -1 && lastOpen != -1 && lastOpen < lastClose) {
-                    // remove the next new element which is being started
-                    return getQuery(textBefore, newText.substring(0, lastOpen));
-                }
-
-
-                // We don't have a closed element
-                if (lastClose == -1) {
-                    line++;
-                }
-            }
-
-            // Remove < and > from the beginning of the element and the end of the element
-            if (textBefore.contains("<")) {
-                textBefore = textBefore.substring(textBefore.indexOf('<') + 1);
-            }
-            if (textAfter.contains(">")) {
-                textAfter = textAfter.substring(0, textAfter.indexOf('>'));
-            }
-
-            return getQuery(textBefore, textAfter);
-
-        } catch (BadLocationException e) {
-            Log.error(AngularJSHtmlCodeAssistProcessor.class, e);
+        // No completion on end elements
+        if (textBefore.startsWith("</")) {
             return null;
         }
 
+        // search the end of the HTML element (or break when number of lines is reached)
+        String textAfter = "";
+        line = lineWithCursor;
+        while (line < totalNumberOfLines && !textAfter.contains(">")) {
+            int lastOpen;
+            int lastClose;
+
+            String text;
+            final String lineContent = document.getLineContent(line);
+            if (parsingLineWithCursor) {
+                // end of line starting at column=cursor
+                text = lineContent.substring(column);
+                parsingLineWithCursor = false;
+            } else {
+                // whole line but trimmed
+                text = lineContent.trim();
+            }
+
+            String newText = textAfter + text;
+            lastClose = newText.lastIndexOf('>');
+            lastOpen = newText.lastIndexOf('<');
+
+            // We have a new element and the current one is not finished
+            if (lastClose != -1 && lastOpen != -1 && lastOpen < lastClose) {
+                // remove the next new element which is being started
+                return getQuery(textBefore, newText.substring(0, lastOpen));
+            }
+
+
+            // We don't have a closed element
+            if (lastClose == -1) {
+                line++;
+            }
+        }
+
+        // Remove < and > from the beginning of the element and the end of the element
+        if (textBefore.contains("<")) {
+            textBefore = textBefore.substring(textBefore.indexOf('<') + 1);
+        }
+        if (textAfter.contains(">")) {
+            textAfter = textAfter.substring(0, textAfter.indexOf('>'));
+        }
+
+        return getQuery(textBefore, textAfter);
 
     }
 
     /**
      * Gets a list of angularjs attributes from the given text
-     *
-     * @param text
-     *         the text
-     * @param skipLast
-     *         if the last attribute needs to be skipped (for example if it's the current attribute)
+     * 
+     * @param text the text
+     * @param skipLast if the last attribute needs to be skipped (for example if it's the current attribute)
      * @return the list of attributes
      */
     protected List<String> getAngularAttributes(String text, boolean skipLast) {
@@ -208,11 +198,9 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
 
     /**
      * Gets query with the given text.
-     *
-     * @param textBefore
-     *         which is text before cursor
-     * @param textAfter
-     *         which is text after cursor
+     * 
+     * @param textBefore which is text before cursor
+     * @param textAfter which is text after cursor
      * @return a new query
      */
     protected AngularJSQuery getQuery(String textBefore, String textAfter) {
@@ -250,40 +238,32 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
 
     /**
      * Interface API for computing the code completion
-     *
-     * @param textEditorPartView
-     *         the editor
-     * @param offset
-     *         an offset within the document for which completions should be computed
-     * @param codeAssistCallback
-     *         the callback used to provide code completion
+     * 
+     * @param textEditorPartView the editor
+     * @param offset an offset within the document for which completions should be computed
+     * @param codeAssistCallback the callback used to provide code completion
      */
     @Override
-    public void computeCompletionProposals(TextEditorPartView textEditorPartView, int offset, CodeAssistCallback codeAssistCallback) {
+    public void computeCompletionProposals(TextEditor textEditor, int offset, CodeAssistCallback codeAssistCallback) {
 
         // Avoid completion when text is selected
-        if (textEditorPartView.getSelection().hasSelection()) {
+        if (textEditor.getSelectedLinearRange().getLength() > 0) {
             codeAssistCallback.proposalComputed(null);
             return;
         }
 
 
         // Get current text
-        AngularJSQuery query = getQuery(textEditorPartView);
+        AngularJSQuery query = getQuery(textEditor);
 
         if (query.getPrefix() == null) {
             codeAssistCallback.proposalComputed(null);
             return;
         }
 
-        InvocationContext invocationContext = new InvocationContext(query, offset, angularJSResources, textEditorPartView);
+        InvocationContext invocationContext = new InvocationContext(query, offset, angularJSResources, textEditor);
         Array<AngularJSCompletionProposal> completionProposals = AngularJSTrie.findAndFilterAutocompletions(query);
-        codeAssistCallback.proposalComputed(jsToArray(completionProposals, invocationContext));
-    }
-
-    @Override
-    public char[] getCompletionProposalAutoActivationCharacters() {
-        return new char[0];
+        codeAssistCallback.proposalComputed(jsToList(completionProposals, invocationContext));
     }
 
     @Override
@@ -294,22 +274,20 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
 
     /**
      * Convert Javascript array and apply invocation context
-     *
-     * @param autocompletions
-     *         the list of auto completion proposals
-     * @param context
-     *         the given invocation context
+     * 
+     * @param autocompletions the list of auto completion proposals
+     * @param context the given invocation context
      * @return the array
      */
-    private AngularJSCompletionProposal[] jsToArray(Array<AngularJSCompletionProposal> autocompletions,
-                                                    InvocationContext context) {
-        if (autocompletions == null) {
-            return new AngularJSCompletionProposal[0];
-        }
-        AngularJSCompletionProposal[] proposals = new AngularJSCompletionProposal[autocompletions.size()];
-        for (int i = 0; i < autocompletions.size(); i++) {
-            proposals[i] = autocompletions.get(i);
-            proposals[i].setInvocationContext(context);
+    private List<CompletionProposal> jsToList(Array<AngularJSCompletionProposal> autocompletions,
+                                              InvocationContext context) {
+        final List<CompletionProposal> proposals = new ArrayList<>();
+        if (autocompletions != null) {
+            for (int i = 0; i < autocompletions.size(); i++) {
+                final AngularJSCompletionProposal proposal = autocompletions.get(i);
+                proposals.add(proposal);
+                proposal.setInvocationContext(context);
+            }
         }
         return proposals;
     }

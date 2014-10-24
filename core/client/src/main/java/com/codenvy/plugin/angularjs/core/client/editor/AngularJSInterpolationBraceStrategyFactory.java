@@ -11,13 +11,13 @@
 package com.codenvy.plugin.angularjs.core.client.editor;
 
 
-import com.codenvy.ide.api.texteditor.AutoEditStrategy;
-import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.ext.web.html.editor.AutoEditStrategyFactory;
+import com.codenvy.ide.jseditor.client.changeintercept.TextChangeInterceptor;
 import com.google.inject.Singleton;
 
 /**
  * InterpolationBrace Factory for AutoEdit Strategy
+ * 
  * @author Florent Benoit
  */
 @Singleton
@@ -25,12 +25,13 @@ public class AngularJSInterpolationBraceStrategyFactory implements AutoEditStrat
 
     /**
      * Build a new Interpolation each time the method is invoked
+     * 
      * @param textEditorPartView editor view
      * @param contentType content type
      * @return a newly object at each call
      */
     @Override
-    public AutoEditStrategy build(TextEditorPartView textEditorPartView, String contentType) {
-        return new AngularJSInterpolationBraceStrategy(textEditorPartView);
+    public TextChangeInterceptor build(String contentType) {
+        return new AngularJSInterpolationBraceStrategy();
     }
 }

@@ -10,18 +10,23 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.client.javascript;
 
-import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.text.Region;
-import com.codenvy.ide.api.texteditor.CodeAssistCallback;
-import com.codenvy.ide.api.texteditor.TextEditorPartView;
-import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.web.js.editor.JsCodeAssistProcessor;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistCallback;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
+import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
+import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
 import com.codenvy.ide.util.AbstractTrie;
-import com.codenvy.ide.util.loging.Log;
 import com.codenvy.plugin.angularjs.completion.dto.Method;
 import com.codenvy.plugin.angularjs.completion.dto.Param;
 import com.codenvy.plugin.angularjs.completion.dto.TemplateDotProvider;
@@ -33,10 +38,6 @@ import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JSNICon
 import com.codenvy.plugin.angularjs.core.client.javascript.contentassist.JsProposal;
 import com.google.gwt.core.client.JsArray;
 
-import javax.inject.Inject;
-import java.util.Comparator;
-import java.util.List;
-
 /**
  * @author Florent Benoit
  */
@@ -45,8 +46,8 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
     protected static final char ACTIVATION_CHARACTER = '.';
 
     private native IContentAssistProvider getNativeProvider()/*-{
-        return $wnd.jsEsprimaContentAssistProvider;
-    }-*/;
+                                                             return $wnd.jsEsprimaContentAssistProvider;
+                                                             }-*/;
 
     private IContentAssistProvider provider;
 
@@ -62,8 +63,8 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
     private ContextFactory contextFactory;
 
     /**
-     * Sets the javascript resources
-     * Also if resources is injected it means we're in GWT so initialize()
+     * Sets the javascript resources Also if resources is injected it means we're in GWT so initialize()
+     * 
      * @param javaScriptResources
      */
     @Inject
@@ -99,8 +100,9 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
     }
 
 
-    /** Complete will all stuff except directives for now
-     * */
+    /**
+     * Complete will all stuff except directives for now
+     */
     protected void buildTrie() {
         this.trie = new AbstractTrie<>();
         for (TemplateDotProvider provider : templating.getTemplateDotProviders()) {
@@ -112,14 +114,14 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
     }
 
     @Override
-    public void computeCompletionProposals(TextEditorPartView view, int offset, CodeAssistCallback codeAssistCallback) {
+    public void computeCompletionProposals(TextEditor textEditor, int offset, CodeAssistCallback codeAssistCallback) {
         IContext context = contextFactory.create();
-        String prefix = computePrefix(view.getDocument(), offset);
+        String prefix = computePrefix(textEditor.getDocument(), offset);
         context.setPrefix(prefix);
         Array<CompletionProposal> prop = Collections.createArray();
 
 
-        String templatePrefix = computeTemplatePrefix(view.getDocument(), offset);
+        String templatePrefix = computeTemplatePrefix(textEditor.getDocument(), offset);
 
         int dot = 0;
         int lastDot = Integer.MAX_VALUE;
@@ -152,26 +154,28 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
                                     if (i < m.getParams().size()) {
                                         fullName = fullName.concat(",");
                                     }
-                                        i++;
-                                    }
-                                    fullName = fullName.concat(")");
-                                } else {
-                                    fullName = fullName.concat("()");
+                                    i++;
                                 }
-                                subTrie.put(m.getName(), fullName);
+                                fullName = fullName.concat(")");
+                            } else {
+                                fullName = fullName.concat("()");
                             }
+                            subTrie.put(m.getName(), fullName);
                         }
                     }
                 }
-                Array<String> result = subTrie.search(suffixVal);
-                result.sort(String.CASE_INSENSITIVE_ORDER);
-                for (String st : result.asIterable()) {
-                    TemplateProposal templateProposal = new TemplateProposal(templatePrefix, st, prefixVal.concat(".").concat(st), offset, javaScriptResources);
-                    templateProposal.setMethod();
-                    prop.add(templateProposal);
-                }
-            } else if (dot == -1) {
-             // Perform completion only if there is no dot
+            }
+            Array<String> result = subTrie.search(suffixVal);
+            result.sort(String.CASE_INSENSITIVE_ORDER);
+            for (String st : result.asIterable()) {
+                TemplateProposal templateProposal =
+                                                    new TemplateProposal(templatePrefix, st, prefixVal.concat(".").concat(st), offset,
+                                                                         javaScriptResources);
+                templateProposal.setMethod();
+                prop.add(templateProposal);
+            }
+        } else if (dot == -1) {
+            // Perform completion only if there is no dot
             Array<TemplateDotProvider> result = trie.search(prefix);
             result.sort(new Comparator<TemplateDotProvider>() {
                 @Override
@@ -188,7 +192,7 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
 
 
         try {
-            JsArray<JsProposal> jsProposals = provider.computeProposals(view.getDocument().get(), offset, context);
+            JsArray<JsProposal> jsProposals = provider.computeProposals(textEditor.getDocument().getContents(), offset, context);
             if (jsProposals != null && jsProposals.length() != 0) {
                 for (int i = 0; i < jsProposals.length(); i++) {
                     JsProposal jsProposal = jsProposals.get(i);
@@ -200,9 +204,9 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
             ignore.printStackTrace();
         }
 
-        CompletionProposal[] proposals = new CompletionProposal[prop.size()];
+        List<CompletionProposal> proposals = new ArrayList<>();
         for (int i = 0; i < prop.size(); i++) {
-            proposals[i] = prop.get(i);
+            proposals.add(prop.get(i));
         }
 
         codeAssistCallback.proposalComputed(proposals);
@@ -214,15 +218,11 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
      * @param offset
      * @return
      */
-    private String computeTemplatePrefix(Document document, int offset) {
-        try {
-            Region lineInfo = document.getLineInformationOfOffset(offset);
-            String line = document.get(lineInfo.getOffset(), lineInfo.getLength());
-            return line.substring(0, offset - lineInfo.getOffset());
-        } catch (BadLocationException e) {
-            Log.error(JavaScriptCodeAssistProcessor.class, e);
-        }
-        return "";
+    private String computeTemplatePrefix(EmbeddedDocument document, int offset) {
+        final TextPosition textPosition = document.getPositionFromIndex(offset);
+        final String line = document.getLineContent(textPosition.getLine());
+        final LinearRange lineRange = document.getLinearRangeForLine(textPosition.getLine());
+        return line.substring(0, offset - lineRange.getStartOffset());
     }
 
 
@@ -231,41 +231,31 @@ public class JavaScriptCodeAssistProcessor implements JsCodeAssistProcessor {
      * @param offset
      * @return
      */
-    private String computePrefix(Document document, int offset) {
-        try {
-            Region lineInfo = document.getLineInformationOfOffset(offset);
-            String line = document.get(lineInfo.getOffset(), lineInfo.getLength());
-            String partLine = line.substring(0, offset - lineInfo.getOffset());
-            for (int i = partLine.length() - 1; i >= 0; i--) {
-                switch (partLine.charAt(i)) {
-                    case '.':
-                        break;
-                    case ' ':
-                    case '(':
-                    case ')':
-                    case '{':
-                    case '}':
-                    case ';':
-                    case '[':
-                    case ']':
-                    case '"':
-                    case '\'':
-                        return partLine.substring(i + 1);
-                    default:
-                        break;
-                }
+    private String computePrefix(EmbeddedDocument document, int offset) {
+        final TextPosition textPosition = document.getPositionFromIndex(offset);
+        final String line = document.getLineContent(textPosition.getLine());
+        final LinearRange lineRange = document.getLinearRangeForLine(textPosition.getLine());
+        String partLine = line.substring(0, offset - lineRange.getStartOffset());
+        for (int i = partLine.length() - 1; i >= 0; i--) {
+            switch (partLine.charAt(i)) {
+                case '.':
+                    break;
+                case ' ':
+                case '(':
+                case ')':
+                case '{':
+                case '}':
+                case ';':
+                case '[':
+                case ']':
+                case '"':
+                case '\'':
+                    return partLine.substring(i + 1);
+                default:
+                    break;
             }
-            return partLine;
-
-        } catch (BadLocationException e) {
-            Log.error(JavaScriptCodeAssistProcessor.class, e);
         }
-        return "";
-    }
-
-    @Override
-    public char[] getCompletionProposalAutoActivationCharacters() {
-        return new char[] {ACTIVATION_CHARACTER};
+        return partLine;
     }
 
     @Override

@@ -589,7 +589,7 @@ var esprimaJsContentAssist = function () {
         // FIXADE should we only be handling the case where there is more than one module?
         if (body && body.length === 1) {
             if (body[0].type === "ExpressionStatement" &&
-                body[0].expression.type === "CallExpression" &&
+                body[0].expression && body[0].expression.type === "CallExpression" &&
                 body[0].expression.callee.name === "define") {
 
                 // found it.
