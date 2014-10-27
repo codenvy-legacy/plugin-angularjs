@@ -22,6 +22,7 @@ import java.util.Map;
 
 /**
  * Provides the Angular Seed template for AngularJS project type.
+ *
  * @author Florent Benoit
  */
 @Singleton
@@ -40,7 +41,7 @@ public class AngularSeedTemplateExtension implements AngularProjectTemplateExten
                                                 "https://github.com/codenvy-templates/web-angularjs-javascript-angular-seed",
                                                 params,
                                                 null,
-                                                new Runners("javascript-webapp-grunt")));
+                                                new Runners("system:/javascript/web/grunt")));
         return list;
     }
 }
