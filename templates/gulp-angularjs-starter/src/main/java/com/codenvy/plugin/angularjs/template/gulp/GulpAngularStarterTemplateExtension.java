@@ -22,6 +22,7 @@ import java.util.Map;
 
 /**
  * Provides the Gulp AngularJS starter template for AngularJS project type.
+ *
  * @author Florent Benoit
  */
 @Singleton
@@ -40,7 +41,7 @@ public class GulpAngularStarterTemplateExtension implements AngularProjectTempla
                                                 "https://github.com/codenvy-templates/web-angularjs-javascript-gulp-starter",
                                                 params,
                                                 null,
-                                                new Runners("javascript-webapp-gulp")));
+                                                new Runners("system:/javascript/web/gulp")));
         return list;
     }
 }
