@@ -114,7 +114,7 @@ public class AngularJSCompletionProposal implements CompletionProposal {
     }
 
     interface AdditionalInfoTemplate extends SafeHtmlTemplates {
-        @Template("Full documentation available on <a href='{0}'>{0}</a>")
+        @Template("Full documentation available on <a href='{0}' target='_blank'>{0}</a>")
         SafeHtml additionalInfo(String link);
     }
 }
