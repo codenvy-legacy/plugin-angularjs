@@ -41,7 +41,7 @@ public class YeomanTemplateExtension implements AngularProjectTemplateExtension 
                                                 "https://github.com/codenvy-templates/web-angularjs-javascript-yeoman",
                                                 params,
                                                 null,
-                                                new Runners("javascript-webapp-grunt")));
+                                                new Runners("system:/javascript/web/grunt")));
         return list;
     }
 }
