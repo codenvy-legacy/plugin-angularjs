@@ -42,6 +42,14 @@ public class YeomanTemplateExtension implements AngularProjectTemplateExtension 
                                                 params,
                                                 null,
                                                 new Runners("system:/javascript/web/grunt")));
+        list.add(new ProjectTemplateDescription("Samples - Codenvy",
+                                                "git",
+                                                "User Dashboard",
+                                                "Codenvy User Dashboard example.",
+                                                "https://github.com/codenvy/user-dashboard.git",
+                                                params,
+                                                null,
+                                                new Runners("system:/javascript/web/grunt")));
         return list;
     }
 }
