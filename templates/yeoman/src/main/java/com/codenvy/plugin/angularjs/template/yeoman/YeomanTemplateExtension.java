@@ -15,10 +15,7 @@ import com.codenvy.api.project.server.Runners;
 import com.codenvy.plugin.angularjs.api.server.AngularProjectTemplateExtension;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Provides the Yeoman template for AngularJS project type.
@@ -42,12 +39,13 @@ public class YeomanTemplateExtension implements AngularProjectTemplateExtension 
                                                 params,
                                                 null,
                                                 new Runners("system:/javascript/web/grunt")));
+
         list.add(new ProjectTemplateDescription("Samples - Codenvy",
                                                 "git",
                                                 "User Dashboard",
                                                 "Codenvy User Dashboard example.",
                                                 "https://github.com/codenvy/user-dashboard.git",
-                                                params,
+                                                Collections.singletonMap("keepVcs", "false"),
                                                 null,
                                                 new Runners("system:/javascript/web/grunt")));
         return list;
