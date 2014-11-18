@@ -142,9 +142,7 @@ public class AngularJSHtmlCodeAssistProcessor implements HTMLCodeAssistProcessor
 
 
             // We don't have a closed element
-            if (lastClose == -1) {
-                line++;
-            }
+            line++;
         }
 
         // Remove < and > from the beginning of the element and the end of the element
