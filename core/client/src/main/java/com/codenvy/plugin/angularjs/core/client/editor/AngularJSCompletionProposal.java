@@ -20,6 +20,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 
 import elemental.dom.Element;
 
@@ -56,9 +58,10 @@ public class AngularJSCompletionProposal implements CompletionProposal {
         // convert the name ng-xxxx into ngXxxx
         String directiveName = "ng".concat(name.substring(3, 4).toUpperCase()).concat(name.substring(4));
         String link = "http://docs.angularjs.org/api/ng/directive/".concat(directiveName);
+        final SafeUri linkUri = UriUtils.fromSafeConstant(link);
 
         final Element result = Elements.createDivElement();
-        result.setInnerHTML(TEMPLATE.additionalInfo(link).asString());
+        result.setInnerHTML(TEMPLATE.additionalInfo(linkUri, link).asString());
         return result;
     }
 
@@ -114,7 +117,7 @@ public class AngularJSCompletionProposal implements CompletionProposal {
     }
 
     interface AdditionalInfoTemplate extends SafeHtmlTemplates {
-        @Template("Full documentation available on <a href='{0}' target='_blank'>{0}</a>")
-        SafeHtml additionalInfo(String link);
+        @Template("Full documentation available on <a href='{0}' target='_blank'>{1}</a>")
+        SafeHtml additionalInfo(SafeUri linkUri, String link);
     }
 }
