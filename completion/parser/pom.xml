@@ -16,7 +16,7 @@
     <parent>
         <artifactId>angularjs-completion</artifactId>
         <groupId>com.codenvy.plugin-angularjs</groupId>
-        <version>1.8.0</version>
+        <version>1.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>angularjs-completion-parser</artifactId>
     <packaging>jar</packaging>
