@@ -14,7 +14,7 @@ import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.extension.runner.client.wizard.SelectRunnerPagePresenter;
+import com.codenvy.ide.ext.runner.client.wizard.SelectRunnerPagePresenter;
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
 import com.codenvy.plugin.angularjs.core.client.wizard.AngularPagePresenter;
 import com.google.inject.Inject;
