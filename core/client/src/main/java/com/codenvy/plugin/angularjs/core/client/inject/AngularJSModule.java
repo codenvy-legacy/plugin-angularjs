@@ -11,10 +11,15 @@
 package com.codenvy.plugin.angularjs.core.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar;
 import com.codenvy.ide.ext.web.html.editor.HTMLCodeAssistProcessor;
 import com.codenvy.ide.ext.web.js.editor.JsCodeAssistProcessor;
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSHtmlCodeAssistProcessor;
 import com.codenvy.plugin.angularjs.core.client.javascript.JavaScriptCodeAssistProcessor;
+import com.codenvy.plugin.angularjs.core.client.wizard.AngularJsProjectWizardRegistrar;
+import com.codenvy.plugin.angularjs.core.client.wizard.BasicJsProjectWizardRegistrar;
+import com.codenvy.plugin.angularjs.core.client.wizard.GruntJsProjectWizardRegistrar;
+import com.codenvy.plugin.angularjs.core.client.wizard.GulpJsProjectWizardRegistrar;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.multibindings.GinMultibinder;
 
@@ -43,6 +48,11 @@ public class AngularJSModule extends AbstractGinModule {
         GinMultibinder<JsCodeAssistProcessor> binderJsProcessors = GinMultibinder.newSetBinder(binder(), JsCodeAssistProcessor.class);
         binderJsProcessors.addBinding().to(JavaScriptCodeAssistProcessor.class);
 
+        GinMultibinder<ProjectWizardRegistrar> projectWizardBinder = GinMultibinder.newSetBinder(binder(), ProjectWizardRegistrar.class);
+        projectWizardBinder.addBinding().to(AngularJsProjectWizardRegistrar.class);
+        projectWizardBinder.addBinding().to(BasicJsProjectWizardRegistrar.class);
+        projectWizardBinder.addBinding().to(GulpJsProjectWizardRegistrar.class);
+        projectWizardBinder.addBinding().to(GruntJsProjectWizardRegistrar.class);
     }
 
 }

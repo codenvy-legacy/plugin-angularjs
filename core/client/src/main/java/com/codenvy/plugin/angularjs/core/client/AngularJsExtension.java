@@ -13,13 +13,8 @@ package com.codenvy.plugin.angularjs.core.client;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
-import com.codenvy.ide.extension.runner.client.wizard.SelectRunnerPagePresenter;
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
-import com.codenvy.plugin.angularjs.core.client.wizard.AngularPagePresenter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -31,14 +26,7 @@ import com.google.inject.Singleton;
 public class AngularJsExtension extends JsExtension {
 
     @Inject
-    public AngularJsExtension(IconRegistry iconRegistry, AngularJSResources resources, ProjectTypeWizardRegistry projectTypeWizardRegistry, NotificationManager notificationManager, Provider<AngularPagePresenter> angularPagePresenter, Provider<SelectRunnerPagePresenter> runnerPagePresenter) {
-        super("AngularJS", iconRegistry, resources, projectTypeWizardRegistry, notificationManager, angularPagePresenter, runnerPagePresenter);
-
-        // add wizard
-        ProjectWizard wizard = new ProjectWizard(notificationManager);
-        wizard.addPage(angularPagePresenter);
-        wizard.addPage(runnerPagePresenter);
-
-        projectTypeWizardRegistry.addWizard("AngularJS", wizard);
+    public AngularJsExtension(IconRegistry iconRegistry, AngularJSResources resources, NotificationManager notificationManager) {
+        super("AngularJS", iconRegistry, resources, notificationManager);
     }
 }

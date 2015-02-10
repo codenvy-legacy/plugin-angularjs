@@ -13,12 +13,8 @@ package com.codenvy.plugin.angularjs.core.client;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.extension.runner.client.wizard.SelectRunnerPagePresenter;
 import com.codenvy.plugin.angularjs.core.client.editor.AngularJSResources;
-import com.codenvy.plugin.angularjs.core.client.wizard.AngularPagePresenter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 /**
  * JavaScript Extension allowing to register new javascript type
@@ -27,9 +23,8 @@ import com.google.inject.Provider;
 public class JsExtension {
 
     @Inject
-    public JsExtension(String projectTypeId, IconRegistry iconRegistry, AngularJSResources resources, ProjectTypeWizardRegistry projectTypeWizardRegistry,
-                       NotificationManager notificationManager, Provider<AngularPagePresenter> angularPagePresenter,
-                       Provider<SelectRunnerPagePresenter> runnerPagePresenter) {
+    public JsExtension(String projectTypeId, IconRegistry iconRegistry, AngularJSResources resources,
+                       NotificationManager notificationManager) {
         iconRegistry.registerIcon(new Icon(projectTypeId + ".projecttype.big.icon", "angularjs-extension/newproject-angularjs.png"));
         iconRegistry.registerIcon(new Icon(projectTypeId + ".projecttype.small.icon", "angularjs-extension/newproject-angularjs.png"));
 
