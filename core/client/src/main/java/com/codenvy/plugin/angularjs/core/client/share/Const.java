@@ -8,19 +8,30 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.plugin.angularjs.core.client.wizard;
-
-import com.codenvy.ide.api.mvp.View;
-import com.google.inject.ImplementedBy;
+package com.codenvy.plugin.angularjs.core.client.share;
 
 /**
- * @author Florent Benoit
+ * @author Vitaly Parfonov
  */
-@ImplementedBy(AngularPageViewImpl.class)
-public interface AngularPageView extends View<AngularPageView.ActionDelegate> {
+public interface Const {
 
-    public interface ActionDelegate{
+    String ANGULAR_JS_ID = "AngularJs";
 
-    }
+    String ANGULAR_JS_NAME = "AngularJS Project";
+
+    String BASIC_JS_ID = "BasicJs";
+
+    String BASIC_JS_NAME = "Basic Project";
+
+    String GRUNT_JS_ID = "GruntJs";
+
+    String GRUNT_JS_NAME = "Grunt JS Project";
+
+    String GULP_JS_ID = "GulpJs";
+
+    String GULP_JS_NAME = "Gulp JS Project";
+
+    String CATEGORY_JS = "JAVASCRIPT";
+
 
 }
