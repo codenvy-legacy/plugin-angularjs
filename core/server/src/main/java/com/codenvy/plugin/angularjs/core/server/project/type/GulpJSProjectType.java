@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 @Singleton
 public class GulpJSProjectType extends ProjectType {
 
-    private GulpJSProjectType() {
+    public GulpJSProjectType() {
         super("GulpJS", "GulpJS Project", true, false);
         addConstantDefinition(Constants.LANGUAGE, Constants.LANGUAGE, "javascript");
         addConstantDefinition(Constants.FRAMEWORK, Constants.FRAMEWORK, "BasicJS");
