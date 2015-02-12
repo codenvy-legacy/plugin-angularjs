@@ -19,7 +19,7 @@ public interface Const {
 
     String ANGULAR_JS_NAME = "AngularJS Project";
 
-    String BASIC_JS_ID = "BasicJs";
+    String BASIC_JS_ID = "BasicJS";
 
     String BASIC_JS_NAME = "Basic Project";
 
