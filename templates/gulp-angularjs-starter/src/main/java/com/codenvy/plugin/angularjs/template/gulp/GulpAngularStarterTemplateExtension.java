@@ -11,7 +11,7 @@
 package com.codenvy.plugin.angularjs.template.gulp;
 
 import com.codenvy.api.project.server.ProjectTemplateDescription;
-import com.codenvy.api.project.server.Runners;
+import com.codenvy.api.project.shared.Runners;
 import com.codenvy.plugin.angularjs.api.server.AngularProjectTemplateExtension;
 
 import javax.inject.Singleton;

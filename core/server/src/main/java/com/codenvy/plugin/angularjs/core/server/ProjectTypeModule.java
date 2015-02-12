@@ -10,8 +10,14 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.server;
 
+import com.codenvy.api.project.server.type.ProjectType;
 import com.codenvy.inject.DynaModule;
+import com.codenvy.plugin.angularjs.core.server.project.type.AngularJSProjectType;
+import com.codenvy.plugin.angularjs.core.server.project.type.BasicJSProjectType;
+import com.codenvy.plugin.angularjs.core.server.project.type.GruntJSProjectType;
+import com.codenvy.plugin.angularjs.core.server.project.type.GulpJSProjectType;
 import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
 
 /**
  * Module for binding type extension.
@@ -23,7 +29,10 @@ public class ProjectTypeModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(JSProjectTypeDescriptionsExtension.class);
-        bind(AngularJSProjectTypeExtension.class);
+        Multibinder<ProjectType> projectTypeMultibinder = Multibinder.newSetBinder(binder(), ProjectType.class);
+        projectTypeMultibinder.addBinding().to(AngularJSProjectType.class);
+        projectTypeMultibinder.addBinding().to(BasicJSProjectType.class);
+        projectTypeMultibinder.addBinding().to(GulpJSProjectType.class);
+        projectTypeMultibinder.addBinding().to(GruntJSProjectType.class);
     }
 }
