@@ -15,7 +15,7 @@ package com.codenvy.plugin.angularjs.core.client.share;
  */
 public interface Const {
 
-    String ANGULAR_JS_ID = "AngularJs";
+    String ANGULAR_JS_ID = "AngularJS";
 
     String ANGULAR_JS_NAME = "AngularJS Project";
 
@@ -23,11 +23,11 @@ public interface Const {
 
     String BASIC_JS_NAME = "Basic Project";
 
-    String GRUNT_JS_ID = "GruntJs";
+    String GRUNT_JS_ID = "GruntJS";
 
     String GRUNT_JS_NAME = "Grunt JS Project";
 
-    String GULP_JS_ID = "GulpJs";
+    String GULP_JS_ID = "GulpJS";
 
     String GULP_JS_NAME = "Gulp JS Project";
 
