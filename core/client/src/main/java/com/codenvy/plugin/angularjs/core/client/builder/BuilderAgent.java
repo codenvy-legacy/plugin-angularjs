@@ -17,8 +17,8 @@ import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportProject;
+import com.codenvy.api.project.shared.dto.ImportResponse;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.Source;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.notification.Notification;
@@ -293,9 +293,9 @@ public class BuilderAgent {
                     dtoFactory.createDto(ImportSourceDescriptor.class).withLocation(downloadLink.getHref()).withType("zip")));
 
             projectServiceClient.importProject(appContext.getCurrentProject().getRootProject().getPath(), true, importProject,
-                                               new AsyncRequestCallback<ProjectDescriptor>() {
+                                               new AsyncRequestCallback<ImportResponse>() {
                 @Override
-                protected void onSuccess(ProjectDescriptor projectDescriptor) {
+                protected void onSuccess(ImportResponse projectDescriptor) {
                     // notify callback
                     if (buildFinishedCallback != null) {
                         buildFinishedCallback.onFinished(descriptor.getStatus());
