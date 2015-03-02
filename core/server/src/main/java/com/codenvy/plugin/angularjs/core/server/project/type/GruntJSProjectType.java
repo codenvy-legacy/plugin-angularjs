@@ -14,7 +14,14 @@ import com.codenvy.api.project.server.type.ProjectType;
 import com.codenvy.ide.Constants;
 
 import javax.inject.Singleton;
+import java.util.Arrays;
 
+import static com.codenvy.ide.api.projecttype.RunnerCategory.JAVASCRIPT;
+
+/**
+ * @author Vitaliy Parfonov
+ * @author Dmitry Shnurenko
+ */
 @Singleton
 public class GruntJSProjectType extends ProjectType {
 
@@ -23,6 +30,7 @@ public class GruntJSProjectType extends ProjectType {
         addConstantDefinition(Constants.LANGUAGE, Constants.LANGUAGE, "javascript");
         addConstantDefinition(Constants.FRAMEWORK, Constants.FRAMEWORK, "BasicJS");
         setDefaultRunner("system:/javascript/web/grunt");
+        addRunnerCategories(Arrays.asList(JAVASCRIPT.toString()));
     }
 
 
