@@ -15,7 +15,14 @@ import com.codenvy.api.project.server.type.ProjectType;
 import com.codenvy.ide.Constants;
 
 import javax.inject.Singleton;
+import java.util.Arrays;
 
+import static com.codenvy.ide.api.projecttype.RunnerCategory.JAVASCRIPT;
+
+/**
+ * @author Vitaliy Parfonov
+ * @author Dmitry Shnurenko
+ */
 @Singleton
 public class GulpJSProjectType extends ProjectType {
 
@@ -24,5 +31,6 @@ public class GulpJSProjectType extends ProjectType {
         addConstantDefinition(Constants.LANGUAGE, Constants.LANGUAGE, "javascript");
         addConstantDefinition(Constants.FRAMEWORK, Constants.FRAMEWORK, "BasicJS");
         setDefaultRunner("system:/javascript/web/gulp");
+        addRunnerCategories(Arrays.asList(JAVASCRIPT.toString()));
     }
 }

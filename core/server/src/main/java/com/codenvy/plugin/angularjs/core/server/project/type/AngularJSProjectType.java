@@ -12,17 +12,23 @@ package com.codenvy.plugin.angularjs.core.server.project.type;
 
 import com.codenvy.api.project.server.type.ProjectType;
 import com.codenvy.ide.Constants;
+import com.codenvy.ide.api.projecttype.RunnerCategory;
 
 import javax.inject.Singleton;
+import java.util.Arrays;
 
+/**
+ * @author Vitaliy Parfonov
+ * @author Dmitry Shnurenko
+ */
 @Singleton
 public class AngularJSProjectType extends ProjectType {
-
 
     public AngularJSProjectType() {
         super("AngularJS", "AngularJS Project", true, false);
         addConstantDefinition(Constants.LANGUAGE, Constants.LANGUAGE, "javascript");
-        addConstantDefinition(Constants.FRAMEWORK,Constants.FRAMEWORK, "AngularJS");
+        addConstantDefinition(Constants.FRAMEWORK, Constants.FRAMEWORK, "AngularJS");
         setDefaultRunner("system:/javascript/webapp/grunt");
+        addRunnerCategories(Arrays.asList(RunnerCategory.JAVASCRIPT.toString()));
     }
 }

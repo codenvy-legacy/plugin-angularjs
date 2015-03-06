@@ -30,12 +30,6 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-runner</artifactId>
-            <version>${codenvy.ide.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-web</artifactId>
             <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
@@ -89,6 +83,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.plugin-runner</groupId>
+            <artifactId>codenvy-plugin-runner</artifactId>
+            <version>${codenvy.plugin.runner.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <version>${com.google.gwt.version}</version>
@@ -112,7 +112,6 @@
             <version>${org.mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>

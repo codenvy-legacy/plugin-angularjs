@@ -33,12 +33,6 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-runner</artifactId>
-            <version>${codenvy.ide.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
             <version>${codenvy.ide.version}</version>
             <scope>provided</scope>
