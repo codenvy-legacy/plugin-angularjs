@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.server;
 
-import com.codenvy.api.project.server.type.ProjectType;
-import com.codenvy.inject.DynaModule;
+import org.eclipse.che.api.project.server.type.ProjectType;
+import org.eclipse.che.inject.DynaModule;
 import com.codenvy.plugin.angularjs.core.server.project.type.AngularJSProjectType;
 import com.codenvy.plugin.angularjs.core.server.project.type.BasicJSProjectType;
 import com.codenvy.plugin.angularjs.core.server.project.type.GruntJSProjectType;

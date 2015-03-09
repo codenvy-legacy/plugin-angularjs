@@ -150,10 +150,10 @@
                         </goals>
                         <configuration>
                             <dtoPackages>
-                                <package>com.codenvy.plugin.angularjs.completion.dto</package>
+                                <package>org.eclipse.che.plugin.angularjs.completion.dto</package>
                             </dtoPackages>
                             <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                            <genClassName>com.codenvy.plugin.angularjs.completion.dto.client.DtoClientImpls</genClassName>
+                            <genClassName>org.eclipse.che.plugin.angularjs.completion.dto.client.DtoClientImpls</genClassName>
                             <impl>client</impl>
                         </configuration>
                     </execution>
@@ -165,10 +165,10 @@
                         </goals>
                         <configuration>
                             <dtoPackages>
-                                <package>com.codenvy.plugin.angularjs.completion.dto</package>
+                                <package>org.eclipse.che.plugin.angularjs.completion.dto</package>
                             </dtoPackages>
                             <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                            <genClassName>com.codenvy.plugin.angularjs.completion.dto.server.DtoServerImpls</genClassName>
+                            <genClassName>org.eclipse.che.plugin.angularjs.completion.dto.server.DtoServerImpls</genClassName>
                             <impl>server</impl>
                         </configuration>
                     </execution>

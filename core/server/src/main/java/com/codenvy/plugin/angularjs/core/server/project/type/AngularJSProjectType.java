@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.plugin.angularjs.core.server.project.type;
 
-import com.codenvy.api.project.server.type.ProjectType;
-import com.codenvy.ide.Constants;
-import com.codenvy.ide.api.projecttype.RunnerCategory;
+import org.eclipse.che.api.project.server.type.ProjectType;
+import org.eclipse.che.ide.Constants;
+import org.eclipse.che.ide.api.project.type.RunnerCategory;
 
 import javax.inject.Singleton;
 import java.util.Arrays;
